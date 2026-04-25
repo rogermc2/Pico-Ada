@@ -1,0 +1,19 @@
+ openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg -c "adapter speed 5000" -c "init; reset halt"
+
+In another terminal:
+gdb:
+file <executable file name>
+target extended-remote :3333
+monitor reset halt
+load
+monitor reset halt
+continue
+
+target remote connects
+monitor reset halt gives a known starting state
+load writes the ELF
+second monitor reset halt restarts cleanly from the reset vector
+continue lets it run
+
+picotool uf2 convert blinky_pico2w.elf blinky_pico2w.uf2
+

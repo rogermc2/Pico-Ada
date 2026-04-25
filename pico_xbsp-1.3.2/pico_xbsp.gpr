@@ -1,0 +1,90 @@
+with "config/pico_xbsp_config.gpr";
+with "pico_bsp.gpr";
+
+project Pico_XBSP is
+   for Runtime ("Ada") use "light-cortex-m0p";
+   for Target use "arm-eabi";
+   for Library_Name use "Pico_XBSP";
+   for Library_Version use Project'Library_Name & ".so." & Pico_XBSP_Config.Crate_Version;
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Pico_XBSP_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "lib";
+   for Source_Dirs use
+      ("src/",
+       "config/");
+   
+   Ada_Compiler_Switches := Pico_XBSP_Config.Ada_Compiler_Switches & (
+         "-gnat2022",   -- Ada 2022 mode
+         "-gnatef",     -- Display full source path name in brief error messages.
+         "-gnatW8",     -- UTF-8 encoding (brackets encoding also recognized)
+         "-gnatwn",     -- Set normal warnings mode.
+         "-gnatX",      -- Language extensions permitted
+         "-gnaty-I",    -- don't check mode IN keywords.’
+         "-gnatyM120"); -- Set maximum line length.
+
+   Pretty_Printer_Switches := (
+         "--alignment",                               --  Alignment ON (default)
+         "--based-grouping=4",                        --  Add underscores in based literals every n characters
+         "--call-threshold=2",                        --  If the number of parameter associations in a call is greater …
+         "--comments-fill",                           --  Fill comment blocks
+         "--comments-gnat-beginning",                 --  GNAT style comment beginning
+         "--comments-special",                        --  Do not change comments with a special character just after --
+         "--decimal-grouping=3",                      --  Add underscores in decimal literals every n characters
+         "--dictionary=hp41cx_tools.dictionary",      --  Set <file> as the dictionary file defining casing exceptions
+         "--enum-case-as-declared",                   --  Keep enumeration literals as declared
+         "--indent-continuation=3",                   --  Indentation level for continuation lines to 3
+         "--indentation=3",                           --  Indentation level 3
+         "--max-line-length=119",                     --  Set maximal line length one less then warning
+         "--separate-then",                           --  Use a separate line for THEN
+         "--name-case-as-declared",                   --  Keep names as declared (default)
+         "--no-compact",                              --  More verbose formatting of calls and similar
+         "--no-subprojects",                          --  Process sources of root project only
+         "--number-case-as-declared",                 --  Keep named numbers as declared
+         "--pragma-mixed-case",                       --  Pragmas in mixed case
+         "--separate-is",                             --  Try not to place 'IS' on a separate line in a subprogram body
+         "--type-case-as-declared",                   --  Keep types and subtypes as declared
+         "--vertical-case-alternatives",              --  Multi-line case alternatives
+         "--vertical-enum-types",                     --  Multi-line enumeration types
+         "--vertical-named-aggregates",               --  Multi-line named aggregates
+         "--wide-character-encoding=8",               --  Set the wide character encoding of the result filet to UTF-8 encoding
+         "-dd",                                       --  Progress indicator verbose mode
+         "-v");                                       --  Verbose mode
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("PICO_BSP_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+   package Pretty_Printer is
+      for Default_Switches ("ada") use Pretty_Printer_Switches & (
+         "--par-threshold=2",                      --  If the number of parameter specifications is greater than nnn …
+         "--vertical-array-types");                --  Multi-line array types
+   end Pretty_Printer;
+
+   package Documentation is
+      for Default_Switches ("ada") use (
+         "--enable-build",
+         "-l",
+         "-b",
+         "-p");
+      for Image_Dir   use "../Pictures";
+      for Doc_Pattern use "^[: ]";
+   end Documentation;
+
+   package Ide is
+      for Vcs_Kind use "git";
+   end Ide;
+end Pico_XBSP;

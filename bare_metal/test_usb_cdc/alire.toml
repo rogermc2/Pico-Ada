@@ -1,0 +1,15 @@
+name = "test_usb_cdc"
+description = ""
+version = "0.1.0-dev"
+
+authors = ["Roger Mc Murtrie"]
+maintainers = ["Roger Mc Murtrie <rogermc@iinet.net.au>"]
+maintainers-logins = ["Rogermc2"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = []
+
+executables = ["test_usb_cdc"]
+
+[[depends-on]]
+light_rp2350 = "^15.3.0"

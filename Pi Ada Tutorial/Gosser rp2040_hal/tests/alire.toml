@@ -1,0 +1,28 @@
+name = "test_rp2040_hal"
+description = "Unit tests for rp2040_hal"
+version = "2.3.0"
+
+authors = ["Jeremy Grosser"]
+maintainers = ["Jeremy Grosser <jeremy@synack.me>"]
+maintainers-logins = ["JeremyGrosser"]
+
+executables = ["test_rp2040_hal"]
+
+[[depends-on]]  # Added by alr
+rp2040_hal = "^2"
+aunit = "^24"
+gnatcov = "^22"
+gnat_arm_elf = ">=14"
+
+[[pins]]
+rp2040_hal = { path='..' }
+
+[gpr-set-externals]
+AUNIT_RUNTIME = "zfp-cross"
+
+[build-profiles]
+"*" = "validation"
+cortex_m = "release"
+usb_embedded = "release"
+atomic = "release"
+aunit = "release"

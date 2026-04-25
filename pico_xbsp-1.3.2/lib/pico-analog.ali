@@ -1,0 +1,196 @@
+V "GNAT Lib v15"
+A -Og
+A -gnatA
+A --RTS=/users/martin/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_50e0dec4/arm-eabi/lib/gnat/light-cortex-m0p/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=soft
+A -mcpu=cortex-m0plus
+A -fno-tree-loop-distribute-patterns
+A -ffunction-sections
+A -fdata-sections
+A -g
+A -gnatp
+A -gnato
+A -gnatwa
+A -gnatw.X
+A -gnatVa
+A -gnata
+A -gnaty3
+A -gnatya
+A -gnatyA
+A -gnatyB
+A -gnatyb
+A -gnatyc
+A -gnaty-
+A -gnatyd
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatym
+A -gnatyn
+A -gnatyO
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -gnat2022
+A -gnatW8
+A -gnat2022
+A -gnatW8
+A -gnatwn
+A -gnatX
+A -gnaty-
+A -gnatyI
+A -gnatyM120
+A -mlibarch=armv6s-m
+A -march=armv6s-m
+P ZX
+
+RN
+RV NO_FIXED_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+
+U pico.analog%b		pico-analog.adb		c764a16a OO PK
+W pico%s		pico.ads		pico.ali
+
+U pico.analog%s		pico-analog.ads		29a8e0cc BN EE NE OO PK
+W hal%s			hal.ads			hal.ali
+W pico%s		pico.ads		pico.ali
+W rp%s			rp.ads			rp.ali
+W rp.gpio%s		rp-gpio.adb		rp-gpio.ali
+W rp.pwm%s		rp-pwm.adb		rp-pwm.ali
+
+D ada.ads		20250828132010 76789da1 ada%s
+D a-assert.ads		20250828132010 ba465f5c ada.assertions%s
+D a-tags.ads		20250828132010 5d468a85 ada.tags%s
+D a-unccon.ads		20250828132010 0e9b276f ada.unchecked_conversion%s
+D hal.ads		20260307173002 2b42c80e hal%s
+D hal-gpio.ads		20260307173002 c8195dfd hal.gpio%s
+D interfac.ads		20250828132010 9111f9c1 interfaces%s
+D pico.ads		20260331121320 93ee3c9d pico%s
+D pico-analog.ads	20260406103114 16f2a0a8 pico.analog%s
+D pico-analog.adb	20260406095321 d19601c2 pico.analog%b
+D rp.ads		20260331121319 3f5da7e6 rp%s
+D rp-adc.ads		20260331121319 935bcdf8 rp.adc%s
+D rp-clock.ads		20260331121319 e1324c54 rp.clock%s
+D rp-gpio.ads		20260331121319 b541192e rp.gpio%s
+D rp-pwm.ads		20260331121319 32b7add9 rp.pwm%s
+D rp2040_svd.ads	20260331121319 5d526a97 rp2040_svd%s
+D rp2040_svd-clocks.ads	20260331121319 d76a9f96 rp2040_svd.clocks%s
+D rp2040_svd-io_bank0.ads  20260331121319 d70b0d48 rp2040_svd.io_bank0%s
+D rp2040_svd-pads_bank0.ads  20260331121319 e90a55dd rp2040_svd.pads_bank0%s
+D rp2040_svd-pll.ads	20260331121319 25814941 rp2040_svd.pll%s
+D rp2040_svd-pwm.ads	20260331121319 58b6623e rp2040_svd.pwm%s
+D system.ads		20250828132010 b62447ca system%s
+D s-assert.ads		20250828132010 9c4520c7 system.assertions%s
+D s-stoele.ads		20250828132010 ccded4e8 system.storage_elements%s
+D s-unstyp.ads		20250828132010 fa2a7f59 system.unsigned_types%s
+G a e
+G c b b b [b pico__analog 22 1 none]
+G c Z s b [to_pwm pico__analog 68 13 none]
+G c Z s b [write_analog pico__analog 77 14 none]
+G c Z s b [write_analog pico__analog 83 14 none]
+G c Z s s [get_base pico__analog 90 13 none]
+G c Z s s [get_frequency pico__analog 96 13 none]
+G c Z s s [get_reload pico__analog 102 13 none]
+G c Z s s [Omultiply pico__analog 112 13 none]
+G c Z s s [Omultiply pico__analog 128 13 none]
+G c Z s s [pwm_pointIP pico__analog 139 9 none]
+G r c none [b pico__analog 22 1 none] [initialize rp__pwm 47 14 none]
+G r c none [to_pwm pico__analog 68 13 none] [to_pwm rp__pwm 50 13 none]
+G r c none [to_pwm pico__analog 68 13 none] [set_frequency rp__pwm 68 14 none]
+G r c none [to_pwm pico__analog 68 13 none] [set_interval rp__pwm 76 14 none]
+G r c none [to_pwm pico__analog 68 13 none] [enable rp__pwm 96 14 none]
+G r c none [to_pwm pico__analog 68 13 none] [configure rp__gpio 60 14 none]
+G r c none [write_analog pico__analog 77 14 none] [set_duty_cycle rp__pwm 90 14 none]
+G r c none [write_analog pico__analog 83 14 none] [set_duty_cycle rp__pwm 90 14 none]
+X 5 hal.ads
+34K9*HAL 166e8 9|24w6 37r13 55r28
+53M9*UInt8<7|81M9> 9|37r17 55r32
+66M9*UInt16<7|84M9>
+X 6 hal-gpio.ads
+48h9*GPIO_Point
+X 7 interfac.ads
+81M9*Unsigned_8
+84M9*Unsigned_16
+X 8 pico.ads
+10K9*Pico 50e9 9|35r9 149r5 10|22r14 62r5
+X 9 pico-analog.ads
+35K14*Analog 8|10k9 9|139E9 149l10 149e16 10|22b19 62l10 62t16
+39R9*PWM_Point 72r15 77r39 83r39 90r34 96r39 102r36 139c9 143e14 145r34 146r39
+. 147r36 10|28r15 30r25 43r39 51r39
+44i4*Default_Frequency{11|11I12} 70r44 10|26r44
+45m4*Default_Reload{15|42M12} 71r44 10|27r44
+50D9*Percentage 77r61 114r19 10|43r61
+55M12*Analog_Level{5|53M9} 83r61 130r19 10|51r61
+68V13*To_PWM{39R9} 69=8 70>8 71>8 10|24b13 41l8 41t14
+69r8 Point{14|19R9} 10|25b8 31r26 38m7 38r7
+70i8 Frequency{11|11I12} 10|26b8 32r11 35r48
+71m8 Reload{15|42M12} 10|27b8 33r11 36r47
+77U14*Write_Analog 77>28 77>50 10|43b14 49l8 49t20
+77r28 Point{39R9} 10|43b28 44r58 47r30 47r48
+77d50 Level{50D9} 10|43b50 45r55
+83U14*Write_Analog 83>28 83>50 10|51b14 57l8 57t20
+83r28 Point{39R9} 10|51b28 52r58 55r30 55r48
+83m50 Level{55M12} 10|51b50 53r55
+90V13*Get_Base{15|32R9} 90>23 145b13
+90r23 Point{39R9} 145r73
+96V13*Get_Frequency{11|11I12} 96>28 146b13
+96r28 Point{39R9} 146r70
+102V13*Get_Reload{15|42M12} 102>25 147b13 10|44s46 52s46
+102r25 Point{39R9} 147r72
+112V14*"*"{15|42M12} 112b14 113>8 114>8 10|45s53
+113m8 Left{15|42M12} 117r33 118r37
+114d8 Right{50D9} 116r11 117r14 118r54
+128V14*"*"{15|42M12} 128b14 129>8 130>8 10|53s53
+129m8 Left{15|42M12} 133r31 134r37
+130m8 Right{55M12} 132r11 133r14 134r54
+140r7*Base{15|32R9} 145r79 10|35r36 36r35 37r29 47r36 47r54 55r36 55r54
+141i7*Frequency{11|11I12} 146r76
+142m7*Reload{15|42M12} 147r78
+X 10 pico-analog.adb
+30r7 Retval{9|39R9} 35r29 36r28 37r22 40r14
+44m7 Reload{15|42M12} 45r46
+45m7 Duty_Cycle{15|42M12} 47r68
+52m7 Reload{15|42M12} 53r46
+53m7 Duty_Cycle{15|42M12} 55r68
+X 11 rp.ads
+6K9*RP 9|22r6 23r6 36r13 44r33 45r33 69r27 70r27 71r27 90r52 96r57 102r54
+. 113r19 115r15 118r13 129r19 131r15 134r13 140r19 141r19 142r19 145r52 146r57
+. 147r54 10|25r27 26r27 27r27 31r11 35r7 36r7 37r7 38r24 38r40 38r58 44r29
+. 45r29 47r7 52r29 53r29 55r7 60r4 11|12e7
+11I12*Hertz{natural} 9|44r36 70r30 96r60 141r22 146r60 10|26r30
+X 14 rp-gpio.ads
+13K12*GPIO 9|22w9 69r30 10|25r30 38r27 38r43 38r61 14|210e12
+19R9*GPIO_Point<6|48R9> 9|69r35 10|25r35 14|22e17
+24n37*Output{24E9} 10|38r32
+27n24*PWM{26E9} 10|38r66
+29n28*Floating{29E9} 10|38r48
+60U14*Configure 10|38s13
+X 15 rp-pwm.ads
+14K12*PWM 9|23w9 36r16 45r36 71r30 90r55 102r57 113r22 115r18 118r16 129r22
+. 131r18 134r16 140r22 142r22 145r55 147r57 10|27r30 31r14 35r10 36r10 37r10
+. 44r32 45r32 47r10 52r32 53r32 55r10 60r7 15|215e11
+17I9*PWM_Slice<short_short_integer>
+32R9*PWM_Point 9|90r59 140r26 145r59 15|35e14
+33i7*Slice{17I9} 10|35r41 36r40 37r34 47r41 55r41
+34e7*Channel{18E9} 10|47r59 55r59
+42M12*Period{5|66M9} 9|36r20 45r40 71r34 102r61 113r26 115r22 118r20 129r26
+. 131r22 134r20 142r26 147r61 10|27r34 44r36 45r36 52r36 53r36
+47U14*Initialize 10|60s11
+50V13*To_PWM{32R9} 10|31s18
+68U14*Set_Frequency 10|35s14
+76U14*Set_Interval 10|36s14
+90U14*Set_Duty_Cycle 10|47s14 55s14
+96U14*Enable 10|37s14
+

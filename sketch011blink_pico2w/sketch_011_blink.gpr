@@ -1,0 +1,33 @@
+
+--  with "config/hello_pico_config.gpr";
+with "runtime_build.gpr";
+
+project Sketch_011_Blink is
+
+   for Target use runtime_build'Target;
+   for Runtime ("Ada") use runtime_build'Runtime ("Ada");
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir   use "bin";
+   for Main use ("sketch_01_1_blink.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-gnat2022", "-O0", "-g");
+   end Compiler;
+
+   package Linker is
+      for Switches ("Ada") use
+        Runtime_Build.Linker_Switches & ("-Wl,--gc-sections");
+   end Linker;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es");
+   end Binder;
+
+   package Builder is
+      for Executable_Suffix use ".elf";
+   end Builder;
+
+end Sketch_011_Blink;

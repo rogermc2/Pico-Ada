@@ -1,0 +1,10 @@
+bin/
+obj/
+lib/
+alire/
+alire.lock
+config/
+deps/
+*.swp
+*.stderr
+*.stdout

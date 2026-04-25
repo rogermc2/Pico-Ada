@@ -1,0 +1,78 @@
+V "GNAT Lib v15"
+A -Og
+A -gnatA
+A --RTS=/users/martin/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_50e0dec4/arm-eabi/lib/gnat/light-cortex-m0p/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=soft
+A -mcpu=cortex-m0plus
+A -fno-tree-loop-distribute-patterns
+A -ffunction-sections
+A -fdata-sections
+A -g
+A -gnatp
+A -gnato
+A -gnatwa
+A -gnatw.X
+A -gnatVa
+A -gnata
+A -gnaty3
+A -gnatya
+A -gnatyA
+A -gnatyB
+A -gnatyb
+A -gnatyc
+A -gnaty-
+A -gnatyd
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatym
+A -gnatyn
+A -gnatyO
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -gnat2022
+A -gnatW8
+A -gnat2022
+A -gnatW8
+A -gnatwn
+A -gnatX
+A -gnaty-
+A -gnatyI
+A -gnatyM120
+A -mlibarch=armv6s-m
+A -march=armv6s-m
+P ZX
+
+RN
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RR NO_ELABORATION_CODE
+
+U pico_xbsp_config%s	pico_xbsp_config.ads	254c8f62 NE OO PU PK
+
+D pico_xbsp_config.ads	20260406104810 254c8f62 pico_xbsp_config%s
+D system.ads		20250828132010 b62447ca system%s
+G a e
+X 1 pico_xbsp_config.ads
+5K9*Pico_Xbsp_Config 20l5 20e21
+8a4*Crate_Version{string}
+9a4*Crate_Name{string}
+11a4*Alire_Host_OS{string}
+13a4*Alire_Host_Arch{string}
+15a4*Alire_Host_Distro{string}
+17E9*Build_Profile_Kind 17e65 18r29
+17n32*release{17E9}
+17n41*validation{17E9}
+17n53*development{17E9} 18r51
+18e4*Build_Profile{17E9}
+

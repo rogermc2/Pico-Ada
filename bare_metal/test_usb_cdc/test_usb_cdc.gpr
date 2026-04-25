@@ -1,0 +1,23 @@
+with "alire/cache/dependencies/light_rp2350_15.3.0_d1dd15f8/runtime_build.gpr";
+
+project Test_Usb_Cdc is
+
+   for Target use Runtime_Build'Target;
+   for Runtime ("ada") use Runtime_Build'Runtime ("Ada");
+
+   for Source_Dirs use ("src", "../converted from c", "../drivers");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("test_usb_cdc.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-gnat2022");
+   end Compiler;
+
+   package Linker is
+      for Switches ("ada") use
+        Runtime_Build.Linker_Switches &
+        ("-Wl,--gc-sections");
+   end Linker;
+
+end Test_Usb_Cdc;

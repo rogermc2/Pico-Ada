@@ -1,0 +1,570 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project>
+    <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_file>
+    <file_marker column=" 73" line=" 16" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w/src/rp2350_gpio.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w/blinky_pico2w.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 50" line=" 7" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w/blinky_pico2w.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/blinky_pico2w_2.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/blinky_pico2w.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/rp2350_gpio.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/rp2350_gpio.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 3" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/rp2350_gpio.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/Converted_C/rp2350_resets.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 28" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/Converted_C/rp2350_resets.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 406" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/blinky_pico2w_2/src/Converted_C/rp2350_resets.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 40" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 56" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 465" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 483" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 484" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 493" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 517" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 15" line=" 550" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 11" line=" 594" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 621" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 31" line=" 724" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 22" line=" 725" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 31" line=" 724" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 775" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 9" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 812" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 811" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 812" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 813" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 814" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 815" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 816" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 817" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 818" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 819" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 820" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 821" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 822" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 823" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 824" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 825" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 826" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 827" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 829" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 849" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 850" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 851" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 852" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 853" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 854" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 855" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 856" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 857" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 858" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 859" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 860" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 861" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 862" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 863" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 864" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/pads_bank0_h.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 79" line=" 864" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_io_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 43" line=" 6" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_io_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 35" line=" 1238" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_io_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 35" line=" 1238" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_io_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 8" line=" 29" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_io_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 4" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_sio.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 857" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_sio.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 40" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 40" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 27" line=" 4" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 31" line=" 38" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 18" line=" 22" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 23" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 24" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 25" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 26" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 27" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 28" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 29" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 22" line=" 31" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 32" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 33" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 34" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 35" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 36" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 22" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 8" line=" 50" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 60" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 112" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 164" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 216" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 272" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 324" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 376" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 428" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 488" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 540" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 592" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 644" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 824" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 830" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 831" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 832" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 833" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 834" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 835" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 836" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 837" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 838" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 839" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 840" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 841" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 842" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 843" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 844" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 845" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/rp2350_pads_bank0.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/Converted From C/led.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 32" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 26" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 22" line=" 21" >
+      <vfs_project>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_project>
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/src/test_led.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/System/Volumes/Data/Ada_Projects/Pico_Ada/bare_metal_test_led/bare_metal_test_led.gpr</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>

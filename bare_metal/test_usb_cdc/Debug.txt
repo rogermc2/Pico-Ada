@@ -1,0 +1,15 @@
+After every monitor reset halt, before continue:
+set language c
+set $sp = *(unsigned int *)0x10000000
+set $pc = *(unsigned int *)0x10000004
+set language auto
+
+delete breakpoints
+break main
+break adainit
+c
+
+After reaching main/adainit disassemble the new adainit:
+set language c
+x/100i adainit
+set language auto

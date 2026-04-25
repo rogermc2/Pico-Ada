@@ -1,0 +1,15 @@
+
+Step 1  Turn the Pico 2 into a debugging tool for debugging other Pico 2s.
+Flash the Pico 2 with debugprobe
+Hold BOOTSEL
+Plug into your Mac
+A USB drive appears
+Drag:
+debugprobe_on_pico2.uf2
+The board reboots automatically
+After this, the Pico 2 is no longer a “normal” Pico—it’s now a debugger.
+
+Step 2
+What it becomes on your Mac
+It enumerates as a CMSIS-DAP USB device. Drivers on macOS are not needed.
+
