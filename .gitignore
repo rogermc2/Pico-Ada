@@ -28,7 +28,8 @@
 *.pyc
 *lyx~
 *.lyx#
-*.DS_Store
+.DS_Store
+/.DS_Store/
 *pycache*
 b__*
 .#*
