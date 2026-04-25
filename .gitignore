@@ -38,4 +38,5 @@ access token.txt
 *sublime-project
 *.code-workspace
 .Rproj.user
+pico_xbsp-1.3.2/
 
