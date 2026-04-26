@@ -4,7 +4,7 @@ project Bare_Metal_Test_Led is
 
    for Target use Runtime_Build'Target;
    for Runtime ("ada") use Runtime_Build'Runtime ("Ada");
-   for Source_Dirs use ("src", "../converted from c", "../drivers");
+   for Source_Dirs use ("src", "../converted_from_c", "../drivers");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
    for Main use ("test_led.adb");

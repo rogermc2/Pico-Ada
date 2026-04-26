@@ -13,3 +13,10 @@ After reaching main/adainit disassemble the new adainit:
 set language c
 x/100i adainit
 set language auto
+or
+delete breakpoints
+break *0x100001be
+break *0x100001c2
+continue
+When it stops at 0x100001be:
+ni
