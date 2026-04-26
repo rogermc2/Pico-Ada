@@ -25,8 +25,7 @@ with Interfaces; use Interfaces;
 with System;
 
 package RP2350_IO_Bank0 is
-
-   ALL1 : constant Unsigned_32 := 16#FFFF_FFFF#;
+   pragma Preelaborate;
 
    type Reserved_32_Array is array (0 .. 31) of Unsigned_32;
    type Reserved_824_Array is array (0 .. 823) of Unsigned_32;
@@ -1036,6 +1035,11 @@ package RP2350_IO_Bank0 is
    IO_BANK0_GPIO47_CTRL   : Unsigned_32 renames IO_Bank0.gpio47_ctrl;
 
    --  GPIO14_STATUS Register macros
+   
+   GPIO_STATUS_GENERIC_IRQTOPROC_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);  
+   GPIO_STATUS_GENERIC_INFROMPAD_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   GPIO_STATUS_GENERIC_OETOPAD_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
+   GPIO_STATUS_GENERIC_OUTTOPAD_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
 
    function IO_BANK0_GPIO14_STATUS_IRQTOPROC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 26));
@@ -1044,248 +1048,256 @@ package RP2350_IO_Bank0 is
    
    function IO_BANK0_GPIO14_STATUS_INFROMPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
-   IO_BANK0_GPIO14_STATUS_INFROMPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_STATUS_INFROMPAD (ALL1);
+   IO_BANK0_GPIO14_STATUS_INFROMPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_INFROMPAD_MASK;
    
    function IO_BANK0_GPIO14_STATUS_OETOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
-   IO_BANK0_GPIO14_STATUS_OETOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_STATUS_OETOPAD (ALL1);
+   IO_BANK0_GPIO14_STATUS_OETOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OETOPAD_MASK;
    
    function IO_BANK0_GPIO14_STATUS_OUTTOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
-   IO_BANK0_GPIO14_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_STATUS_OUTTOPAD (ALL1);
+   IO_BANK0_GPIO14_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO14_CTRL Register macros
-
+   GPIO_CTRL_GENERIC_IRQOVER_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 28);
+   GPIO_CTRL_GENERIC_INOVER_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 16);
+   GPIO_CTRL_GENERIC_OEOVER_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 14);
+   GPIO_CTRL_GENERIC_OUTOVER_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 12);
+   GPIO_CTRL_GENERIC_FUNCSEL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#1f#), 0);
+     
    function IO_BANK0_GPIO14_CTRL_IRQOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 28));
-   IO_BANK0_GPIO14_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_CTRL_IRQOVER (ALL1);
+   IO_BANK0_GPIO14_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
    
    function IO_BANK0_GPIO14_CTRL_INOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 16));
-   IO_BANK0_GPIO14_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_CTRL_INOVER (ALL1);
+   IO_BANK0_GPIO14_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
    
    function IO_BANK0_GPIO14_CTRL_OEOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 14));
-   IO_BANK0_GPIO14_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_CTRL_OEOVER (ALL1);
+   IO_BANK0_GPIO14_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
    
    function IO_BANK0_GPIO14_CTRL_OUTOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 12));
-   IO_BANK0_GPIO14_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_CTRL_OUTOVER (ALL1);
+   IO_BANK0_GPIO14_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
    
    function IO_BANK0_GPIO14_CTRL_FUNCSEL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 0));
-   IO_BANK0_GPIO14_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO14_CTRL_FUNCSEL (ALL1);
+   IO_BANK0_GPIO14_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_FUNCSEL_MASK;
 
-   --  GPIO15_STATUS Register macros
-
+   --  --  GPIO15_STATUS Register macros
+   
    function IO_BANK0_GPIO15_STATUS_IRQTOPROC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 26));
-   IO_BANK0_GPIO15_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_STATUS_IRQTOPROC (ALL1);
+   IO_BANK0_GPIO15_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_IRQTOPROC_MASK;
    
    function IO_BANK0_GPIO15_STATUS_INFROMPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
-   IO_BANK0_GPIO15_STATUS_INFROMPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_STATUS_INFROMPAD (ALL1);
+   IO_BANK0_GPIO15_STATUS_INFROMPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_INFROMPAD_MASK;
    
    function IO_BANK0_GPIO15_STATUS_OETOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
-   IO_BANK0_GPIO15_STATUS_OETOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_STATUS_OETOPAD (ALL1);
+   IO_BANK0_GPIO15_STATUS_OETOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OETOPAD_MASK;
    
    function IO_BANK0_GPIO15_STATUS_OUTTOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
-   IO_BANK0_GPIO15_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_STATUS_OUTTOPAD (ALL1);
+   IO_BANK0_GPIO15_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO15_CTRL Register macros
 
    function IO_BANK0_GPIO15_CTRL_IRQOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 28));
-   IO_BANK0_GPIO15_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_CTRL_IRQOVER (ALL1);
+   IO_BANK0_GPIO15_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
    
    function IO_BANK0_GPIO15_CTRL_INOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 16));
-   IO_BANK0_GPIO15_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_CTRL_INOVER (ALL1);
+   IO_BANK0_GPIO15_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
    
    function IO_BANK0_GPIO15_CTRL_OEOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 14));
-   IO_BANK0_GPIO15_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_CTRL_OEOVER (ALL1);
+   IO_BANK0_GPIO15_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
    
    function IO_BANK0_GPIO15_CTRL_OUTOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 12));
-   IO_BANK0_GPIO15_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_CTRL_OUTOVER (ALL1);
+   IO_BANK0_GPIO15_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
    
    function IO_BANK0_GPIO15_CTRL_FUNCSEL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 0));
-   IO_BANK0_GPIO15_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO15_CTRL_FUNCSEL (ALL1);
+   IO_BANK0_GPIO15_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_FUNCSEL_MASK;
 
    --  GPIO16_STATUS Register macros
-
+   
    function IO_BANK0_GPIO16_STATUS_IRQTOPROC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 26));
-   IO_BANK0_GPIO16_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_STATUS_IRQTOPROC (ALL1);
+   IO_BANK0_GPIO16_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_IRQTOPROC_MASK;
    
    function IO_BANK0_GPIO16_STATUS_INFROMPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
-   IO_BANK0_GPIO16_STATUS_INFROMPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_STATUS_INFROMPAD (ALL1);
+   IO_BANK0_GPIO16_STATUS_INFROMPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_INFROMPAD_MASK;
    
    function IO_BANK0_GPIO16_STATUS_OETOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
-   IO_BANK0_GPIO16_STATUS_OETOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_STATUS_OETOPAD (ALL1);
+   IO_BANK0_GPIO16_STATUS_OETOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OETOPAD_MASK;
    
    function IO_BANK0_GPIO16_STATUS_OUTTOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
-   IO_BANK0_GPIO16_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_STATUS_OUTTOPAD (ALL1);
+   IO_BANK0_GPIO16_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO16_CTRL Register macros
-
+   
    function IO_BANK0_GPIO16_CTRL_IRQOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 28));
-   IO_BANK0_GPIO16_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_CTRL_IRQOVER (ALL1);
+   IO_BANK0_GPIO16_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
    
    function IO_BANK0_GPIO16_CTRL_INOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 16));
-   IO_BANK0_GPIO16_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_CTRL_INOVER (ALL1);
+   IO_BANK0_GPIO16_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
    
    function IO_BANK0_GPIO16_CTRL_OEOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 14));
-   IO_BANK0_GPIO16_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_CTRL_OEOVER (ALL1);
+   IO_BANK0_GPIO16_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
    
    function IO_BANK0_GPIO16_CTRL_OUTOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 12));
-   IO_BANK0_GPIO16_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_CTRL_OUTOVER (ALL1);
+   IO_BANK0_GPIO16_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
    
    function IO_BANK0_GPIO16_CTRL_FUNCSEL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 0));
-   IO_BANK0_GPIO16_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO16_CTRL_FUNCSEL (ALL1);
+   IO_BANK0_GPIO16_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_FUNCSEL_MASK;
 
    --  GPIO17_STATUS Register macros
 
    function IO_BANK0_GPIO17_STATUS_IRQTOPROC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 26));
-   IO_BANK0_GPIO17_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_STATUS_IRQTOPROC (ALL1);
+   IO_BANK0_GPIO17_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_IRQTOPROC_MASK;
    
    function IO_BANK0_GPIO17_STATUS_INFROMPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
-   IO_BANK0_GPIO17_STATUS_INFROMPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_STATUS_INFROMPAD (ALL1);
+   IO_BANK0_GPIO17_STATUS_INFROMPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_INFROMPAD_MASK;
    
    function IO_BANK0_GPIO17_STATUS_OETOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
-   IO_BANK0_GPIO17_STATUS_OETOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_STATUS_OETOPAD (ALL1);
+   IO_BANK0_GPIO17_STATUS_OETOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OETOPAD_MASK;
    
    function IO_BANK0_GPIO17_STATUS_OUTTOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
-   IO_BANK0_GPIO17_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_STATUS_OUTTOPAD (ALL1);
+   IO_BANK0_GPIO17_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO17_CTRL Register macros
 
    function IO_BANK0_GPIO17_CTRL_IRQOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 28));
-   IO_BANK0_GPIO17_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_CTRL_IRQOVER (ALL1);
+   IO_BANK0_GPIO17_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
    
    function IO_BANK0_GPIO17_CTRL_INOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 16));
-   IO_BANK0_GPIO17_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_CTRL_INOVER (ALL1);
+   IO_BANK0_GPIO17_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
    
    function IO_BANK0_GPIO17_CTRL_OEOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 14));
-   IO_BANK0_GPIO17_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_CTRL_OEOVER (ALL1);
+   IO_BANK0_GPIO17_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
    
    function IO_BANK0_GPIO17_CTRL_OUTOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 12));
-   IO_BANK0_GPIO17_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_CTRL_OUTOVER (ALL1);
+   IO_BANK0_GPIO17_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
    
    function IO_BANK0_GPIO17_CTRL_FUNCSEL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 0));
-   IO_BANK0_GPIO17_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO17_CTRL_FUNCSEL (ALL1);
+   IO_BANK0_GPIO17_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO18_STATUS Register macros
 
    function IO_BANK0_GPIO18_STATUS_IRQTOPROC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 26));
-   IO_BANK0_GPIO18_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_STATUS_IRQTOPROC (ALL1);
+   IO_BANK0_GPIO18_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_IRQTOPROC_MASK;
    
    function IO_BANK0_GPIO18_STATUS_INFROMPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
-   IO_BANK0_GPIO18_STATUS_INFROMPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_STATUS_INFROMPAD (ALL1);
+   IO_BANK0_GPIO18_STATUS_INFROMPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_INFROMPAD_MASK;
    
    function IO_BANK0_GPIO18_STATUS_OETOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
-   IO_BANK0_GPIO18_STATUS_OETOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_STATUS_OETOPAD (ALL1);
+   IO_BANK0_GPIO18_STATUS_OETOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OETOPAD_MASK;
    
    function IO_BANK0_GPIO18_STATUS_OUTTOPAD (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
-   IO_BANK0_GPIO18_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_STATUS_OUTTOPAD (ALL1);
+   IO_BANK0_GPIO18_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO18_CTRL Register macros
-
+   
    function IO_BANK0_GPIO18_CTRL_IRQOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 28));
-   IO_BANK0_GPIO18_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_CTRL_IRQOVER (ALL1);
+   IO_BANK0_GPIO18_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
    
    function IO_BANK0_GPIO18_CTRL_INOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 16));
-   IO_BANK0_GPIO18_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_CTRL_INOVER (ALL1);
+   IO_BANK0_GPIO18_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
    
    function IO_BANK0_GPIO18_CTRL_OEOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 14));
-   IO_BANK0_GPIO18_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_CTRL_OEOVER (ALL1);
+   IO_BANK0_GPIO18_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
    
    function IO_BANK0_GPIO18_CTRL_OUTOVER (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#3#, 12));
-   IO_BANK0_GPIO18_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_CTRL_OUTOVER (ALL1);
+   IO_BANK0_GPIO18_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
    
    function IO_BANK0_GPIO18_CTRL_FUNCSEL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 0));
-   IO_BANK0_GPIO18_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO18_CTRL_FUNCSEL (ALL1);
+   IO_BANK0_GPIO18_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_FUNCSEL_MASK;
    
    -- GPIO24_CTRL Register macros 
+   
    function IO_BANK0_GPIO24_CTRL_IRQOVER (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3#, 28));
-   IO_BANK0_GPIO24_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO24_CTRL_IRQOVER (ALL1);
+   IO_BANK0_GPIO24_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
 
    function IO_BANK0_GPIO24_CTRL_INOVER (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3#, 16));
-   IO_BANK0_GPIO24_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO24_CTRL_INOVER (ALL1);
+   IO_BANK0_GPIO24_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
 
    function IO_BANK0_GPIO24_CTRL_OEOVER (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3#, 14));
-   IO_BANK0_GPIO24_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO24_CTRL_OEOVER (ALL1);
+   IO_BANK0_GPIO24_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
 
    function IO_BANK0_GPIO24_CTRL_OUTOVER (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3#, 12));
-   IO_BANK0_GPIO24_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO24_CTRL_OUTOVER (ALL1);
+   IO_BANK0_GPIO24_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
 
    function IO_BANK0_GPIO24_CTRL_FUNCSEL (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1F#, 0));
-   IO_BANK0_GPIO24_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO24_CTRL_FUNCSEL (ALL1);
+   IO_BANK0_GPIO24_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_FUNCSEL_MASK;
 
    --  GPIO25_STATUS Register macros
+   
    function IO_BANK0_GPIO25_STATUS_IRQTOPROC(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#1#, 26)) with Inline;
-   IO_BANK0_GPIO25_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_STATUS_IRQTOPROC(ALL1);
+   IO_BANK0_GPIO25_STATUS_IRQTOPROC_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_IRQTOPROC_MASK;
    function IO_BANK0_GPIO25_STATUS_INFROMPAD(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#1#, 17)) with Inline;
-   IO_BANK0_GPIO25_STATUS_INFROMPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_STATUS_INFROMPAD(ALL1);
+   IO_BANK0_GPIO25_STATUS_INFROMPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_INFROMPAD_MASK;
    function IO_BANK0_GPIO25_STATUS_OETOPAD(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#1#, 13)) with Inline;
-   IO_BANK0_GPIO25_STATUS_OETOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_STATUS_OETOPAD(ALL1);
+   IO_BANK0_GPIO25_STATUS_OETOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OETOPAD_MASK;
    function IO_BANK0_GPIO25_STATUS_OUTTOPAD(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#1#, 9)) with Inline;
-   IO_BANK0_GPIO25_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_STATUS_OUTTOPAD(ALL1);
+   IO_BANK0_GPIO25_STATUS_OUTTOPAD_MASK : constant Unsigned_32 := GPIO_STATUS_GENERIC_OUTTOPAD_MASK;
 
    --  GPIO25_CTRL Register macros
+   
    function IO_BANK0_GPIO25_CTRL_IRQOVER(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#3#, 28)) with Inline;
-   IO_BANK0_GPIO25_CTRL_IRQOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_CTRL_IRQOVER(ALL1);
+   IO_BANK0_GPIO25_CTRL_IRQOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_IRQOVER_MASK;
    function IO_BANK0_GPIO25_CTRL_INOVER(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#3#, 16)) with Inline;
-   IO_BANK0_GPIO25_CTRL_INOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_CTRL_INOVER(ALL1);
+   IO_BANK0_GPIO25_CTRL_INOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_INOVER_MASK;
    function IO_BANK0_GPIO25_CTRL_OEOVER(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#3#, 14)) with Inline;
-   IO_BANK0_GPIO25_CTRL_OEOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_CTRL_OEOVER(ALL1);
+   IO_BANK0_GPIO25_CTRL_OEOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OEOVER_MASK;
    function IO_BANK0_GPIO25_CTRL_OUTOVER(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#3#, 12)) with Inline;
-   IO_BANK0_GPIO25_CTRL_OUTOVER_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_CTRL_OUTOVER(ALL1);
+   IO_BANK0_GPIO25_CTRL_OUTOVER_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_OUTOVER_MASK;
    function IO_BANK0_GPIO25_CTRL_FUNCSEL(v : Unsigned_32) return Unsigned_32 is 
       (Shift_Left(v and 16#1f#, 0)) with Inline;
-   IO_BANK0_GPIO25_CTRL_FUNCSEL_MASK : constant Unsigned_32 := IO_BANK0_GPIO25_CTRL_FUNCSEL(ALL1);
+   IO_BANK0_GPIO25_CTRL_FUNCSEL_MASK : constant Unsigned_32 := GPIO_CTRL_GENERIC_FUNCSEL_MASK;
 
 end RP2350_IO_Bank0;

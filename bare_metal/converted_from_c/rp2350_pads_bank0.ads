@@ -27,8 +27,6 @@ with System;
 package RP2350_Pads_Bank0 is
    pragma Preelaborate;
 
-   ALL1 : constant Unsigned_32 := 16#FFFF_FFFF#;
-
    type Unsigned_32_Array is array (Natural range <>) of Unsigned_32;
 
    type PADS_BANK0_REG_BLOCKS is record
