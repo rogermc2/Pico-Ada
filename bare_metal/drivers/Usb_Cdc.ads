@@ -156,6 +156,7 @@ private
    end record;
 
    USBRAM : USBRAM_T with Address => USB_DPRAM_OFFSET, Volatile;
+   pragma Import (Ada, USBRAM);
 
    -- Setup Packet Structure
    type Setup_Pkt_T is record
@@ -208,28 +209,37 @@ private
       Usb_Muxing      : Unsigned_32 := 0;
       Usb_Pwr         : Unsigned_32 := 0;
    end record;
-   USB_Base : constant System.Address := System'To_Address(16#50110000#); -- Actual RP2350 USB base
-   USBCtrl : USB_Ctrl_Regs with Address => USB_Base, Volatile;
+   
+   -- Actual RP2350 USB base 
+   USB_Base : constant System.Address := System'To_Address (16#50110000#); 
+   
+   USBCtrl : USB_Ctrl_Regs with Address => USB_Base, Volatile; 
+   pragma Import (Ada, USBCtrl);
 
    type Reset_Regs is record
       Reset_Done : Unsigned_32 := 0;
       Reset_Clr  : Unsigned_32 := 0;
    end record;
-   Resets : Reset_Regs with Address => System'To_Address(16#40010000#), Volatile;
+   Resets : Reset_Regs with Address => System'To_Address(16#40010000#), Volatile; 
+   pragma Import (Ada, Resets);
 
    type Clock_Regs is record
       Clk_Usb_Ctrl     : Unsigned_32 := 0;
       Clk_Usb_Div      : Unsigned_32 := 0;
       Clk_Usb_Selected : Unsigned_32 := 0;
    end record;
+   
    Clocks : Clock_Regs with Address => System'To_Address(16#40010000# + 16#78#), Volatile;
+   pragma Import (Ada, Clocks);
 
    type M33_Regs is record
       Nvic_Iser0 : Unsigned_32 := 0;
       Nvic_Ipr3  : Unsigned_32 := 0;
       Nvic_Icpr0 : Unsigned_32 := 0;
    end record;
+   
    M33 : M33_Regs with Address => System'To_Address(16#E000E100#), Volatile;
+   pragma Import (Ada, M33);
 
    -- Masks and Helpers
    USBCTRL_INTS_BUS_RESET_MASK : constant Unsigned_32 := 2**12;

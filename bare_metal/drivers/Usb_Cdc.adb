@@ -195,14 +195,30 @@ package body USB_CDC is
    end USBCTRL_IRQ_Handler;
 
    procedure Configure_USBCDC is
+      use System.Machine_Code;
       type U32_Ptr is access all Unsigned_32;
       function To_U32_Ptr is new Ada.Unchecked_Conversion (System.Address, U32_Ptr);
       Ptr : U32_Ptr;
    begin
-      Clocks.Clk_Usb_Ctrl := 0 or 16#01#; -- AUXSRC 0, Enable
-      while (Clocks.Clk_Usb_Selected and 16#1#) = 0 loop
-         null;
-      end loop;
+      --  Clocks.Clk_Usb_Ctrl := 0 or 16#01#; -- AUXSRC 0, Enable
+      --  while (Clocks.Clk_Usb_Selected and 16#1#) = 0 loop
+      --     null;
+      --  end loop;
+      declare
+         Timeout : Natural := 10_000_000;
+      begin
+         Clocks.Clk_Usb_Ctrl := 16#01#;
+
+         while (Clocks.Clk_Usb_Selected and 16#1#) = 0 loop
+            Timeout := Timeout - 1;
+            exit when Timeout = 0;
+         end loop;
+
+         if Timeout = 0 then
+            -- Put a breakpoint here
+            Asm ("bkpt #0", Volatile => True);
+         end if;
+      end;
 
       Clocks.Clk_Usb_Div := 3 * 2 ** 16; -- Integer divider 3 (for 48MHz from 144MHz)
 
