@@ -9,6 +9,7 @@ with Interfaces.C.Extensions;
 with System;
 
 package arm_utypes_h is
+pragma Preelaborate;
 
    subtype uu_int8_t is signed_char;  -- /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/arm/_types.h:28
 

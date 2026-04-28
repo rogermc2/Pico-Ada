@@ -26,8 +26,34 @@ package RP2350_USB is
     --  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     --  DEALINGS IN THE SOFTWARE.
     
+   --  pragma Preelaborate;
 
    ALL1 : constant Unsigned_32 := 16#FFFFFFFF#;
+   
+   GENERIC_1_23_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
+   GENERIC_1_22_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
+   GENERIC_1_21_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
+   GENERIC_1_20_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);
+   GENERIC_1_19_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
+   GENERIC_1_18_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   GENERIC_1_17_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   GENERIC_1_16_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
+   GENERIC_1_15_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
+   GENERIC_1_14_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);
+   GENERIC_1_13_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
+   GENERIC_1_12_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
+   GENERIC_1_11_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   GENERIC_1_10_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   GENERIC_1_9_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   GENERIC_1_8_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   GENERIC_1_7_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   GENERIC_1_6_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   GENERIC_1_5_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   GENERIC_1_4_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   GENERIC_1_3_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   GENERIC_1_2_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   GENERIC_1_1_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   GENERIC_1_0_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
 
    type RSVD0_Array is array (0 .. 24) of Unsigned_32 with Pack;
    type RSVD1_Array is array (0 .. 953) of Unsigned_32 with Pack;
@@ -416,1243 +442,1387 @@ package RP2350_USB is
    USBCTRL_DEV_SM_WATCHDOG_CLR : Unsigned_32 with Volatile, Import, Address => System'To_Address (16#50113114#);
 
    -- ADDR_ENDP Register macros
+   ADDR_ENDP_GENERIC_ENDPOINT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#f#), 16);
+   ADDR_ENDP_GENERIC_ADDRESS_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7f#), 0);
 
    function USBCTRL_ADDR_ENDP_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_ADDRESS_MASK;
 
    -- ADDR_ENDP1 Register macros
+   ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
+   ADDR_ENDP_GENERIC_INTEP_DIR_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#f#), 16);
+   ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7f#), 0);
 
    function USBCTRL_ADDR_ENDP1_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP1_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP1_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP1_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP1_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP1_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP1_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP1_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP1_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP1_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP1_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP1_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP1_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP1_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP1_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP1_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP2 Register macros
 
    function USBCTRL_ADDR_ENDP2_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP2_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP2_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP2_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP2_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP2_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP2_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP2_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP2_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP2_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP2_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP2_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP2_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP2_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP2_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP2_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP3 Register macros
 
    function USBCTRL_ADDR_ENDP3_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP3_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP3_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP3_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP3_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP3_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP3_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP3_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP3_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP3_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP3_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP3_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP3_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP3_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP3_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP3_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP4 Register macros
 
    function USBCTRL_ADDR_ENDP4_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP4_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP4_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP4_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP4_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP4_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP4_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP4_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP4_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP4_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP4_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP4_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP4_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP4_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP4_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP4_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP5 Register macros
 
    function USBCTRL_ADDR_ENDP5_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP5_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP5_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP5_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP5_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP5_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP5_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP5_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP5_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP5_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP5_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP5_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP5_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP5_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP5_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP5_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP6 Register macros
 
    function USBCTRL_ADDR_ENDP6_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP6_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP6_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP6_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP6_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP6_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP6_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP6_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP6_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP6_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP6_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP6_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP6_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP6_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP6_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP6_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP7 Register macros
 
    function USBCTRL_ADDR_ENDP7_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP7_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP7_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP7_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP7_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP7_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP7_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP7_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP7_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP7_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP7_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP7_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP7_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP7_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP7_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP7_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP8 Register macros
 
    function USBCTRL_ADDR_ENDP8_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP8_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP8_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP8_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP8_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP8_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP8_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP8_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP8_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP8_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP8_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP8_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP8_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP8_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP8_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP8_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP9 Register macros
 
    function USBCTRL_ADDR_ENDP9_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP9_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP9_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP9_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP9_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP9_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP9_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP9_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP9_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP9_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP9_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP9_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP9_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP9_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP9_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP9_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP10 Register macros
 
    function USBCTRL_ADDR_ENDP10_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP10_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP10_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP10_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP10_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP10_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP10_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP10_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP10_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP10_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP10_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP10_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP10_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP10_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP10_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP10_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP11 Register macros
 
    function USBCTRL_ADDR_ENDP11_INTEP_PREAMBLE (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 26));
-   USBCTRL_ADDR_ENDP11_INTEP_PREAMBLE_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP11_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP11_INTEP_PREAMBLE_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
    function USBCTRL_ADDR_ENDP11_INTEP_DIR (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#1#, 25));
-   USBCTRL_ADDR_ENDP11_INTEP_DIR_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP11_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP11_INTEP_DIR_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
    function USBCTRL_ADDR_ENDP11_ENDPOINT (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 16#f#, 16));
-   USBCTRL_ADDR_ENDP11_ENDPOINT_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP11_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP11_ENDPOINT_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
    function USBCTRL_ADDR_ENDP11_ADDRESS (v : Unsigned_32) return Unsigned_32 is (v and 16#7f#);
-   USBCTRL_ADDR_ENDP11_ADDRESS_MASK : constant Unsigned_32 := USBCTRL_ADDR_ENDP11_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP11_ADDRESS_MASK : constant Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP12 Register macros
 
    function USBCTRL_ADDR_ENDP12_INTEP_PREAMBLE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_ADDR_ENDP12_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP12_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP12_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
 
    function USBCTRL_ADDR_ENDP12_INTEP_DIR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_ADDR_ENDP12_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP12_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP12_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
 
    function USBCTRL_ADDR_ENDP12_ENDPOINT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#0F#), 16));
-   USBCTRL_ADDR_ENDP12_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP12_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP12_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
 
    function USBCTRL_ADDR_ENDP12_ADDRESS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7F#), 0));
-   USBCTRL_ADDR_ENDP12_ADDRESS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP12_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP12_ADDRESS_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP13 Register macros
 
    function USBCTRL_ADDR_ENDP13_INTEP_PREAMBLE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_ADDR_ENDP13_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP13_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP13_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
 
    function USBCTRL_ADDR_ENDP13_INTEP_DIR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_ADDR_ENDP13_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP13_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP13_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
 
    function USBCTRL_ADDR_ENDP13_ENDPOINT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#0F#), 16));
-   USBCTRL_ADDR_ENDP13_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP13_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP13_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
 
    function USBCTRL_ADDR_ENDP13_ADDRESS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7F#), 0));
-   USBCTRL_ADDR_ENDP13_ADDRESS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP13_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP13_ADDRESS_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP14 Register macros
 
    function USBCTRL_ADDR_ENDP14_INTEP_PREAMBLE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_ADDR_ENDP14_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP14_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP14_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
 
    function USBCTRL_ADDR_ENDP14_INTEP_DIR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_ADDR_ENDP14_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP14_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP14_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
 
    function USBCTRL_ADDR_ENDP14_ENDPOINT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#0F#), 16));
-   USBCTRL_ADDR_ENDP14_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP14_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP14_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
 
    function USBCTRL_ADDR_ENDP14_ADDRESS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7F#), 0));
-   USBCTRL_ADDR_ENDP14_ADDRESS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP14_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP14_ADDRESS_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- ADDR_ENDP15 Register macros
 
    function USBCTRL_ADDR_ENDP15_INTEP_PREAMBLE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_ADDR_ENDP15_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP15_INTEP_PREAMBLE (ALL1);
+   USBCTRL_ADDR_ENDP15_INTEP_PREAMBLE_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_PREAMBLE_MASK;
 
    function USBCTRL_ADDR_ENDP15_INTEP_DIR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_ADDR_ENDP15_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP15_INTEP_DIR (ALL1);
+   USBCTRL_ADDR_ENDP15_INTEP_DIR_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_DIR_MASK;
 
    function USBCTRL_ADDR_ENDP15_ENDPOINT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#0F#), 16));
-   USBCTRL_ADDR_ENDP15_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP15_ENDPOINT (ALL1);
+   USBCTRL_ADDR_ENDP15_ENDPOINT_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ENDPOINT_MASK;
 
    function USBCTRL_ADDR_ENDP15_ADDRESS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7F#), 0));
-   USBCTRL_ADDR_ENDP15_ADDRESS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_ADDR_ENDP15_ADDRESS (ALL1);
+   USBCTRL_ADDR_ENDP15_ADDRESS_MASK : constant Interfaces.Unsigned_32 := ADDR_ENDP_GENERIC_INTEP_ADDRESS_MASK;
 
    -- MAIN_CTRL Register macros
+   
+   MAIN_CTRL_GENERIC_SIM_TIMING_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 31);
+   MAIN_CTRL_GENERIC_PHY_ISO_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   MAIN_CTRL_GENERIC_HOST_NDEVICE_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   MAIN_CTRL_GENERIC_CONTROLLER_EN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
 
    function USBCTRL_MAIN_CTRL_SIM_TIMING (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 31));
-   USBCTRL_MAIN_CTRL_SIM_TIMING_MASK : constant Interfaces.Unsigned_32 := USBCTRL_MAIN_CTRL_SIM_TIMING (ALL1);
+   USBCTRL_MAIN_CTRL_SIM_TIMING_MASK : constant Interfaces.Unsigned_32 := MAIN_CTRL_GENERIC_SIM_TIMING_MASK;
 
    function USBCTRL_MAIN_CTRL_PHY_ISO (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 2));
-   USBCTRL_MAIN_CTRL_PHY_ISO_MASK : constant Interfaces.Unsigned_32 := USBCTRL_MAIN_CTRL_PHY_ISO (ALL1);
+   USBCTRL_MAIN_CTRL_PHY_ISO_MASK : constant Interfaces.Unsigned_32 := MAIN_CTRL_GENERIC_PHY_ISO_MASK;
 
    function USBCTRL_MAIN_CTRL_HOST_NDEVICE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 1));
-   USBCTRL_MAIN_CTRL_HOST_NDEVICE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_MAIN_CTRL_HOST_NDEVICE (ALL1);
+   USBCTRL_MAIN_CTRL_HOST_NDEVICE_MASK : constant Interfaces.Unsigned_32 := MAIN_CTRL_GENERIC_HOST_NDEVICE_MASK;
 
    function USBCTRL_MAIN_CTRL_CONTROLLER_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 0));
-   USBCTRL_MAIN_CTRL_CONTROLLER_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_MAIN_CTRL_CONTROLLER_EN (ALL1);
+   USBCTRL_MAIN_CTRL_CONTROLLER_EN_MASK : constant Interfaces.Unsigned_32 := MAIN_CTRL_GENERIC_CONTROLLER_EN_MASK;
 
    -- SOF_WR Register macros
+   SOF_GENERIC_COUNT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7FF#), 0);
 
    function USBCTRL_SOF_WR_COUNT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7FF#), 0));
-   USBCTRL_SOF_WR_COUNT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SOF_WR_COUNT (ALL1);
+   USBCTRL_SOF_WR_COUNT_MASK : constant Interfaces.Unsigned_32 := SOF_GENERIC_COUNT_MASK;
 
    -- SOF_RD Register macros
 
    function USBCTRL_SOF_RD_COUNT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7FF#), 0));
-   USBCTRL_SOF_RD_COUNT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SOF_RD_COUNT (ALL1);
+   USBCTRL_SOF_RD_COUNT_MASK : constant Interfaces.Unsigned_32 := SOF_GENERIC_COUNT_MASK;
 
    -- SIE_CTRL Register macros
-
+   SIE_CTRL_GENERIC_EP0_INT_STALL_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 31);
+   SIE_CTRL_GENERIC_EP0_DOUBLE_BUF_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 30);
+   SIE_CTRL_GENERIC_EP0_INT_1BUF_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 29);
+   SIE_CTRL_GENERIC_EP0_INT_2BUF_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
+   SIE_CTRL_GENERIC_EP0_INT_NAK_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
+   SIE_CTRL_GENERIC_DIRECT_EN_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
+   SIE_CTRL_GENERIC_DIRECT_DP_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   SIE_CTRL_GENERIC_DIRECT_DM_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
+  
    function USBCTRL_SIE_CTRL_EP0_INT_STALL (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 31));
-   USBCTRL_SIE_CTRL_EP0_INT_STALL_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_EP0_INT_STALL (ALL1);
+   USBCTRL_SIE_CTRL_EP0_INT_STALL_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_EP0_INT_STALL_MASK;
 
    function USBCTRL_SIE_CTRL_EP0_DOUBLE_BUF (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 30));
-   USBCTRL_SIE_CTRL_EP0_DOUBLE_BUF_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_EP0_DOUBLE_BUF (ALL1);
+   USBCTRL_SIE_CTRL_EP0_DOUBLE_BUF_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_EP0_DOUBLE_BUF_MASK;
 
    function USBCTRL_SIE_CTRL_EP0_INT_1BUF (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 29));
-   USBCTRL_SIE_CTRL_EP0_INT_1BUF_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_EP0_INT_1BUF (ALL1);
+   USBCTRL_SIE_CTRL_EP0_INT_1BUF_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_EP0_INT_1BUF_MASK;
 
    function USBCTRL_SIE_CTRL_EP0_INT_2BUF (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 28));
-   USBCTRL_SIE_CTRL_EP0_INT_2BUF_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_EP0_INT_2BUF (ALL1);
+   USBCTRL_SIE_CTRL_EP0_INT_2BUF_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_EP0_INT_2BUF_MASK;
 
    function USBCTRL_SIE_CTRL_EP0_INT_NAK (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 27));
-   USBCTRL_SIE_CTRL_EP0_INT_NAK_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_EP0_INT_NAK (ALL1);
+   USBCTRL_SIE_CTRL_EP0_INT_NAK_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_EP0_INT_NAK_MASK;
 
    function USBCTRL_SIE_CTRL_DIRECT_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_SIE_CTRL_DIRECT_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_DIRECT_EN (ALL1);
+   USBCTRL_SIE_CTRL_DIRECT_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_DIRECT_EN_MASK;
 
    function USBCTRL_SIE_CTRL_DIRECT_DP (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_SIE_CTRL_DIRECT_DP_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_DIRECT_DP (ALL1);
+   USBCTRL_SIE_CTRL_DIRECT_DP_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_DIRECT_DP_MASK;
 
    function USBCTRL_SIE_CTRL_DIRECT_DM (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 24));
-   USBCTRL_SIE_CTRL_DIRECT_DM_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_DIRECT_DM (ALL1);
+   USBCTRL_SIE_CTRL_DIRECT_DM_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_DIRECT_DM (ALL1);  
+   
+   SIE_CTRL_GENERIC_EP0_STOP_ON_SHORT_PACKET_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
+   SIE_CTRL_GENERIC_TRANSCEIVER_PD_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   SIE_CTRL_GENERIC_RPU_OPT_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   SIE_CTRL_GENERIC_PULLUP_EN_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
+   SIE_CTRL_GENERIC_PULLDOWN_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
+   SIE_CTRL_GENERIC_RESET_BUS_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
+   SIE_CTRL_GENERIC_RESUME_MASK         : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
+   SIE_CTRL_GENERIC_VBUS_EN_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
 
    function USBCTRL_SIE_CTRL_EP0_STOP_ON_SHORT_PACKET (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 19));
-   USBCTRL_SIE_CTRL_EP0_STOP_ON_SHORT_PACKET_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_EP0_STOP_ON_SHORT_PACKET (ALL1);
+   USBCTRL_SIE_CTRL_EP0_STOP_ON_SHORT_PACKET_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_EP0_STOP_ON_SHORT_PACKET_MASK;
 
    function USBCTRL_SIE_CTRL_TRANSCEIVER_PD (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 18));
-   USBCTRL_SIE_CTRL_TRANSCEIVER_PD_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_TRANSCEIVER_PD (ALL1);
+   USBCTRL_SIE_CTRL_TRANSCEIVER_PD_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_TRANSCEIVER_PD_MASK;
 
    function USBCTRL_SIE_CTRL_RPU_OPT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 17));
-   USBCTRL_SIE_CTRL_RPU_OPT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_RPU_OPT (ALL1);
+   USBCTRL_SIE_CTRL_RPU_OPT_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_RPU_OPT_MASK;
 
    function USBCTRL_SIE_CTRL_PULLUP_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 16));
-   USBCTRL_SIE_CTRL_PULLUP_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_PULLUP_EN (ALL1);
+   USBCTRL_SIE_CTRL_PULLUP_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_PULLUP_EN_MASK;
 
    function USBCTRL_SIE_CTRL_PULLDOWN_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 15));
-   USBCTRL_SIE_CTRL_PULLDOWN_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_PULLDOWN_EN (ALL1);
+   USBCTRL_SIE_CTRL_PULLDOWN_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_PULLDOWN_EN_MASK;
 
    function USBCTRL_SIE_CTRL_RESET_BUS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 13));
-   USBCTRL_SIE_CTRL_RESET_BUS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_RESET_BUS (ALL1);
+   USBCTRL_SIE_CTRL_RESET_BUS_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_RESET_BUS_MASK;
 
    function USBCTRL_SIE_CTRL_RESUME (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 12));
-   USBCTRL_SIE_CTRL_RESUME_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_RESUME (ALL1);
+   USBCTRL_SIE_CTRL_RESUME_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_RESUME_MASK;
 
    function USBCTRL_SIE_CTRL_VBUS_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
-     (Shift_Left ((v and 16#01#), 11));
-   USBCTRL_SIE_CTRL_VBUS_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_VBUS_EN (ALL1);
+     (Shift_Left ((v and 16#01#), 11));  
+   USBCTRL_SIE_CTRL_VBUS_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_VBUS_EN_MASK; 
 
+   SIE_CTRL_GENERIC_KEEP_ALIVE_EN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   SIE_CTRL_GENERIC_SOF_EN_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   SIE_CTRL_GENERIC_SOF_SYNC_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   SIE_CTRL_GENERIC_PREAMBLE_EN_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   SIE_CTRL_GENERIC_STOP_TRANS_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   SIE_CTRL_GENERIC_RECEIVE_DATA_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   SIE_CTRL_GENERIC_SEND_DATA_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   SIE_CTRL_GENERIC_END_SETUP_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   SIE_CTRL_GENERIC_START_TRANS_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function USBCTRL_SIE_CTRL_KEEP_ALIVE_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 10));
-   USBCTRL_SIE_CTRL_KEEP_ALIVE_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_KEEP_ALIVE_EN (ALL1);
+   USBCTRL_SIE_CTRL_KEEP_ALIVE_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_KEEP_ALIVE_EN_MASK;
 
    function USBCTRL_SIE_CTRL_SOF_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 9));
-   USBCTRL_SIE_CTRL_SOF_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_SOF_EN (ALL1);
+   USBCTRL_SIE_CTRL_SOF_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_SOF_EN_MASK;
 
    function USBCTRL_SIE_CTRL_SOF_SYNC (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 8));
-   USBCTRL_SIE_CTRL_SOF_SYNC_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_SOF_SYNC (ALL1);
+   USBCTRL_SIE_CTRL_SOF_SYNC_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_SOF_SYNC_MASK;
 
    function USBCTRL_SIE_CTRL_PREAMBLE_EN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 6));
-   USBCTRL_SIE_CTRL_PREAMBLE_EN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_PREAMBLE_EN (ALL1);
+   USBCTRL_SIE_CTRL_PREAMBLE_EN_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_PREAMBLE_EN_MASK;
 
    function USBCTRL_SIE_CTRL_STOP_TRANS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 4));
-   USBCTRL_SIE_CTRL_STOP_TRANS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_STOP_TRANS (ALL1);
+   USBCTRL_SIE_CTRL_STOP_TRANS_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_STOP_TRANS_MASK;
 
    function USBCTRL_SIE_CTRL_RECEIVE_DATA (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 3));
-   USBCTRL_SIE_CTRL_RECEIVE_DATA_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_RECEIVE_DATA (ALL1);
+   USBCTRL_SIE_CTRL_RECEIVE_DATA_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_RECEIVE_DATA_MASK;
 
    function USBCTRL_SIE_CTRL_SEND_DATA (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 2));
-   USBCTRL_SIE_CTRL_SEND_DATA_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_SEND_DATA (ALL1);
+   USBCTRL_SIE_CTRL_SEND_DATA_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_SEND_DATA_MASK;
 
    function USBCTRL_SIE_CTRL_SEND_SETUP (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 1));
-   USBCTRL_SIE_CTRL_SEND_SETUP_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_SEND_SETUP (ALL1);
+   USBCTRL_SIE_CTRL_SEND_SETUP_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_END_SETUP_MASK;
 
    function USBCTRL_SIE_CTRL_START_TRANS (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 0));
-   USBCTRL_SIE_CTRL_START_TRANS_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_CTRL_START_TRANS (ALL1);
+   USBCTRL_SIE_CTRL_START_TRANS_MASK : constant Interfaces.Unsigned_32 := SIE_CTRL_GENERIC_START_TRANS_MASK;
 
    -- SIE_STATUS Register macros
+   SIE_STATUS_GENERIC_DATA_SEQ_ERROR_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 31);
+   SIE_STATUS_GENERIC_ACK_REC_MASK         : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 30);
+   SIE_STATUS_GENERIC_STALL_REC_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 29);
+   SIE_STATUS_GENERIC_NAK_REC_MASK         : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
+   SIE_STATUS_GENERIC_RX_TIMEOUT_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
+   SIE_STATUS_GENERIC_RX_OVERFLOW_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
+   SIE_STATUS_GENERIC_BIT_STUFF_ERROR_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   SIE_STATUS_GENERIC_CRC_ERROR_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
+   SIE_STATUS_GENERIC_ENDPOINT_ERROR_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
 
    function USBCTRL_SIE_STATUS_DATA_SEQ_ERROR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 31));
-   USBCTRL_SIE_STATUS_DATA_SEQ_ERROR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_DATA_SEQ_ERROR (ALL1);
+   USBCTRL_SIE_STATUS_DATA_SEQ_ERROR_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_DATA_SEQ_ERROR_MASK;
 
    function USBCTRL_SIE_STATUS_ACK_REC (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 30));
-   USBCTRL_SIE_STATUS_ACK_REC_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_ACK_REC (ALL1);
+   USBCTRL_SIE_STATUS_ACK_REC_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_ACK_REC_MASK;
 
    function USBCTRL_SIE_STATUS_STALL_REC (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 29));
-   USBCTRL_SIE_STATUS_STALL_REC_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_STALL_REC (ALL1);
+   USBCTRL_SIE_STATUS_STALL_REC_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_STALL_REC_MASK;
 
    function USBCTRL_SIE_STATUS_NAK_REC (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 28));
-   USBCTRL_SIE_STATUS_NAK_REC_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_NAK_REC (ALL1);
+   USBCTRL_SIE_STATUS_NAK_REC_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_NAK_REC_MASK;
 
    function USBCTRL_SIE_STATUS_RX_TIMEOUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 27));
-   USBCTRL_SIE_STATUS_RX_TIMEOUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_RX_TIMEOUT (ALL1);
+   USBCTRL_SIE_STATUS_RX_TIMEOUT_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_RX_TIMEOUT_MASK;
 
    function USBCTRL_SIE_STATUS_RX_OVERFLOW (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_SIE_STATUS_RX_OVERFLOW_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_RX_OVERFLOW (ALL1);
+   USBCTRL_SIE_STATUS_RX_OVERFLOW_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_RX_OVERFLOW_MASK;
 
    function USBCTRL_SIE_STATUS_BIT_STUFF_ERROR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_SIE_STATUS_BIT_STUFF_ERROR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_BIT_STUFF_ERROR (ALL1);
+   USBCTRL_SIE_STATUS_BIT_STUFF_ERROR_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_BIT_STUFF_ERROR_MASK;
 
    function USBCTRL_SIE_STATUS_CRC_ERROR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 24));
-   USBCTRL_SIE_STATUS_CRC_ERROR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_CRC_ERROR (ALL1);
+   USBCTRL_SIE_STATUS_CRC_ERROR_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_CRC_ERROR_MASK;
 
    function USBCTRL_SIE_STATUS_ENDPOINT_ERROR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 23));
-   USBCTRL_SIE_STATUS_ENDPOINT_ERROR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_ENDPOINT_ERROR (ALL1);
+   USBCTRL_SIE_STATUS_ENDPOINT_ERROR_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_ENDPOINT_ERROR_MASK;
 
+   SIE_STATUS_GENERIC_BUS_RESET_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
+   SIE_STATUS_GENERIC_TRANS_COMPLETE_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   SIE_STATUS_GENERIC_SETUP_REC_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   SIE_STATUS_GENERIC_CONNECTED            : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
+   SIE_STATUS_GENERIC_RX_SHORT_PACKET_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
+   SIE_STATUS_GENERIC_RESUME_MASK          : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   SIE_STATUS_GENERIC_VBUS_OVER_CURR_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   SIE_STATUS_GENERIC_SPEED_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 8);
+   SIE_STATUS_GENERIC_SUSPENDED_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   SIE_STATUS_GENERIC_LINE_STATE_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 2);
+   SIE_STATUS_GENERIC_VBUS_DETECTED_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function USBCTRL_SIE_STATUS_BUS_RESET (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 19));
-   USBCTRL_SIE_STATUS_BUS_RESET_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_BUS_RESET (ALL1);
+   USBCTRL_SIE_STATUS_BUS_RESET_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_BUS_RESET_MASK;
 
    function USBCTRL_SIE_STATUS_TRANS_COMPLETE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 18));
-   USBCTRL_SIE_STATUS_TRANS_COMPLETE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_TRANS_COMPLETE (ALL1);
+   USBCTRL_SIE_STATUS_TRANS_COMPLETE_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_TRANS_COMPLETE_MASK;
 
    function USBCTRL_SIE_STATUS_SETUP_REC (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 17));
-   USBCTRL_SIE_STATUS_SETUP_REC_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_SETUP_REC (ALL1);
+   USBCTRL_SIE_STATUS_SETUP_REC_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_SETUP_REC_MASK;
 
    function USBCTRL_SIE_STATUS_CONNECTED (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 16));
-   USBCTRL_SIE_STATUS_CONNECTED_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_CONNECTED (ALL1);
+   USBCTRL_SIE_STATUS_CONNECTED_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_CONNECTED;
 
    function USBCTRL_SIE_STATUS_RX_SHORT_PACKET (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 12));
-   USBCTRL_SIE_STATUS_RX_SHORT_PACKET_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_RX_SHORT_PACKET (ALL1);
+   USBCTRL_SIE_STATUS_RX_SHORT_PACKET_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_RX_SHORT_PACKET_MASK;
 
    function USBCTRL_SIE_STATUS_RESUME (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 11));
-   USBCTRL_SIE_STATUS_RESUME_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_RESUME (ALL1);
+   USBCTRL_SIE_STATUS_RESUME_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_RESUME_MASK;
 
    function USBCTRL_SIE_STATUS_VBUS_OVER_CURR (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 10));
-   USBCTRL_SIE_STATUS_VBUS_OVER_CURR_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_VBUS_OVER_CURR (ALL1);
+   USBCTRL_SIE_STATUS_VBUS_OVER_CURR_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_VBUS_OVER_CURR_MASK;
 
    function USBCTRL_SIE_STATUS_SPEED (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#03#), 8));
-   USBCTRL_SIE_STATUS_SPEED_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_SPEED (ALL1);
+   USBCTRL_SIE_STATUS_SPEED_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_SPEED_MASK;
 
    function USBCTRL_SIE_STATUS_SUSPENDED (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 4));
-   USBCTRL_SIE_STATUS_SUSPENDED_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_SUSPENDED (ALL1);
+   USBCTRL_SIE_STATUS_SUSPENDED_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_SUSPENDED_MASK;
 
    function USBCTRL_SIE_STATUS_LINE_STATE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#03#), 2));
-   USBCTRL_SIE_STATUS_LINE_STATE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_LINE_STATE (ALL1);
+   USBCTRL_SIE_STATUS_LINE_STATE_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_LINE_STATE_MASK;
 
    function USBCTRL_SIE_STATUS_VBUS_DETECTED (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 0));
-   USBCTRL_SIE_STATUS_VBUS_DETECTED_MASK : constant Interfaces.Unsigned_32 := USBCTRL_SIE_STATUS_VBUS_DETECTED (ALL1);
+   USBCTRL_SIE_STATUS_VBUS_DETECTED_MASK : constant Interfaces.Unsigned_32 := SIE_STATUS_GENERIC_VBUS_DETECTED_MASK;
 
-   -- INT_EP_CTRL Register macros
+   -- INT_EP_CTRL Register macros 
+   INT_EP_CTRL_GENERIC_INT_EP_ACTIVE_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7FFF#), 1);
 
    function USBCTRL_INT_EP_CTRL_INT_EP_ACTIVE (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#7FFF#), 1));
-   USBCTRL_INT_EP_CTRL_INT_EP_ACTIVE_MASK : constant Interfaces.Unsigned_32 := USBCTRL_INT_EP_CTRL_INT_EP_ACTIVE (ALL1);
+   USBCTRL_INT_EP_CTRL_INT_EP_ACTIVE_MASK : constant Interfaces.Unsigned_32 := INT_EP_CTRL_GENERIC_INT_EP_ACTIVE_MASK;
 
    -- BUFF_STATUS Register macros
+   EP_GENERIC_EP15_OUT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 31);
+   EP_GENERIC_EP15_IN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 30);
+   EP_GENERIC_EP14_OUT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 29);
+   EP_GENERIC_EP14_IN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
+   EP_GENERIC_EP13_OUT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
+   EP_GENERIC_EP13_IN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
+   EP_GENERIC_EP12_OUT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   EP_GENERIC_EP12_IN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
+   EP_GENERIC_EP11_OUT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
+   EP_GENERIC_EP11_IN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
+   EP_GENERIC_EP10_OUT_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
+   EP_GENERIC_EP10_IN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);
+   EP_GENERIC_EP9_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
+   EP_GENERIC_EP9_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   EP_GENERIC_EP8_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   EP_GENERIC_EP8_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
+   EP_GENERIC_EP7_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
+   EP_GENERIC_EP7_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);
+   EP_GENERIC_EP6_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
+   EP_GENERIC_EP6_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
+   EP_GENERIC_EP5_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   EP_GENERIC_EP5_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   EP_GENERIC_EP4_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   EP_GENERIC_EP4_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   EP_GENERIC_EP3_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   EP_GENERIC_EP3_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   EP_GENERIC_EP2_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   EP_GENERIC_EP2_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   EP_GENERIC_EP1_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   EP_GENERIC_EP1_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   EP_GENERIC_EP0_OUT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   EP_GENERIC_EP0_IN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
 
    function USBCTRL_BUFF_STATUS_EP15_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 31));
-   USBCTRL_BUFF_STATUS_EP15_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP15_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP15_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP15_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP15_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 30));
-   USBCTRL_BUFF_STATUS_EP15_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP15_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP15_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP15_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP14_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 29));
-   USBCTRL_BUFF_STATUS_EP14_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP14_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP14_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP14_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP14_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 28));
-   USBCTRL_BUFF_STATUS_EP14_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP14_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP14_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP14_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP13_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 27));
-   USBCTRL_BUFF_STATUS_EP13_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP13_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP13_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP13_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP13_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_BUFF_STATUS_EP13_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP13_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP13_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP13_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP12_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_BUFF_STATUS_EP12_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP12_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP12_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP12_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP12_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 24));
-   USBCTRL_BUFF_STATUS_EP12_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP12_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP12_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP12_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP11_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 23));
-   USBCTRL_BUFF_STATUS_EP11_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP11_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP11_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP11_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP11_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 22));
-   USBCTRL_BUFF_STATUS_EP11_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP11_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP11_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP11_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP10_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 21));
-   USBCTRL_BUFF_STATUS_EP10_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP10_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP10_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP10_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP10_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 20));
-   USBCTRL_BUFF_STATUS_EP10_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP10_IN (ALL1);
-
+   USBCTRL_BUFF_STATUS_EP10_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP10_IN_MASK;
    function USBCTRL_BUFF_STATUS_EP9_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 19));
-   USBCTRL_BUFF_STATUS_EP9_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP9_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP9_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP9_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP9_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 18));
-   USBCTRL_BUFF_STATUS_EP9_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP9_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP9_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP9_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP8_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 17));
-   USBCTRL_BUFF_STATUS_EP8_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP8_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP8_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP8_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 16));
-   USBCTRL_BUFF_STATUS_EP8_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP8_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP8_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP7_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 15));
-   USBCTRL_BUFF_STATUS_EP7_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP7_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP7_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP7_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP7_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 14));
-   USBCTRL_BUFF_STATUS_EP7_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP7_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP7_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP7_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP6_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 13));
-   USBCTRL_BUFF_STATUS_EP6_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP6_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP6_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP6_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP6_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 12));
-   USBCTRL_BUFF_STATUS_EP6_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP6_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP6_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP6_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP5_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 11));
-   USBCTRL_BUFF_STATUS_EP5_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP5_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP5_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP5_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP5_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 10));
-   USBCTRL_BUFF_STATUS_EP5_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP5_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP5_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP5_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP4_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 9));
-   USBCTRL_BUFF_STATUS_EP4_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP4_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP4_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP4_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP4_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 8));
-   USBCTRL_BUFF_STATUS_EP4_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP4_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP4_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP4_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP3_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 7));
-   USBCTRL_BUFF_STATUS_EP3_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP3_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP3_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP3_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP3_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 6));
-   USBCTRL_BUFF_STATUS_EP3_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP3_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP3_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP3_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP2_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 5));
-   USBCTRL_BUFF_STATUS_EP2_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP2_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP2_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP2_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP2_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 4));
-   USBCTRL_BUFF_STATUS_EP2_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP2_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP2_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP2_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP1_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 3));
-   USBCTRL_BUFF_STATUS_EP1_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP1_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP1_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP1_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP1_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 2));
-   USBCTRL_BUFF_STATUS_EP1_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP1_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP1_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP1_IN_MASK;
 
    function USBCTRL_BUFF_STATUS_EP0_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 1));
-   USBCTRL_BUFF_STATUS_EP0_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP0_OUT (ALL1);
+   USBCTRL_BUFF_STATUS_EP0_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
 
    function USBCTRL_BUFF_STATUS_EP0_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 0));
-   USBCTRL_BUFF_STATUS_EP0_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_STATUS_EP0_IN (ALL1);
+   USBCTRL_BUFF_STATUS_EP0_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
-   -- BUFF_CPU_SHOULD_HANDLE Register macros
+   -- BUFF_CPU_SHOULD_HANDLE Register macros 
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 31));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP15_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 30));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP15_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP15_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 29));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP14_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 28));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP14_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP14_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 27));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP13_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 26));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP13_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP13_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 25));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP12_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 24));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP12_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP12_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 23));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP11_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 22));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP11_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP11_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 21));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP10_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 20));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP10_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP10_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 19));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP9_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 18));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP9_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP9_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 17));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP8_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 16));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP8_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 15));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP7_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 14));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP7_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP7_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 13));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP6_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 12));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP6_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP6_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 11));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP5_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 10));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP5_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP5_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 9));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP4_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 8));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP4_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP4_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 7));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP3_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 6));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP3_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP3_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 5));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP2_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 4));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP2_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP2_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 3));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP1_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 2));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP1_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP1_IN_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_OUT (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 1));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_OUT_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_OUT (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_OUT_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
 
    function USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_IN (v : Interfaces.Unsigned_32) return Interfaces.Unsigned_32 is
      (Shift_Left ((v and 16#01#), 0));
-   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_IN_MASK : constant Interfaces.Unsigned_32 := USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_IN (ALL1);
+   USBCTRL_BUFF_CPU_SHOULD_HANDLE_EP0_IN_MASK : constant Interfaces.Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
    --  EP_ABORT Register macros
 
    function USBCTRL_EP_ABORT_EP15_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 31));
-   USBCTRL_EP_ABORT_EP15_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP15_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP15_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP15_OUT_MASK;
    function USBCTRL_EP_ABORT_EP15_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 30));
-   USBCTRL_EP_ABORT_EP15_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP15_IN (ALL1);
+   USBCTRL_EP_ABORT_EP15_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP15_IN_MASK;
    function USBCTRL_EP_ABORT_EP14_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 29));
-   USBCTRL_EP_ABORT_EP14_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP14_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP14_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP14_OUT_MASK;
    function USBCTRL_EP_ABORT_EP14_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 28));
-   USBCTRL_EP_ABORT_EP14_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP14_IN (ALL1);
+   USBCTRL_EP_ABORT_EP14_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP14_IN_MASK;
    function USBCTRL_EP_ABORT_EP13_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 27));
-   USBCTRL_EP_ABORT_EP13_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP13_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP13_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP13_OUT_MASK;
    function USBCTRL_EP_ABORT_EP13_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 26));
-   USBCTRL_EP_ABORT_EP13_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP13_IN (ALL1);
+   USBCTRL_EP_ABORT_EP13_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP13_IN_MASK;
    function USBCTRL_EP_ABORT_EP12_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 25));
-   USBCTRL_EP_ABORT_EP12_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP12_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP12_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP12_OUT_MASK;
    function USBCTRL_EP_ABORT_EP12_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 24));
-   USBCTRL_EP_ABORT_EP12_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP12_IN (ALL1);
+   USBCTRL_EP_ABORT_EP12_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP12_IN_MASK;
    function USBCTRL_EP_ABORT_EP11_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 23));
-   USBCTRL_EP_ABORT_EP11_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP11_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP11_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP11_OUT_MASK;
    function USBCTRL_EP_ABORT_EP11_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 22));
-   USBCTRL_EP_ABORT_EP11_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP11_IN (ALL1);
+   USBCTRL_EP_ABORT_EP11_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP11_IN_MASK;
    function USBCTRL_EP_ABORT_EP10_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 21));
-   USBCTRL_EP_ABORT_EP10_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP10_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP10_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP10_OUT_MASK;
    function USBCTRL_EP_ABORT_EP10_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 20));
-   USBCTRL_EP_ABORT_EP10_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP10_IN (ALL1);
+   USBCTRL_EP_ABORT_EP10_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP10_IN_MASK;
    function USBCTRL_EP_ABORT_EP9_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 19));
-   USBCTRL_EP_ABORT_EP9_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP9_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP9_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP9_OUT_MASK;
    function USBCTRL_EP_ABORT_EP9_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 18));
-   USBCTRL_EP_ABORT_EP9_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP9_IN (ALL1);
+   USBCTRL_EP_ABORT_EP9_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP9_IN_MASK;
    function USBCTRL_EP_ABORT_EP8_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 17));
-   USBCTRL_EP_ABORT_EP8_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP8_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP8_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP8_OUT_MASK;
    function USBCTRL_EP_ABORT_EP8_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 16));
-   USBCTRL_EP_ABORT_EP8_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP8_IN (ALL1);
+   USBCTRL_EP_ABORT_EP8_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
    function USBCTRL_EP_ABORT_EP7_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 15));
-   USBCTRL_EP_ABORT_EP7_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP7_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP7_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP7_OUT_MASK;
    function USBCTRL_EP_ABORT_EP7_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 14));
-   USBCTRL_EP_ABORT_EP7_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP7_IN (ALL1);
+   USBCTRL_EP_ABORT_EP7_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP7_IN_MASK;
    function USBCTRL_EP_ABORT_EP6_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 13));
-   USBCTRL_EP_ABORT_EP6_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP6_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP6_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP6_OUT_MASK;
    function USBCTRL_EP_ABORT_EP6_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 12));
-   USBCTRL_EP_ABORT_EP6_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP6_IN (ALL1);
+   USBCTRL_EP_ABORT_EP6_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP6_IN_MASK;
    function USBCTRL_EP_ABORT_EP5_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 11));
-   USBCTRL_EP_ABORT_EP5_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP5_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP5_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP5_OUT_MASK;
    function USBCTRL_EP_ABORT_EP5_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 10));
-   USBCTRL_EP_ABORT_EP5_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP5_IN (ALL1);
+   USBCTRL_EP_ABORT_EP5_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP5_IN_MASK;
    function USBCTRL_EP_ABORT_EP4_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 9));
-   USBCTRL_EP_ABORT_EP4_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP4_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP4_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP4_OUT_MASK;
    function USBCTRL_EP_ABORT_EP4_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 8));
-   USBCTRL_EP_ABORT_EP4_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP4_IN (ALL1);
+   USBCTRL_EP_ABORT_EP4_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP4_IN_MASK;
    function USBCTRL_EP_ABORT_EP3_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 7));
-   USBCTRL_EP_ABORT_EP3_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP3_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP3_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP3_OUT_MASK;
    function USBCTRL_EP_ABORT_EP3_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 6));
-   USBCTRL_EP_ABORT_EP3_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP3_IN (ALL1);
+   USBCTRL_EP_ABORT_EP3_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP3_IN_MASK;
    function USBCTRL_EP_ABORT_EP2_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 5));
-   USBCTRL_EP_ABORT_EP2_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP2_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP2_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP2_OUT_MASK;
    function USBCTRL_EP_ABORT_EP2_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_EP_ABORT_EP2_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP2_IN (ALL1);
+   USBCTRL_EP_ABORT_EP2_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP2_IN_MASK;
    function USBCTRL_EP_ABORT_EP1_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 3));
-   USBCTRL_EP_ABORT_EP1_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP1_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP1_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP1_OUT_MASK;
    function USBCTRL_EP_ABORT_EP1_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_EP_ABORT_EP1_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP1_IN (ALL1);
+   USBCTRL_EP_ABORT_EP1_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP1_IN_MASK;
    function USBCTRL_EP_ABORT_EP0_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_EP_ABORT_EP0_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP0_OUT (ALL1);
+   USBCTRL_EP_ABORT_EP0_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
    function USBCTRL_EP_ABORT_EP0_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_EP_ABORT_EP0_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_EP0_IN (ALL1);
+   USBCTRL_EP_ABORT_EP0_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
    function USBCTRL_EP_ABORT_DONE_EP15_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 31));
-   USBCTRL_EP_ABORT_DONE_EP15_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP15_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP15_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP15_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP15_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 30));
-   USBCTRL_EP_ABORT_DONE_EP15_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP15_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP15_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP15_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP14_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 29));
-   USBCTRL_EP_ABORT_DONE_EP14_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP14_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP14_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP14_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP14_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 28));
-   USBCTRL_EP_ABORT_DONE_EP14_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP14_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP14_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP14_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP13_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 27));
-   USBCTRL_EP_ABORT_DONE_EP13_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP13_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP13_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP13_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP13_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 26));
-   USBCTRL_EP_ABORT_DONE_EP13_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP13_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP13_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP13_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP12_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 25));
-   USBCTRL_EP_ABORT_DONE_EP12_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP12_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP12_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP12_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP12_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 24));
-   USBCTRL_EP_ABORT_DONE_EP12_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP12_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP12_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP12_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP11_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 23));
-   USBCTRL_EP_ABORT_DONE_EP11_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP11_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP11_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP11_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP11_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 22));
-   USBCTRL_EP_ABORT_DONE_EP11_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP11_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP11_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP11_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP10_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 21));
-   USBCTRL_EP_ABORT_DONE_EP10_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP10_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP10_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP10_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP10_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 20));
-   USBCTRL_EP_ABORT_DONE_EP10_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP10_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP10_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP10_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP9_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 19));
-   USBCTRL_EP_ABORT_DONE_EP9_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP9_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP9_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP9_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP9_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 18));
-   USBCTRL_EP_ABORT_DONE_EP9_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP9_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP9_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP9_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP8_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 17));
-   USBCTRL_EP_ABORT_DONE_EP8_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP8_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP8_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP8_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP8_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 16));
-   USBCTRL_EP_ABORT_DONE_EP8_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP8_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP8_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP7_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 15));
-   USBCTRL_EP_ABORT_DONE_EP7_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP7_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP7_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP7_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP7_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 14));
-   USBCTRL_EP_ABORT_DONE_EP7_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP7_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP7_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP7_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP6_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 13));
-   USBCTRL_EP_ABORT_DONE_EP6_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP6_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP6_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP6_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP6_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 12));
-   USBCTRL_EP_ABORT_DONE_EP6_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP6_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP6_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP6_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP5_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 11));
-   USBCTRL_EP_ABORT_DONE_EP5_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP5_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP5_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP5_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP5_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 10));
-   USBCTRL_EP_ABORT_DONE_EP5_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP5_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP5_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP5_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP4_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 9));
-   USBCTRL_EP_ABORT_DONE_EP4_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP4_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP4_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP4_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP4_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 8));
-   USBCTRL_EP_ABORT_DONE_EP4_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP4_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP4_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP4_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP3_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 7));
-   USBCTRL_EP_ABORT_DONE_EP3_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP3_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP3_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP3_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP3_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 6));
-   USBCTRL_EP_ABORT_DONE_EP3_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP3_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP3_IN_MASK : constant Unsigned_32 :=EP_GENERIC_EP3_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP2_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 5));
-   USBCTRL_EP_ABORT_DONE_EP2_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP2_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP2_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP2_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP2_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_EP_ABORT_DONE_EP2_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP2_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP2_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP2_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP1_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 3));
-   USBCTRL_EP_ABORT_DONE_EP1_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP1_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP1_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP1_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP1_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_EP_ABORT_DONE_EP1_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP1_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP1_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP1_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP0_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_EP_ABORT_DONE_EP0_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP0_OUT (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP0_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP0_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_EP_ABORT_DONE_EP0_IN_MASK : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP0_IN (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP0_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
    -- EP_ABORT_DONE Register macros
 
    function USBCTRL_EP_ABORT_DONE_EP15_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 31));
-   USBCTRL_EP_ABORT_DONE_EP15_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP15_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP15_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP15_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP15_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 30));
-   USBCTRL_EP_ABORT_DONE_EP15_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP15_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP15_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP15_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP14_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 29));
-   USBCTRL_EP_ABORT_DONE_EP14_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP14_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP14_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP14_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP14_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 28));
-   USBCTRL_EP_ABORT_DONE_EP14_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP14_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP14_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP14_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP13_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 27));
-   USBCTRL_EP_ABORT_DONE_EP13_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP13_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP13_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP13_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP13_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 26));
-   USBCTRL_EP_ABORT_DONE_EP13_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP13_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP13_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP13_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP12_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 25));
-   USBCTRL_EP_ABORT_DONE_EP12_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP12_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP12_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP12_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP12_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 24));
-   USBCTRL_EP_ABORT_DONE_EP12_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP12_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP12_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP12_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP11_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 23));
-   USBCTRL_EP_ABORT_DONE_EP11_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP11_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP11_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP11_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP11_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 22));
-   USBCTRL_EP_ABORT_DONE_EP11_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP11_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP11_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP11_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP10_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 21));
-   USBCTRL_EP_ABORT_DONE_EP10_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP10_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP10_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP10_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP10_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 20));
-   USBCTRL_EP_ABORT_DONE_EP10_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP10_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP10_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP10_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP9_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 19));
-   USBCTRL_EP_ABORT_DONE_EP9_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP9_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP9_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP9_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP9_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 18));
-   USBCTRL_EP_ABORT_DONE_EP9_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP9_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP9_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP9_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP8_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 17));
-   USBCTRL_EP_ABORT_DONE_EP8_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP8_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP8_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP8_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP8_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 16));
-   USBCTRL_EP_ABORT_DONE_EP8_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP8_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP8_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP7_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 15));
-   USBCTRL_EP_ABORT_DONE_EP7_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP7_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP7_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP7_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP7_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 14));
-   USBCTRL_EP_ABORT_DONE_EP7_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP7_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP7_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP7_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP6_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 13));
-   USBCTRL_EP_ABORT_DONE_EP6_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP6_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP6_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP6_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP6_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 12));
-   USBCTRL_EP_ABORT_DONE_EP6_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP6_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP6_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP6_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP5_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 11));
-   USBCTRL_EP_ABORT_DONE_EP5_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP5_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP5_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP5_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP5_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 10));
-   USBCTRL_EP_ABORT_DONE_EP5_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP5_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP5_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP5_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP4_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 9));
-   USBCTRL_EP_ABORT_DONE_EP4_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP4_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP4_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP4_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP4_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 8));
-   USBCTRL_EP_ABORT_DONE_EP4_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP4_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP4_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP4_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP3_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 7));
-   USBCTRL_EP_ABORT_DONE_EP3_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP3_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP3_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP3_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP3_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 6));
-   USBCTRL_EP_ABORT_DONE_EP3_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP3_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP3_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP3_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP2_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 5));
-   USBCTRL_EP_ABORT_DONE_EP2_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP2_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP2_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP2_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP2_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_EP_ABORT_DONE_EP2_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP2_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP2_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP2_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP1_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 3));
-   USBCTRL_EP_ABORT_DONE_EP1_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP1_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP1_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP1_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP1_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_EP_ABORT_DONE_EP1_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP1_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP1_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP1_IN_MASK;
    function USBCTRL_EP_ABORT_DONE_EP0_OUT_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_EP_ABORT_DONE_EP0_OUT_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP0_OUT_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP0_OUT_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
    function USBCTRL_EP_ABORT_DONE_EP0_IN_v2 (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_EP_ABORT_DONE_EP0_IN_MASK_v2 : constant Unsigned_32 := USBCTRL_EP_ABORT_DONE_EP0_IN_v2 (ALL1);
+   USBCTRL_EP_ABORT_DONE_EP0_IN_MASK_v2 : constant Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
    -- EP_STALL_ARM Register macros
 
    function USBCTRL_EP_STALL_ARM_EP0_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_EP_STALL_ARM_EP0_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STALL_ARM_EP0_OUT (ALL1);
+   USBCTRL_EP_STALL_ARM_EP0_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
    function USBCTRL_EP_STALL_ARM_EP0_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_EP_STALL_ARM_EP0_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STALL_ARM_EP0_IN (ALL1);
+   USBCTRL_EP_STALL_ARM_EP0_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
    -- NAK_POLL Register macros
+   NAK_POLL_GENERIC_RETRY_COUNT_HI_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(15), 28);
+   NAK_POLL_GENERIC_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
+   NAK_POLL_GENERIC_STOP_EPX_ON_NAK_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
+   NAK_POLL_GENERIC_DELAY_FS_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#3FF#), 16);
+   NAK_POLL_GENERIC_RETRY_COUNT_LO_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#3F#), 10);
+   NAK_POLL_GENERIC_DELAY_LS_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#3FF#), 0);
 
    function USBCTRL_NAK_POLL_RETRY_COUNT_HI (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#F#, 28));
-   USBCTRL_NAK_POLL_RETRY_COUNT_HI_MASK : constant Unsigned_32 := USBCTRL_NAK_POLL_RETRY_COUNT_HI (ALL1);
+   USBCTRL_NAK_POLL_RETRY_COUNT_HI_MASK : constant Unsigned_32 := NAK_POLL_GENERIC_RETRY_COUNT_HI_MASK;
    function USBCTRL_NAK_POLL_EPX_STOPPED_ON_NAK (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 27));
-   USBCTRL_NAK_POLL_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := USBCTRL_NAK_POLL_EPX_STOPPED_ON_NAK (ALL1);
+   USBCTRL_NAK_POLL_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := NAK_POLL_GENERIC_EPX_STOPPED_ON_NAK_MASK;
    function USBCTRL_NAK_POLL_STOP_EPX_ON_NAK (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 26));
-   USBCTRL_NAK_POLL_STOP_EPX_ON_NAK_MASK : constant Unsigned_32 := USBCTRL_NAK_POLL_STOP_EPX_ON_NAK (ALL1);
+   USBCTRL_NAK_POLL_STOP_EPX_ON_NAK_MASK : constant Unsigned_32 := NAK_POLL_GENERIC_STOP_EPX_ON_NAK_MASK; 
    function USBCTRL_NAK_POLL_DELAY_FS (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3FF#, 16));
-   USBCTRL_NAK_POLL_DELAY_FS_MASK : constant Unsigned_32 := USBCTRL_NAK_POLL_DELAY_FS (ALL1);
+   USBCTRL_NAK_POLL_DELAY_FS_MASK : constant Unsigned_32 := NAK_POLL_GENERIC_DELAY_FS_MASK;
    function USBCTRL_NAK_POLL_RETRY_COUNT_LO (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3F#, 10));
-   USBCTRL_NAK_POLL_RETRY_COUNT_LO_MASK : constant Unsigned_32 := USBCTRL_NAK_POLL_RETRY_COUNT_LO (ALL1);
+   USBCTRL_NAK_POLL_RETRY_COUNT_LO_MASK : constant Unsigned_32 :=NAK_POLL_GENERIC_RETRY_COUNT_LO_MASK;  
    function USBCTRL_NAK_POLL_DELAY_LS (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#3FF#, 0));
-   USBCTRL_NAK_POLL_DELAY_LS_MASK : constant Unsigned_32 := USBCTRL_NAK_POLL_DELAY_LS (ALL1);
+   USBCTRL_NAK_POLL_DELAY_LS_MASK : constant Unsigned_32 := NAK_POLL_GENERIC_DELAY_LS_MASK;
 
    --  EP_STATUS_STALL_NAK Register macros
 
    function USBCTRL_EP_STATUS_STALL_NAK_EP15_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 31));
-   USBCTRL_EP_STATUS_STALL_NAK_EP15_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP15_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP15_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP15_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP15_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 30));
-   USBCTRL_EP_STATUS_STALL_NAK_EP15_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP15_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP15_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP15_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP14_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 29));
-   USBCTRL_EP_STATUS_STALL_NAK_EP14_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP14_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP14_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP14_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP14_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 28));
-   USBCTRL_EP_STATUS_STALL_NAK_EP14_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP14_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP14_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP14_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP13_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 27));
-   USBCTRL_EP_STATUS_STALL_NAK_EP13_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP13_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP13_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP13_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP13_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 26));
-   USBCTRL_EP_STATUS_STALL_NAK_EP13_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP13_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP13_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP13_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP12_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 25));
-   USBCTRL_EP_STATUS_STALL_NAK_EP12_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP12_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP12_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP12_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP12_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 24));
-   USBCTRL_EP_STATUS_STALL_NAK_EP12_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP12_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP12_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP12_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP11_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 23));
-   USBCTRL_EP_STATUS_STALL_NAK_EP11_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP11_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP11_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP11_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP11_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 22));
-   USBCTRL_EP_STATUS_STALL_NAK_EP11_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP11_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP11_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP11_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP10_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 21));
-   USBCTRL_EP_STATUS_STALL_NAK_EP10_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP10_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP10_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP10_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP10_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 20));
-   USBCTRL_EP_STATUS_STALL_NAK_EP10_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP10_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP10_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP10_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP9_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 19));
-   USBCTRL_EP_STATUS_STALL_NAK_EP9_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP9_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP9_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP9_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP9_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 18));
-   USBCTRL_EP_STATUS_STALL_NAK_EP9_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP9_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP9_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP9_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP8_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 17));
-   USBCTRL_EP_STATUS_STALL_NAK_EP8_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP8_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP8_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP8_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP8_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 16));
-   USBCTRL_EP_STATUS_STALL_NAK_EP8_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP8_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP8_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP8_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP7_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 15));
-   USBCTRL_EP_STATUS_STALL_NAK_EP7_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP7_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP7_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP7_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP7_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 14));
-   USBCTRL_EP_STATUS_STALL_NAK_EP7_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP7_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP7_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP7_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP6_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 13));
-   USBCTRL_EP_STATUS_STALL_NAK_EP6_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP6_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP6_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP6_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP6_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 12));
-   USBCTRL_EP_STATUS_STALL_NAK_EP6_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP6_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP6_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP6_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP5_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 11));
-   USBCTRL_EP_STATUS_STALL_NAK_EP5_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP5_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP5_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP5_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP5_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 10));
-   USBCTRL_EP_STATUS_STALL_NAK_EP5_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP5_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP5_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP5_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP4_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 9));
-   USBCTRL_EP_STATUS_STALL_NAK_EP4_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP4_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP4_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP4_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP4_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 8));
-   USBCTRL_EP_STATUS_STALL_NAK_EP4_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP4_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP4_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP4_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP3_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 7));
-   USBCTRL_EP_STATUS_STALL_NAK_EP3_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP3_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP3_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP3_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP3_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 6));
-   USBCTRL_EP_STATUS_STALL_NAK_EP3_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP3_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP3_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP3_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP2_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 5));
-   USBCTRL_EP_STATUS_STALL_NAK_EP2_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP2_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP2_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP2_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP2_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_EP_STATUS_STALL_NAK_EP2_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP2_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP2_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP2_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP1_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 3));
-   USBCTRL_EP_STATUS_STALL_NAK_EP1_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP1_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP1_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP1_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP1_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_EP_STATUS_STALL_NAK_EP1_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP1_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP1_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP1_IN_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP0_OUT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_EP_STATUS_STALL_NAK_EP0_OUT_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP0_OUT (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP0_OUT_MASK : constant Unsigned_32 := EP_GENERIC_EP0_OUT_MASK;
    function USBCTRL_EP_STATUS_STALL_NAK_EP0_IN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_EP_STATUS_STALL_NAK_EP0_IN_MASK : constant Unsigned_32 := USBCTRL_EP_STATUS_STALL_NAK_EP0_IN (ALL1);
+   USBCTRL_EP_STATUS_STALL_NAK_EP0_IN_MASK : constant Unsigned_32 := EP_GENERIC_EP0_IN_MASK;
 
    --  USB_MUXING Register macros
+   MUXING_GENERIC_SWAP_DPDM_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 31);
+   MUXING_GENERIC_USBPHY_AS_GPIO_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   MUXING_GENERIC_SOFTCON_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   MUXING_GENERIC_TO_DIGITAL_PAD_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   MUXING_GENERIC_TO_EXTPHY_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   MUXING_GENERIC_TO_PHY_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
 
    function USBCTRL_USB_MUXING_SWAP_DPDM (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 31));
-   USBCTRL_USB_MUXING_SWAP_DPDM_MASK : constant Unsigned_32 := USBCTRL_USB_MUXING_SWAP_DPDM (ALL1);
+   USBCTRL_USB_MUXING_SWAP_DPDM_MASK : constant Unsigned_32 := MUXING_GENERIC_SWAP_DPDM_MASK;
    function USBCTRL_USB_MUXING_USBPHY_AS_GPIO (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_USB_MUXING_USBPHY_AS_GPIO_MASK : constant Unsigned_32 := USBCTRL_USB_MUXING_USBPHY_AS_GPIO (ALL1);
+   USBCTRL_USB_MUXING_USBPHY_AS_GPIO_MASK : constant Unsigned_32 := MUXING_GENERIC_USBPHY_AS_GPIO_MASK;
    function USBCTRL_USB_MUXING_SOFTCON (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 3));
-   USBCTRL_USB_MUXING_SOFTCON_MASK : constant Unsigned_32 := USBCTRL_USB_MUXING_SOFTCON (ALL1);
+   USBCTRL_USB_MUXING_SOFTCON_MASK : constant Unsigned_32 := MUXING_GENERIC_SOFTCON_MASK;
    function USBCTRL_USB_MUXING_TO_DIGITAL_PAD (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_USB_MUXING_TO_DIGITAL_PAD_MASK : constant Unsigned_32 := USBCTRL_USB_MUXING_TO_DIGITAL_PAD (ALL1);
+   USBCTRL_USB_MUXING_TO_DIGITAL_PAD_MASK : constant Unsigned_32 := MUXING_GENERIC_TO_DIGITAL_PAD_MASK;
    function USBCTRL_USB_MUXING_TO_EXTPHY (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_USB_MUXING_TO_EXTPHY_MASK : constant Unsigned_32 := USBCTRL_USB_MUXING_TO_EXTPHY (ALL1);
+   USBCTRL_USB_MUXING_TO_EXTPHY_MASK : constant Unsigned_32 := MUXING_GENERIC_TO_EXTPHY_MASK;
    function USBCTRL_USB_MUXING_TO_PHY (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_USB_MUXING_TO_PHY_MASK : constant Unsigned_32 := USBCTRL_USB_MUXING_TO_PHY (ALL1);
+   USBCTRL_USB_MUXING_TO_PHY_MASK : constant Unsigned_32 := MUXING_GENERIC_TO_PHY_MASK;
 
    -- USB_PWR Register macros
+   USB_PWR_GENERIC_OVERCURR_DETECT_EN      : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   USB_PWR_GENERIC_OVERCURR_DETECT         : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   USB_PWR_GENERIC_VBUS_DETECT_OVERRIDE_EN : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   USB_PWR_GENERIC_VBUS_DETECT             : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   USB_PWR_GENERIC_VBUS_EN_OVERRIDE_EN     : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   USB_PWR_GENERIC_VBUS_EN                 : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
 
    function USBCTRL_USB_PWR_OVERCURR_DETECT_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 5));
-   USBCTRL_USB_PWR_OVERCURR_DETECT_EN_MASK : constant Unsigned_32 := USBCTRL_USB_PWR_OVERCURR_DETECT_EN (ALL1);
+   USBCTRL_USB_PWR_OVERCURR_DETECT_EN_MASK : constant Unsigned_32 := USB_PWR_GENERIC_OVERCURR_DETECT_EN;
    function USBCTRL_USB_PWR_OVERCURR_DETECT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_USB_PWR_OVERCURR_DETECT_MASK : constant Unsigned_32 := USBCTRL_USB_PWR_OVERCURR_DETECT (ALL1);
+   USBCTRL_USB_PWR_OVERCURR_DETECT_MASK : constant Unsigned_32 := USB_PWR_GENERIC_OVERCURR_DETECT;
    function USBCTRL_USB_PWR_VBUS_DETECT_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 3));
-   USBCTRL_USB_PWR_VBUS_DETECT_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USB_PWR_VBUS_DETECT_OVERRIDE_EN (ALL1);
+   USBCTRL_USB_PWR_VBUS_DETECT_OVERRIDE_EN_MASK : constant Unsigned_32 := USB_PWR_GENERIC_VBUS_DETECT_OVERRIDE_EN;
    function USBCTRL_USB_PWR_VBUS_DETECT (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_USB_PWR_VBUS_DETECT_MASK : constant Unsigned_32 := USBCTRL_USB_PWR_VBUS_DETECT (ALL1);
+   USBCTRL_USB_PWR_VBUS_DETECT_MASK : constant Unsigned_32 := USB_PWR_GENERIC_VBUS_DETECT;
    function USBCTRL_USB_PWR_VBUS_EN_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_USB_PWR_VBUS_EN_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USB_PWR_VBUS_EN_OVERRIDE_EN (ALL1);
+   USBCTRL_USB_PWR_VBUS_EN_OVERRIDE_EN_MASK : constant Unsigned_32 := USB_PWR_GENERIC_VBUS_EN_OVERRIDE_EN;
    function USBCTRL_USB_PWR_VBUS_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_USB_PWR_VBUS_EN_MASK : constant Unsigned_32 := USBCTRL_USB_PWR_VBUS_EN (ALL1);
+   USBCTRL_USB_PWR_VBUS_EN_MASK : constant Unsigned_32 := USB_PWR_GENERIC_VBUS_EN;
 
    -- USBPHY_DIRECT Register macros
-
+   USBPHY_DIRECT_GENERIC_RX_DM_OVERRIDE_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   USBPHY_DIRECT_GENERIC_RX_DP_OVERRIDE_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
+   USBPHY_DIRECT_GENERIC_RX_DD_OVERRIDE_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
+   USBPHY_DIRECT_GENERIC_DM_OVV_MASK          : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
+   USBPHY_DIRECT_GENERIC_DP_OVV_MASK          : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
+   USBPHY_DIRECT_GENERIC_DM_OVCN_MASK         : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);
+   USBPHY_DIRECT_GENERIC_DP_OVCN_MASK         : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
+   USBPHY_DIRECT_GENERIC_RX_DM_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   USBPHY_DIRECT_GENERIC_RX_DP_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   USBPHY_DIRECT_GENERIC_RX_DD_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);   
+   USBPHY_DIRECT_GENERIC_TX_DIFFMODE_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);   
+   USBPHY_DIRECT_GENERIC_TX_FSSLEW_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);   
+   USBPHY_DIRECT_GENERIC_TX_PD_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);   
+   USBPHY_DIRECT_GENERIC_RX_PD_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);   
+   USBPHY_DIRECT_GENERIC_TX_DM_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);   
+   USBPHY_DIRECT_GENERIC_TX_DP_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);   
+   USBPHY_DIRECT_GENERIC_TX_DM_OE_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);   
+   USBPHY_DIRECT_GENERIC_TX_DP_OE_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8); 
+   USBPHY_DIRECT_GENERIC_DM_PULLDN_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   USBPHY_DIRECT_GENERIC_DM_PULLUP_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   USBPHY_DIRECT_GENERIC_DM_PULLUP_HISEL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4); 
+   USBPHY_DIRECT_GENERIC_DP_PULLDN_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2); 
+   USBPHY_DIRECT_GENERIC_DP_PULLUP_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1); 
+   USBPHY_DIRECT_GENERIC_DP_PULLUP_HISEL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function USBCTRL_USBPHY_DIRECT_RX_DM_OVERRIDE (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 25));
-   USBCTRL_USBPHY_DIRECT_RX_DM_OVERRIDE_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_DM_OVERRIDE (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_DM_OVERRIDE_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_DM_OVERRIDE_MASK;
    function USBCTRL_USBPHY_DIRECT_RX_DP_OVERRIDE (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 24));
-   USBCTRL_USBPHY_DIRECT_RX_DP_OVERRIDE_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_DP_OVERRIDE (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_DP_OVERRIDE_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_DP_OVERRIDE_MASK;
    function USBCTRL_USBPHY_DIRECT_RX_DD_OVERRIDE (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 23));
-   USBCTRL_USBPHY_DIRECT_RX_DD_OVERRIDE_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_DD_OVERRIDE (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_DD_OVERRIDE_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_DD_OVERRIDE_MASK;
    function USBCTRL_USBPHY_DIRECT_DM_OVV (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 22));
-   USBCTRL_USBPHY_DIRECT_DM_OVV_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DM_OVV (ALL1);
+   USBCTRL_USBPHY_DIRECT_DM_OVV_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DM_OVV_MASK;
    function USBCTRL_USBPHY_DIRECT_DP_OVV (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 21));
-   USBCTRL_USBPHY_DIRECT_DP_OVV_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DP_OVV (ALL1);
+   USBCTRL_USBPHY_DIRECT_DP_OVV_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DP_OVV_MASK;
    function USBCTRL_USBPHY_DIRECT_DM_OVCN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 20));
-   USBCTRL_USBPHY_DIRECT_DM_OVCN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DM_OVCN (ALL1);
+   USBCTRL_USBPHY_DIRECT_DM_OVCN_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DM_OVCN_MASK;
    function USBCTRL_USBPHY_DIRECT_DP_OVCN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 19));
-   USBCTRL_USBPHY_DIRECT_DP_OVCN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DP_OVCN (ALL1);
+   USBCTRL_USBPHY_DIRECT_DP_OVCN_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DP_OVCN_MASK;
    function USBCTRL_USBPHY_DIRECT_RX_DM (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 18));
-   USBCTRL_USBPHY_DIRECT_RX_DM_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_DM (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_DM_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_DM_MASK;
    function USBCTRL_USBPHY_DIRECT_RX_DP (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 17));
-   USBCTRL_USBPHY_DIRECT_RX_DP_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_DP (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_DP_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_DP_MASK;
    function USBCTRL_USBPHY_DIRECT_RX_DD (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 16));
-   USBCTRL_USBPHY_DIRECT_RX_DD_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_DD (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_DD_MASK          : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_DD_MASK;   
    function USBCTRL_USBPHY_DIRECT_TX_DIFFMODE (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 15));
-   USBCTRL_USBPHY_DIRECT_TX_DIFFMODE_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_DIFFMODE (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_DIFFMODE_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_DIFFMODE_MASK;
    function USBCTRL_USBPHY_DIRECT_TX_FSSLEW (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 14));
-   USBCTRL_USBPHY_DIRECT_TX_FSSLEW_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_FSSLEW (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_FSSLEW_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_FSSLEW_MASK;
    function USBCTRL_USBPHY_DIRECT_TX_PD (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 13));
-   USBCTRL_USBPHY_DIRECT_TX_PD_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_PD (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_PD_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_PD_MASK;
    function USBCTRL_USBPHY_DIRECT_RX_PD (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 12));
-   USBCTRL_USBPHY_DIRECT_RX_PD_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_RX_PD (ALL1);
+   USBCTRL_USBPHY_DIRECT_RX_PD_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_RX_PD_MASK;
    function USBCTRL_USBPHY_DIRECT_TX_DM (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 11));
-   USBCTRL_USBPHY_DIRECT_TX_DM_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_DM (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_DM_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_DM_MASK;
    function USBCTRL_USBPHY_DIRECT_TX_DP (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 10));
-   USBCTRL_USBPHY_DIRECT_TX_DP_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_DP (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_DP_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_DP_MASK;
    function USBCTRL_USBPHY_DIRECT_TX_DM_OE (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 9));
-   USBCTRL_USBPHY_DIRECT_TX_DM_OE_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_DM_OE (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_DM_OE_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_DM_OE_MASK;
    function USBCTRL_USBPHY_DIRECT_TX_DP_OE (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 8));
-   USBCTRL_USBPHY_DIRECT_TX_DP_OE_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_TX_DP_OE (ALL1);
+   USBCTRL_USBPHY_DIRECT_TX_DP_OE_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_TX_DP_OE_MASK;
    function USBCTRL_USBPHY_DIRECT_DM_PULLDN_EN (V : Unsigned_32) return Unsigned_32 is
-     (Shift_Left (V and 16#1#, 6));
-   USBCTRL_USBPHY_DIRECT_DM_PULLDN_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DM_PULLDN_EN (ALL1);
+     (Shift_Left (V and 16#1#, 6));    
+   USBCTRL_USBPHY_DIRECT_DM_PULLDN_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DM_PULLDN_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_DM_PULLUP_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 5));
-   USBCTRL_USBPHY_DIRECT_DM_PULLUP_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DM_PULLUP_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_DM_PULLUP_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DM_PULLUP_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_DM_PULLUP_HISEL (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 4));
-   USBCTRL_USBPHY_DIRECT_DM_PULLUP_HISEL_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DM_PULLUP_HISEL (ALL1);
+   USBCTRL_USBPHY_DIRECT_DM_PULLUP_HISEL_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DM_PULLUP_HISEL_MASK;
    function USBCTRL_USBPHY_DIRECT_DP_PULLDN_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 2));
-   USBCTRL_USBPHY_DIRECT_DP_PULLDN_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DP_PULLDN_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_DP_PULLDN_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DP_PULLDN_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_DP_PULLUP_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 1));
-   USBCTRL_USBPHY_DIRECT_DP_PULLUP_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DP_PULLUP_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_DP_PULLUP_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DP_PULLUP_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_DP_PULLUP_HISEL (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 0));
-   USBCTRL_USBPHY_DIRECT_DP_PULLUP_HISEL_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_DP_PULLUP_HISEL (ALL1);
+   USBCTRL_USBPHY_DIRECT_DP_PULLUP_HISEL_MASK : constant Unsigned_32 := USBPHY_DIRECT_GENERIC_DP_PULLUP_HISEL_MASK;
+   
+   USBPHY_DIRECT_OVERRIDE_GENERIC_RX_DM_OVERRIDE_EN_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_RX_DP_OVERRIDE_EN_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);   
+   USBPHY_DIRECT_OVERRIDE_GENERIC_RX_DD_OVERRIDE_EN_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);   
+   USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DIFFMODE_OVERRIDE_EN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);   
+   USBPHY_DIRECT_OVERRIDE_GENERIC_DM_PULLUP_OVERRIDE_EN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);    
+   USBPHY_DIRECT_OVERRIDE_GENERIC_FSSLEW_OVERRIDE_EN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);  
+      
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DM_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 18));
-   USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DM_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DM_OVERRIDE_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DM_OVERRIDE_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_OVERRIDE_GENERIC_RX_DM_OVERRIDE_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DP_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 17));
-   USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DP_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DP_OVERRIDE_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DP_OVERRIDE_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_OVERRIDE_GENERIC_RX_DP_OVERRIDE_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DD_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 16));
-   USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DD_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DD_OVERRIDE_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_DD_OVERRIDE_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_OVERRIDE_GENERIC_RX_DD_OVERRIDE_EN_MASK;
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DIFFMODE_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 15));
-   USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DIFFMODE_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DIFFMODE_OVERRIDE_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DIFFMODE_OVERRIDE_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DIFFMODE_OVERRIDE_EN_MASK;
+   
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 12));
-   USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_OVERRIDE_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_OVERRIDE_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_OVERRIDE_GENERIC_DM_PULLUP_OVERRIDE_EN_MASK;
+   
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_FSSLEW_OVERRIDE_EN (V : Unsigned_32) return Unsigned_32 is
      (Shift_Left (V and 16#1#, 11));
-   USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_FSSLEW_OVERRIDE_EN_MASK : constant Unsigned_32 := USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_FSSLEW_OVERRIDE_EN (ALL1);
+   USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_FSSLEW_OVERRIDE_EN_MASK : constant Unsigned_32 := USBPHY_DIRECT_OVERRIDE_GENERIC_FSSLEW_OVERRIDE_EN_MASK;
 
    --  USBPHY_DIRECT_OVERRIDE Register macros
 
@@ -1662,83 +1832,95 @@ package RP2350_USB is
 
    --  USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_FSSLEW_OVERRIDE_EN_MASK : constant Unsigned_32 :=
    --    USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_FSSLEW_OVERRIDE_EN (ALL1);
-
+  
+   USBPHY_DIRECT_OVERRIDE_GENERIC_TX_PD_OVERRIDE_EN_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_RX_PD_OVERRIDE_EN_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DM_OVERRIDE_EN_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DP_OVERRIDE_EN_MASK           : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DM_OE_OVERRIDE_EN_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);   
+   USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DP_OE_OVERRIDE_EN_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_DM_PULLDN_EN_OVERRIDE_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_DP_PULLDN_EN_OVERRIDE_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_DP_PULLUP_EN_OVERRIDE_EN_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_DM_PULLUP_HISEL_OVERRIDE_EN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   USBPHY_DIRECT_OVERRIDE_GENERIC_DP_PULLUP_HISEL_OVERRIDE_EN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_PD_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 10));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_PD_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_PD_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_PD_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_TX_PD_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_PD_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_PD_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_PD_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_RX_PD_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_RX_PD_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 8));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DM_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 7));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DP_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OE_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 6));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OE_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OE_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DM_OE_OVERRIDE_EN (ALL1);
-
+     USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DM_OE_OVERRIDE_EN_MASK;
+   
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OE_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 5));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OE_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OE_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_TX_DP_OE_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_TX_DP_OE_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLDN_EN_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 4));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLDN_EN_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLDN_EN_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLDN_EN_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_DM_PULLDN_EN_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLDN_EN_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 3));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLDN_EN_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLDN_EN_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLDN_EN_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_DP_PULLDN_EN_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_EN_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 2));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_EN_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_EN_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_EN_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_DP_PULLUP_EN_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_HISEL_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 1));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_HISEL_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_HISEL_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_HISEL_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_DM_PULLUP_HISEL_OVERRIDE_EN_MASK;
 
    function USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_HISEL_OVERRIDE_EN (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 0));
    pragma Inline (USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_HISEL_OVERRIDE_EN);
 
    USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_HISEL_OVERRIDE_EN_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_HISEL_OVERRIDE_EN (ALL1);
+     USBPHY_DIRECT_OVERRIDE_GENERIC_DP_PULLUP_HISEL_OVERRIDE_EN_MASK;
 
    --  USBPHY_DIRECT_OVERRIDE Register macros
 
@@ -1785,425 +1967,388 @@ package RP2350_USB is
    -----------------------------------------------------------------------------
 
    --  USBPHY_TRIM Register macros
+   
+   USBPHY_TRIM_GENERIC_DM_PULLDN_TRIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#1f#), 8);
+   USBPHY_TRIM_GENERIC_DP_PULLDN_TRIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#1f#), 0);
 
    function USBCTRL_USBPHY_TRIM_DM_PULLDN_TRIM (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 8));
    pragma Inline (USBCTRL_USBPHY_TRIM_DM_PULLDN_TRIM);
 
    USBCTRL_USBPHY_TRIM_DM_PULLDN_TRIM_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_TRIM_DM_PULLDN_TRIM (ALL1);
+     USBPHY_TRIM_GENERIC_DM_PULLDN_TRIM_MASK;
 
    function USBCTRL_USBPHY_TRIM_DP_PULLDN_TRIM (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1f#, 0));
    pragma Inline (USBCTRL_USBPHY_TRIM_DP_PULLDN_TRIM);
 
    USBCTRL_USBPHY_TRIM_DP_PULLDN_TRIM_MASK : constant Unsigned_32 := 
-     USBCTRL_USBPHY_TRIM_DP_PULLDN_TRIM (ALL1);
+     USBPHY_TRIM_GENERIC_DP_PULLDN_TRIM_MASK;
    
    --  LINESTATE_TUNING Register macros
 
+   LINESTATE_TUNING_GENERIC_SPARE_FIX_MASK              : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   LINESTATE_TUNING_GENERIC_DEV_LS_WAKE_FIX_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   LINESTATE_TUNING_GENERIC_DEV_RX_ERR_QUIESCE_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   LINESTATE_TUNING_GENERIC_SIE_RX_CHATTER_SE0_FIX_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   LINESTATE_TUNING_GENERIC_SIE_RX_BITSTUFF_FIX_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);   
+   LINESTATE_TUNING_GENERIC_DEV_BUFF_CONTROL_DOUBLE_READ_FIX_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   LINESTATE_TUNING_GENERIC_MULTI_HUB_FIX_MASK          : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   LINESTATE_TUNING_GENERIC_LINESTATE_DELAY_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   LINESTATE_TUNING_GENERIC_RCV_DELAY                   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function USBCTRL_LINESTATE_TUNING_SPARE_FIX (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#f#, 8));
    pragma Inline (USBCTRL_LINESTATE_TUNING_SPARE_FIX);
 
    USBCTRL_LINESTATE_TUNING_SPARE_FIX_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_SPARE_FIX (ALL1);
+     LINESTATE_TUNING_GENERIC_SPARE_FIX_MASK;
 
    function USBCTRL_LINESTATE_TUNING_DEV_LS_WAKE_FIX (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 7));
    pragma Inline (USBCTRL_LINESTATE_TUNING_DEV_LS_WAKE_FIX);
 
    USBCTRL_LINESTATE_TUNING_DEV_LS_WAKE_FIX_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_DEV_LS_WAKE_FIX (ALL1);
+     LINESTATE_TUNING_GENERIC_DEV_LS_WAKE_FIX_MASK;
 
    function USBCTRL_LINESTATE_TUNING_DEV_RX_ERR_QUIESCE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 6));
    pragma Inline (USBCTRL_LINESTATE_TUNING_DEV_RX_ERR_QUIESCE);
 
    USBCTRL_LINESTATE_TUNING_DEV_RX_ERR_QUIESCE_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_DEV_RX_ERR_QUIESCE (ALL1);
+     LINESTATE_TUNING_GENERIC_DEV_RX_ERR_QUIESCE_MASK;
 
    function USBCTRL_LINESTATE_TUNING_SIE_RX_CHATTER_SE0_FIX (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 5));
    pragma Inline (USBCTRL_LINESTATE_TUNING_SIE_RX_CHATTER_SE0_FIX);
 
    USBCTRL_LINESTATE_TUNING_SIE_RX_CHATTER_SE0_FIX_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_SIE_RX_CHATTER_SE0_FIX (ALL1);
+     LINESTATE_TUNING_GENERIC_SIE_RX_CHATTER_SE0_FIX_MASK;
 
    function USBCTRL_LINESTATE_TUNING_SIE_RX_BITSTUFF_FIX (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 4));
    pragma Inline (USBCTRL_LINESTATE_TUNING_SIE_RX_BITSTUFF_FIX);
 
    USBCTRL_LINESTATE_TUNING_SIE_RX_BITSTUFF_FIX_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_SIE_RX_BITSTUFF_FIX (ALL1);
+    LINESTATE_TUNING_GENERIC_SIE_RX_BITSTUFF_FIX_MASK;
 
    function USBCTRL_LINESTATE_TUNING_DEV_BUFF_CONTROL_DOUBLE_READ_FIX (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 3));
    pragma Inline (USBCTRL_LINESTATE_TUNING_DEV_BUFF_CONTROL_DOUBLE_READ_FIX);
 
    USBCTRL_LINESTATE_TUNING_DEV_BUFF_CONTROL_DOUBLE_READ_FIX_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_DEV_BUFF_CONTROL_DOUBLE_READ_FIX (ALL1);
+     LINESTATE_TUNING_GENERIC_DEV_BUFF_CONTROL_DOUBLE_READ_FIX_MASK;
 
    function USBCTRL_LINESTATE_TUNING_MULTI_HUB_FIX (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 2));
    pragma Inline (USBCTRL_LINESTATE_TUNING_MULTI_HUB_FIX);
 
    USBCTRL_LINESTATE_TUNING_MULTI_HUB_FIX_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_MULTI_HUB_FIX (ALL1);
+     LINESTATE_TUNING_GENERIC_MULTI_HUB_FIX_MASK;
 
    function USBCTRL_LINESTATE_TUNING_LINESTATE_DELAY (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 1));
    pragma Inline (USBCTRL_LINESTATE_TUNING_LINESTATE_DELAY);
 
    USBCTRL_LINESTATE_TUNING_LINESTATE_DELAY_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_LINESTATE_DELAY (ALL1);
+    LINESTATE_TUNING_GENERIC_LINESTATE_DELAY_MASK;
 
    function USBCTRL_LINESTATE_TUNING_RCV_DELAY (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 0));
    pragma Inline (USBCTRL_LINESTATE_TUNING_RCV_DELAY);
 
    USBCTRL_LINESTATE_TUNING_RCV_DELAY_MASK : constant Unsigned_32 := 
-     USBCTRL_LINESTATE_TUNING_RCV_DELAY (ALL1);
-   
-   --  INTR Register macros
+     LINESTATE_TUNING_GENERIC_RCV_DELAY;
 
    function USBCTRL_INTR_EPX_STOPPED_ON_NAK (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 23));
    pragma Inline (USBCTRL_INTR_EPX_STOPPED_ON_NAK);
 
-   USBCTRL_INTR_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_EPX_STOPPED_ON_NAK (ALL1);
+   USBCTRL_INTR_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := GENERIC_1_23_MASK;
 
    function USBCTRL_INTR_DEV_SM_WATCHDOG_FIRED (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 22));
    pragma Inline (USBCTRL_INTR_DEV_SM_WATCHDOG_FIRED);
 
-   USBCTRL_INTR_DEV_SM_WATCHDOG_FIRED_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_DEV_SM_WATCHDOG_FIRED (ALL1);
+   USBCTRL_INTR_DEV_SM_WATCHDOG_FIRED_MASK : constant Unsigned_32 := GENERIC_1_22_MASK;
 
    function USBCTRL_INTR_ENDPOINT_ERROR (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 21));
    pragma Inline (USBCTRL_INTR_ENDPOINT_ERROR);
 
-   USBCTRL_INTR_ENDPOINT_ERROR_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ENDPOINT_ERROR (ALL1);
+   USBCTRL_INTR_ENDPOINT_ERROR_MASK : constant Unsigned_32 :=  GENERIC_1_21_MASK;
 
    function USBCTRL_INTR_RX_SHORT_PACKET (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 20));
    pragma Inline (USBCTRL_INTR_RX_SHORT_PACKET);
 
-   USBCTRL_INTR_RX_SHORT_PACKET_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_RX_SHORT_PACKET (ALL1);
+   USBCTRL_INTR_RX_SHORT_PACKET_MASK : constant Unsigned_32 := GENERIC_1_20_MASK;
 
    function USBCTRL_INTR_EP_STALL_NAK (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 19));
    pragma Inline (USBCTRL_INTR_EP_STALL_NAK);
 
-   USBCTRL_INTR_EP_STALL_NAK_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_EP_STALL_NAK (ALL1);
-
+   USBCTRL_INTR_EP_STALL_NAK_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
+   
    function USBCTRL_INTR_ABORT_DONE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 18));
    pragma Inline (USBCTRL_INTR_ABORT_DONE);
 
-   USBCTRL_INTR_ABORT_DONE_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ABORT_DONE (ALL1);
+   USBCTRL_INTR_ABORT_DONE_MASK : constant Unsigned_32 :=  GENERIC_1_18_MASK;
 
    function USBCTRL_INTR_DEV_SOF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
    pragma Inline (USBCTRL_INTR_DEV_SOF);
 
-   USBCTRL_INTR_DEV_SOF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_DEV_SOF (ALL1);
+   USBCTRL_INTR_DEV_SOF_MASK : constant Unsigned_32 :=  GENERIC_1_17_MASK;
 
    function USBCTRL_INTR_SETUP_REQ (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 16));
    pragma Inline (USBCTRL_INTR_SETUP_REQ);
 
-   USBCTRL_INTR_SETUP_REQ_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_SETUP_REQ (ALL1);
+   USBCTRL_INTR_SETUP_REQ_MASK : constant Unsigned_32 := GENERIC_1_16_MASK;
 
    function USBCTRL_INTR_DEV_RESUME_FROM_HOST (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 15));
    pragma Inline (USBCTRL_INTR_DEV_RESUME_FROM_HOST);
 
-   USBCTRL_INTR_DEV_RESUME_FROM_HOST_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_DEV_RESUME_FROM_HOST (ALL1);
+   USBCTRL_INTR_DEV_RESUME_FROM_HOST_MASK : constant Unsigned_32 := GENERIC_1_15_MASK;
 
    function USBCTRL_INTR_DEV_SUSPEND (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 14));
    pragma Inline (USBCTRL_INTR_DEV_SUSPEND);
 
-   USBCTRL_INTR_DEV_SUSPEND_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_DEV_SUSPEND (ALL1);
-
+   USBCTRL_INTR_DEV_SUSPEND_MASK : constant Unsigned_32 := GENERIC_1_14_MASK;
+   
    function USBCTRL_INTR_DEV_CONN_DIS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
    pragma Inline (USBCTRL_INTR_DEV_CONN_DIS);
 
-   USBCTRL_INTR_DEV_CONN_DIS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_DEV_CONN_DIS (ALL1);
+   USBCTRL_INTR_DEV_CONN_DIS_MASK : constant Unsigned_32 := GENERIC_1_13_MASK;
 
    function USBCTRL_INTR_BUS_RESET (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 12));
    pragma Inline (USBCTRL_INTR_BUS_RESET);
 
-   USBCTRL_INTR_BUS_RESET_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_BUS_RESET (ALL1);
+   USBCTRL_INTR_BUS_RESET_MASK : constant Unsigned_32 := GENERIC_1_12_MASK;
 
    function USBCTRL_INTR_VBUS_DETECT (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 11));
    pragma Inline (USBCTRL_INTR_VBUS_DETECT);
 
-   USBCTRL_INTR_VBUS_DETECT_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_VBUS_DETECT (ALL1);
+   USBCTRL_INTR_VBUS_DETECT_MASK : constant Unsigned_32 := GENERIC_1_11_MASK;
 
    function USBCTRL_INTR_STALL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 10));
    pragma Inline (USBCTRL_INTR_STALL);
 
-   USBCTRL_INTR_STALL_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_STALL (ALL1);
+   USBCTRL_INTR_STALL_MASK : constant Unsigned_32 := GENERIC_1_10_MASK;
 
    function USBCTRL_INTR_ERROR_CRC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
    pragma Inline (USBCTRL_INTR_ERROR_CRC);
 
-   USBCTRL_INTR_ERROR_CRC_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ERROR_CRC (ALL1);
-
+   USBCTRL_INTR_ERROR_CRC_MASK : constant Unsigned_32 := GENERIC_1_9_MASK;
+   
    function USBCTRL_INTR_ERROR_BIT_STUFF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 8));
    pragma Inline (USBCTRL_INTR_ERROR_BIT_STUFF);
 
-   USBCTRL_INTR_ERROR_BIT_STUFF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ERROR_BIT_STUFF (ALL1);
+   USBCTRL_INTR_ERROR_BIT_STUFF_MASK : constant Unsigned_32 := GENERIC_1_8_MASK;
 
    function USBCTRL_INTR_ERROR_RX_OVERFLOW (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 7));
    pragma Inline (USBCTRL_INTR_ERROR_RX_OVERFLOW);
 
-   USBCTRL_INTR_ERROR_RX_OVERFLOW_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ERROR_RX_OVERFLOW (ALL1);
+   USBCTRL_INTR_ERROR_RX_OVERFLOW_MASK : constant Unsigned_32 := GENERIC_1_7_MASK;
 
    function USBCTRL_INTR_ERROR_RX_TIMEOUT (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 6));
    pragma Inline (USBCTRL_INTR_ERROR_RX_TIMEOUT);
 
-   USBCTRL_INTR_ERROR_RX_TIMEOUT_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ERROR_RX_TIMEOUT (ALL1);
+   USBCTRL_INTR_ERROR_RX_TIMEOUT_MASK : constant Unsigned_32 := GENERIC_1_6_MASK;
 
    function USBCTRL_INTR_ERROR_DATA_SEQ (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 5));
    pragma Inline (USBCTRL_INTR_ERROR_DATA_SEQ);
 
-   USBCTRL_INTR_ERROR_DATA_SEQ_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_ERROR_DATA_SEQ (ALL1);
+   USBCTRL_INTR_ERROR_DATA_SEQ_MASK : constant Unsigned_32 := GENERIC_1_5_MASK;
 
    function USBCTRL_INTR_BUFF_STATUS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 4));
    pragma Inline (USBCTRL_INTR_BUFF_STATUS);
 
-   USBCTRL_INTR_BUFF_STATUS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_BUFF_STATUS (ALL1);
-
+   USBCTRL_INTR_BUFF_STATUS_MASK : constant Unsigned_32 := GENERIC_1_4_MASK;
+   
    function USBCTRL_INTR_TRANS_COMPLETE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 3));
    pragma Inline (USBCTRL_INTR_TRANS_COMPLETE);
 
-   USBCTRL_INTR_TRANS_COMPLETE_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_TRANS_COMPLETE (ALL1);
+   USBCTRL_INTR_TRANS_COMPLETE_MASK : constant Unsigned_32 := GENERIC_1_3_MASK;
 
    function USBCTRL_INTR_HOST_SOF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 2));
    pragma Inline (USBCTRL_INTR_HOST_SOF);
 
-   USBCTRL_INTR_HOST_SOF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_HOST_SOF (ALL1);
+   USBCTRL_INTR_HOST_SOF_MASK : constant Unsigned_32 := GENERIC_1_2_MASK;
 
    function USBCTRL_INTR_HOST_RESUME (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 1));
    pragma Inline (USBCTRL_INTR_HOST_RESUME);
 
-   USBCTRL_INTR_HOST_RESUME_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_HOST_RESUME (ALL1);
+   USBCTRL_INTR_HOST_RESUME_MASK : constant Unsigned_32 := GENERIC_1_1_MASK;
 
    function USBCTRL_INTR_HOST_CONN_DIS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 0));
    pragma Inline (USBCTRL_INTR_HOST_CONN_DIS);
 
-   USBCTRL_INTR_HOST_CONN_DIS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTR_HOST_CONN_DIS (ALL1);
+   USBCTRL_INTR_HOST_CONN_DIS_MASK : constant Unsigned_32 := GENERIC_1_0_MASK;
 
-   --  INTE Register macros
+   --  INTE Register macros 
 
    function USBCTRL_INTE_EPX_STOPPED_ON_NAK (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 23));
    pragma Inline (USBCTRL_INTE_EPX_STOPPED_ON_NAK);
 
-   USBCTRL_INTE_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_EPX_STOPPED_ON_NAK (ALL1);
+   USBCTRL_INTE_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := GENERIC_1_23_MASK;
 
    function USBCTRL_INTE_DEV_SM_WATCHDOG_FIRED (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 22));
    pragma Inline (USBCTRL_INTE_DEV_SM_WATCHDOG_FIRED);
 
-   USBCTRL_INTE_DEV_SM_WATCHDOG_FIRED_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_DEV_SM_WATCHDOG_FIRED (ALL1);
+   USBCTRL_INTE_DEV_SM_WATCHDOG_FIRED_MASK : constant Unsigned_32 := GENERIC_1_22_MASK;
 
    function USBCTRL_INTE_ENDPOINT_ERROR (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 21));
    pragma Inline (USBCTRL_INTE_ENDPOINT_ERROR);
 
-   USBCTRL_INTE_ENDPOINT_ERROR_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ENDPOINT_ERROR (ALL1);
+   USBCTRL_INTE_ENDPOINT_ERROR_MASK : constant Unsigned_32 := GENERIC_1_21_MASK;
 
    function USBCTRL_INTE_RX_SHORT_PACKET (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 20));
    pragma Inline (USBCTRL_INTE_RX_SHORT_PACKET);
 
-   USBCTRL_INTE_RX_SHORT_PACKET_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_RX_SHORT_PACKET (ALL1);
+   USBCTRL_INTE_RX_SHORT_PACKET_MASK : constant Unsigned_32 := GENERIC_1_20_MASK;
 
    function USBCTRL_INTE_EP_STALL_NAK (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 19));
    pragma Inline (USBCTRL_INTE_EP_STALL_NAK);
 
-   USBCTRL_INTE_EP_STALL_NAK_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_EP_STALL_NAK (ALL1);
+   USBCTRL_INTE_EP_STALL_NAK_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
 
    function USBCTRL_INTE_ABORT_DONE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 18));
    pragma Inline (USBCTRL_INTE_ABORT_DONE);
 
-   USBCTRL_INTE_ABORT_DONE_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ABORT_DONE (ALL1);
+   USBCTRL_INTE_ABORT_DONE_MASK : constant Unsigned_32 := GENERIC_1_18_MASK;
 
    function USBCTRL_INTE_DEV_SOF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
    pragma Inline (USBCTRL_INTE_DEV_SOF);
 
-   USBCTRL_INTE_DEV_SOF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_DEV_SOF (ALL1);
+   USBCTRL_INTE_DEV_SOF_MASK : constant Unsigned_32 := GENERIC_1_17_MASK;
 
    function USBCTRL_INTE_SETUP_REQ (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 16));
    pragma Inline (USBCTRL_INTE_SETUP_REQ);
 
-   USBCTRL_INTE_SETUP_REQ_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_SETUP_REQ (ALL1);
+   USBCTRL_INTE_SETUP_REQ_MASK : constant Unsigned_32 := GENERIC_1_16_MASK;
 
    function USBCTRL_INTE_DEV_RESUME_FROM_HOST (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 15));
    pragma Inline (USBCTRL_INTE_DEV_RESUME_FROM_HOST);
 
-   USBCTRL_INTE_DEV_RESUME_FROM_HOST_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_DEV_RESUME_FROM_HOST (ALL1);
+   USBCTRL_INTE_DEV_RESUME_FROM_HOST_MASK : constant Unsigned_32 := GENERIC_1_15_MASK;
 
    function USBCTRL_INTE_DEV_SUSPEND (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 14));
    pragma Inline (USBCTRL_INTE_DEV_SUSPEND);
 
-   USBCTRL_INTE_DEV_SUSPEND_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_DEV_SUSPEND (ALL1);
+   USBCTRL_INTE_DEV_SUSPEND_MASK : constant Unsigned_32 := GENERIC_1_14_MASK;
 
    function USBCTRL_INTE_DEV_CONN_DIS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
    pragma Inline (USBCTRL_INTE_DEV_CONN_DIS);
 
-   USBCTRL_INTE_DEV_CONN_DIS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_DEV_CONN_DIS (ALL1);
+   USBCTRL_INTE_DEV_CONN_DIS_MASK : constant Unsigned_32 := GENERIC_1_13_MASK;
 
    function USBCTRL_INTE_BUS_RESET (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 12));
    pragma Inline (USBCTRL_INTE_BUS_RESET);
 
-   USBCTRL_INTE_BUS_RESET_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_BUS_RESET (ALL1);
+   USBCTRL_INTE_BUS_RESET_MASK : constant Unsigned_32 := GENERIC_1_12_MASK;
 
    function USBCTRL_INTE_VBUS_DETECT (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 11));
    pragma Inline (USBCTRL_INTE_VBUS_DETECT);
 
-   USBCTRL_INTE_VBUS_DETECT_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_VBUS_DETECT (ALL1);
+   USBCTRL_INTE_VBUS_DETECT_MASK : constant Unsigned_32 := GENERIC_1_11_MASK;
 
    function USBCTRL_INTE_STALL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 10));
    pragma Inline (USBCTRL_INTE_STALL);
 
-   USBCTRL_INTE_STALL_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_STALL (ALL1);
+   USBCTRL_INTE_STALL_MASK : constant Unsigned_32 := GENERIC_1_10_MASK;
 
    function USBCTRL_INTE_ERROR_CRC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
    pragma Inline (USBCTRL_INTE_ERROR_CRC);
 
-   USBCTRL_INTE_ERROR_CRC_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ERROR_CRC (ALL1);
+   USBCTRL_INTE_ERROR_CRC_MASK : constant Unsigned_32 := GENERIC_1_9_MASK;
 
    function USBCTRL_INTE_ERROR_BIT_STUFF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 8));
    pragma Inline (USBCTRL_INTE_ERROR_BIT_STUFF);
 
-   USBCTRL_INTE_ERROR_BIT_STUFF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ERROR_BIT_STUFF (ALL1);
+   USBCTRL_INTE_ERROR_BIT_STUFF_MASK : constant Unsigned_32 := GENERIC_1_8_MASK;
 
    function USBCTRL_INTE_ERROR_RX_OVERFLOW (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 7));
    pragma Inline (USBCTRL_INTE_ERROR_RX_OVERFLOW);
 
-   USBCTRL_INTE_ERROR_RX_OVERFLOW_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ERROR_RX_OVERFLOW (ALL1);
+   USBCTRL_INTE_ERROR_RX_OVERFLOW_MASK : constant Unsigned_32 := GENERIC_1_7_MASK;
 
    function USBCTRL_INTE_ERROR_RX_TIMEOUT (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 6));
    pragma Inline (USBCTRL_INTE_ERROR_RX_TIMEOUT);
 
-   USBCTRL_INTE_ERROR_RX_TIMEOUT_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ERROR_RX_TIMEOUT (ALL1);
+   USBCTRL_INTE_ERROR_RX_TIMEOUT_MASK : constant Unsigned_32 := GENERIC_1_6_MASK;
 
    function USBCTRL_INTE_ERROR_DATA_SEQ (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 5));
    pragma Inline (USBCTRL_INTE_ERROR_DATA_SEQ);
 
-   USBCTRL_INTE_ERROR_DATA_SEQ_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_ERROR_DATA_SEQ (ALL1);
+   USBCTRL_INTE_ERROR_DATA_SEQ_MASK : constant Unsigned_32 := GENERIC_1_5_MASK;
 
    function USBCTRL_INTE_BUFF_STATUS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 4));
    pragma Inline (USBCTRL_INTE_BUFF_STATUS);
 
-   USBCTRL_INTE_BUFF_STATUS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_BUFF_STATUS (ALL1);
+   USBCTRL_INTE_BUFF_STATUS_MASK : constant Unsigned_32 := GENERIC_1_4_MASK;
 
    function USBCTRL_INTE_TRANS_COMPLETE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 3));
    pragma Inline (USBCTRL_INTE_TRANS_COMPLETE);
 
-   USBCTRL_INTE_TRANS_COMPLETE_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_TRANS_COMPLETE (ALL1);
+   USBCTRL_INTE_TRANS_COMPLETE_MASK : constant Unsigned_32 := GENERIC_1_3_MASK;
 
    function USBCTRL_INTE_HOST_SOF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 2));
    pragma Inline (USBCTRL_INTE_HOST_SOF);
 
-   USBCTRL_INTE_HOST_SOF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_HOST_SOF (ALL1);
+   USBCTRL_INTE_HOST_SOF_MASK : constant Unsigned_32 := GENERIC_1_2_MASK;
 
    function USBCTRL_INTE_HOST_RESUME (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 1));
    pragma Inline (USBCTRL_INTE_HOST_RESUME);
 
-   USBCTRL_INTE_HOST_RESUME_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_HOST_RESUME (ALL1);
+   USBCTRL_INTE_HOST_RESUME_MASK : constant Unsigned_32 := GENERIC_1_1_MASK;
 
    function USBCTRL_INTE_HOST_CONN_DIS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 0));
    pragma Inline (USBCTRL_INTE_HOST_CONN_DIS);
 
-   USBCTRL_INTE_HOST_CONN_DIS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTE_HOST_CONN_DIS (ALL1);
+   USBCTRL_INTE_HOST_CONN_DIS_MASK : constant Unsigned_32 := GENERIC_1_0_MASK;
 
    -----------------------------------------------------------------------------
    --  INTF Register macros
@@ -2215,169 +2360,145 @@ package RP2350_USB is
      (Shift_Left (v and 16#1#, 23));
    pragma Inline (USBCTRL_INTF_EPX_STOPPED_ON_NAK);
 
-   USBCTRL_INTF_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_EPX_STOPPED_ON_NAK (ALL1);
+   USBCTRL_INTF_EPX_STOPPED_ON_NAK_MASK : constant Unsigned_32 := GENERIC_1_23_MASK;
 
    function USBCTRL_INTF_DEV_SM_WATCHDOG_FIRED (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 22));
    pragma Inline (USBCTRL_INTF_DEV_SM_WATCHDOG_FIRED);
 
-   USBCTRL_INTF_DEV_SM_WATCHDOG_FIRED_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_DEV_SM_WATCHDOG_FIRED (ALL1);
+   USBCTRL_INTF_DEV_SM_WATCHDOG_FIRED_MASK : constant Unsigned_32 := GENERIC_1_22_MASK;
 
    function USBCTRL_INTF_ENDPOINT_ERROR (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 21));
    pragma Inline (USBCTRL_INTF_ENDPOINT_ERROR);
 
-   USBCTRL_INTF_ENDPOINT_ERROR_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ENDPOINT_ERROR (ALL1);
+   USBCTRL_INTF_ENDPOINT_ERROR_MASK : constant Unsigned_32 := GENERIC_1_21_MASK;
 
    function USBCTRL_INTF_RX_SHORT_PACKET (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 20));
    pragma Inline (USBCTRL_INTF_RX_SHORT_PACKET);
 
-   USBCTRL_INTF_RX_SHORT_PACKET_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_RX_SHORT_PACKET (ALL1);
+   USBCTRL_INTF_RX_SHORT_PACKET_MASK : constant Unsigned_32 := GENERIC_1_20_MASK;
 
    function USBCTRL_INTF_EP_STALL_NAK (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 19));
    pragma Inline (USBCTRL_INTF_EP_STALL_NAK);
 
-   USBCTRL_INTF_EP_STALL_NAK_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_EP_STALL_NAK (ALL1);
+   USBCTRL_INTF_EP_STALL_NAK_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
 
    function USBCTRL_INTF_ABORT_DONE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 18));
    pragma Inline (USBCTRL_INTF_ABORT_DONE);
 
-   USBCTRL_INTF_ABORT_DONE_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ABORT_DONE (ALL1);
+   USBCTRL_INTF_ABORT_DONE_MASK : constant Unsigned_32 := GENERIC_1_18_MASK;
 
    function USBCTRL_INTF_DEV_SOF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 17));
    pragma Inline (USBCTRL_INTF_DEV_SOF);
 
-   USBCTRL_INTF_DEV_SOF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_DEV_SOF (ALL1);
+   USBCTRL_INTF_DEV_SOF_MASK : constant Unsigned_32 := GENERIC_1_17_MASK;
 
    function USBCTRL_INTF_SETUP_REQ (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 16));
    pragma Inline (USBCTRL_INTF_SETUP_REQ);
 
-   USBCTRL_INTF_SETUP_REQ_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_SETUP_REQ (ALL1);
+   USBCTRL_INTF_SETUP_REQ_MASK : constant Unsigned_32 := GENERIC_1_16_MASK;
 
    function USBCTRL_INTF_DEV_RESUME_FROM_HOST (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 15));
    pragma Inline (USBCTRL_INTF_DEV_RESUME_FROM_HOST);
 
-   USBCTRL_INTF_DEV_RESUME_FROM_HOST_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_DEV_RESUME_FROM_HOST (ALL1);
+   USBCTRL_INTF_DEV_RESUME_FROM_HOST_MASK : constant Unsigned_32 := GENERIC_1_15_MASK;
 
    function USBCTRL_INTF_DEV_SUSPEND (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 14));
    pragma Inline (USBCTRL_INTF_DEV_SUSPEND);
 
-   USBCTRL_INTF_DEV_SUSPEND_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_DEV_SUSPEND (ALL1);
+   USBCTRL_INTF_DEV_SUSPEND_MASK : constant Unsigned_32 := GENERIC_1_14_MASK;
 
    function USBCTRL_INTF_DEV_CONN_DIS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 13));
    pragma Inline (USBCTRL_INTF_DEV_CONN_DIS);
 
-   USBCTRL_INTF_DEV_CONN_DIS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_DEV_CONN_DIS (ALL1);
+   USBCTRL_INTF_DEV_CONN_DIS_MASK : constant Unsigned_32 := GENERIC_1_13_MASK;
 
    function USBCTRL_INTF_BUS_RESET (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 12));
    pragma Inline (USBCTRL_INTF_BUS_RESET);
 
-   USBCTRL_INTF_BUS_RESET_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_BUS_RESET (ALL1);
+   USBCTRL_INTF_BUS_RESET_MASK : constant Unsigned_32 := GENERIC_1_12_MASK;
 
    function USBCTRL_INTF_VBUS_DETECT (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 11));
    pragma Inline (USBCTRL_INTF_VBUS_DETECT);
 
-   USBCTRL_INTF_VBUS_DETECT_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_VBUS_DETECT (ALL1);
+   USBCTRL_INTF_VBUS_DETECT_MASK : constant Unsigned_32 := GENERIC_1_11_MASK;
 
    function USBCTRL_INTF_STALL (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 10));
    pragma Inline (USBCTRL_INTF_STALL);
 
-   USBCTRL_INTF_STALL_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_STALL (ALL1);
+   USBCTRL_INTF_STALL_MASK : constant Unsigned_32 := GENERIC_1_10_MASK;
 
    function USBCTRL_INTF_ERROR_CRC (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 9));
    pragma Inline (USBCTRL_INTF_ERROR_CRC);
 
-   USBCTRL_INTF_ERROR_CRC_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ERROR_CRC (ALL1);
+   USBCTRL_INTF_ERROR_CRC_MASK : constant Unsigned_32 := GENERIC_1_9_MASK;
 
    function USBCTRL_INTF_ERROR_BIT_STUFF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 8));
    pragma Inline (USBCTRL_INTF_ERROR_BIT_STUFF);
 
-   USBCTRL_INTF_ERROR_BIT_STUFF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ERROR_BIT_STUFF (ALL1);
+   USBCTRL_INTF_ERROR_BIT_STUFF_MASK : constant Unsigned_32 := GENERIC_1_8_MASK;
 
    function USBCTRL_INTF_ERROR_RX_OVERFLOW (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 7));
    pragma Inline (USBCTRL_INTF_ERROR_RX_OVERFLOW);
 
-   USBCTRL_INTF_ERROR_RX_OVERFLOW_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ERROR_RX_OVERFLOW (ALL1);
+   USBCTRL_INTF_ERROR_RX_OVERFLOW_MASK : constant Unsigned_32 := GENERIC_1_7_MASK;
 
    function USBCTRL_INTF_ERROR_RX_TIMEOUT (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 6));
    pragma Inline (USBCTRL_INTF_ERROR_RX_TIMEOUT);
 
-   USBCTRL_INTF_ERROR_RX_TIMEOUT_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ERROR_RX_TIMEOUT (ALL1);
+   USBCTRL_INTF_ERROR_RX_TIMEOUT_MASK : constant Unsigned_32 := GENERIC_1_6_MASK;
 
    function USBCTRL_INTF_ERROR_DATA_SEQ (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 5));
    pragma Inline (USBCTRL_INTF_ERROR_DATA_SEQ);
 
-   USBCTRL_INTF_ERROR_DATA_SEQ_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_ERROR_DATA_SEQ (ALL1);
+   USBCTRL_INTF_ERROR_DATA_SEQ_MASK : constant Unsigned_32 := GENERIC_1_5_MASK;
 
    function USBCTRL_INTF_BUFF_STATUS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 4));
    pragma Inline (USBCTRL_INTF_BUFF_STATUS);
 
-   USBCTRL_INTF_BUFF_STATUS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_BUFF_STATUS (ALL1);
+   USBCTRL_INTF_BUFF_STATUS_MASK : constant Unsigned_32 := GENERIC_1_4_MASK;
 
    function USBCTRL_INTF_TRANS_COMPLETE (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 3));
    pragma Inline (USBCTRL_INTF_TRANS_COMPLETE);
 
-   USBCTRL_INTF_TRANS_COMPLETE_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_TRANS_COMPLETE (ALL1);
+   USBCTRL_INTF_TRANS_COMPLETE_MASK : constant Unsigned_32 := GENERIC_1_3_MASK;
 
    function USBCTRL_INTF_HOST_SOF (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 2));
    pragma Inline (USBCTRL_INTF_HOST_SOF);
 
-   USBCTRL_INTF_HOST_SOF_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_HOST_SOF (ALL1);
+   USBCTRL_INTF_HOST_SOF_MASK : constant Unsigned_32 := GENERIC_1_2_MASK;
 
    function USBCTRL_INTF_HOST_RESUME (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 1));
    pragma Inline (USBCTRL_INTF_HOST_RESUME);
 
-   USBCTRL_INTF_HOST_RESUME_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_HOST_RESUME (ALL1);
+   USBCTRL_INTF_HOST_RESUME_MASK : constant Unsigned_32 := GENERIC_1_1_MASK;
 
    function USBCTRL_INTF_HOST_CONN_DIS (v : Unsigned_32) return Unsigned_32 is
      (Shift_Left (v and 16#1#, 0));
    pragma Inline (USBCTRL_INTF_HOST_CONN_DIS);
 
-   USBCTRL_INTF_HOST_CONN_DIS_MASK : constant Unsigned_32 := 
-     USBCTRL_INTF_HOST_CONN_DIS (ALL1);
+   USBCTRL_INTF_HOST_CONN_DIS_MASK : constant Unsigned_32 := GENERIC_1_0_MASK;
 
    --  INTS Register macros
 

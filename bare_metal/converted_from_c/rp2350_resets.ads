@@ -137,15 +137,15 @@ package RP2350_Resets is
 
    --  RESET Register macros
    
-   RESET_GENERIC_USBCTRL_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
+   RESET_GENERIC_USBCTRL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
    RESET_GENERIC_UART1_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
    RESET_GENERIC_UART0_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
-   RESET_GENERIC_TRNG_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
-   RESET_GENERIC_TIMER1_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
-   RESET_GENERIC_TIMER0_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
+   RESET_GENERIC_TRNG_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   RESET_GENERIC_TIMER1_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
+   RESET_GENERIC_TIMER0_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
    RESET_GENERIC_TBMAN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
-   RESET_GENERIC_SYSINFO_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
-   RESET_GENERIC_SYSCFG_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);   
+   RESET_GENERIC_SYSINFO_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
+   RESET_GENERIC_SYSCFG_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);   
    RESET_GENERIC_SPI1_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
    RESET_GENERIC_SPI0_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
    RESET_GENERIC_SHA256_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);

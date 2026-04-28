@@ -25,8 +25,7 @@ with Interfaces; use Interfaces;
 with System;
 
 package RP2350_UART is
-
-   ALL1 : constant Unsigned_32 := 16#FFFF_FFFF#;
+   pragma Preelaborate;
 
    type Unsigned_32_Array is array (Natural range <>) of Unsigned_32;
 
@@ -434,163 +433,244 @@ package RP2350_UART is
    UART1_UARTPCELLID2_CLR : Unsigned_32 with Address => System'To_Address (16#4007_BFF8#), Volatile;
    UART1_UARTPCELLID3_CLR : Unsigned_32 with Address => System'To_Address (16#4007_BFFC#), Volatile;
 
+   UARTDR_GENERIC_OE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   UARTDR_GENERIC_BE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   UARTDR_GENERIC_PE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   UARTDR_GENERIC_FE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   UARTDR_GENERIC_DATA_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#FF#), 0);
+   
+   UARTSR_GENERIC_OE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   UARTSR_GENERIC_BE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   UARTSR_GENERIC_PE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   UARTSR_GENERIC_FE_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    -- UARTDR Register macros
    function UART0_UARTDR_OE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 11));
-   UART0_UARTDR_OE_MASK : constant Unsigned_32 := UART0_UARTDR_OE (ALL1);
+   UART0_UARTDR_OE_MASK : constant Unsigned_32 := UARTDR_GENERIC_OE_MASK;
    function UART0_UARTDR_BE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 10));
-   UART0_UARTDR_BE_MASK : constant Unsigned_32 := UART0_UARTDR_BE (ALL1);
+   UART0_UARTDR_BE_MASK : constant Unsigned_32 := UARTDR_GENERIC_BE_MASK;
    function UART0_UARTDR_PE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 9));
-   UART0_UARTDR_PE_MASK : constant Unsigned_32 := UART0_UARTDR_PE (ALL1);
+   UART0_UARTDR_PE_MASK : constant Unsigned_32 := UARTDR_GENERIC_PE_MASK;
    function UART0_UARTDR_FE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 8));
-   UART0_UARTDR_FE_MASK : constant Unsigned_32 := UART0_UARTDR_FE (ALL1);
+   UART0_UARTDR_FE_MASK : constant Unsigned_32 := UARTDR_GENERIC_FE_MASK;
    function UART0_UARTDR_DATA (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#FF#, 0));
-   UART0_UARTDR_DATA_MASK : constant Unsigned_32 := UART0_UARTDR_DATA (ALL1);
+   UART0_UARTDR_DATA_MASK : constant Unsigned_32 := UARTDR_GENERIC_DATA_MASK;
 
    -- UARTRSR Register macros
+   
    function UART0_UARTRSR_OE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 3));
-   UART0_UARTRSR_OE_MASK : constant Unsigned_32 := UART0_UARTRSR_OE (ALL1);
+   UART0_UARTRSR_OE_MASK : constant Unsigned_32 := UARTSR_GENERIC_OE_MASK;
    function UART0_UARTRSR_BE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 2));
-   UART0_UARTRSR_BE_MASK : constant Unsigned_32 := UART0_UARTRSR_BE (ALL1);
+   UART0_UARTRSR_BE_MASK : constant Unsigned_32 := UARTSR_GENERIC_BE_MASK;
    function UART0_UARTRSR_PE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 1));
-   UART0_UARTRSR_PE_MASK : constant Unsigned_32 := UART0_UARTRSR_PE (ALL1);
+   UART0_UARTRSR_PE_MASK : constant Unsigned_32 := UARTSR_GENERIC_PE_MASK;
    function UART0_UARTRSR_FE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 0));
-   UART0_UARTRSR_FE_MASK : constant Unsigned_32 := UART0_UARTRSR_FE (ALL1);
+   UART0_UARTRSR_FE_MASK : constant Unsigned_32 := UARTSR_GENERIC_FE_MASK;
 
    -- UARTFR Register macros
+    
+   UARTFR_GENERIC_RI_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   UARTFR_GENERIC_TXFE_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   UARTFR_GENERIC_RXFF_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   UARTFR_GENERIC_TXFF_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   UARTFR_GENERIC_RXFE_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   UARTFR_GENERIC_BUSY_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   UARTFR_GENERIC_DCD_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   UARTFR_GENERIC_DSR_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   UARTFR_GENERIC_CTS_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
+   UARTILPR_GENERIC_ILPDVSR_MASK      : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#FF#), 0);
+   UARTIBRD_GENERIC_BAUD_DIVINT_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#FFFF#), 0);
+   UARTFBRD_GENERIC_BAUD_DIVFRAC_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#3F#), 0);
+   
    function UART0_UARTFR_RI (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 8));
-   UART0_UARTFR_RI_MASK : constant Unsigned_32 := UART0_UARTFR_RI (ALL1);
+   UART0_UARTFR_RI_MASK : constant Unsigned_32 := UARTFR_GENERIC_RI_MASK;
    function UART0_UARTFR_TXFE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 7));
-   UART0_UARTFR_TXFE_MASK : constant Unsigned_32 := UART0_UARTFR_TXFE (ALL1);
+   UART0_UARTFR_TXFE_MASK : constant Unsigned_32 := UARTFR_GENERIC_TXFE_MASK;
    function UART0_UARTFR_RXFF (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 6));
-   UART0_UARTFR_RXFF_MASK : constant Unsigned_32 := UART0_UARTFR_RXFF (ALL1);
+   UART0_UARTFR_RXFF_MASK : constant Unsigned_32 := UARTFR_GENERIC_RXFF_MASK;
    function UART0_UARTFR_TXFF (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 5));
-   UART0_UARTFR_TXFF_MASK : constant Unsigned_32 := UART0_UARTFR_TXFF (ALL1);
+   UART0_UARTFR_TXFF_MASK : constant Unsigned_32 := UARTFR_GENERIC_TXFF_MASK;
    function UART0_UARTFR_RXFE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 4));
-   UART0_UARTFR_RXFE_MASK : constant Unsigned_32 := UART0_UARTFR_RXFE (ALL1);
+   UART0_UARTFR_RXFE_MASK : constant Unsigned_32 := UARTFR_GENERIC_RXFE_MASK;
    function UART0_UARTFR_BUSY (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 3));
-   UART0_UARTFR_BUSY_MASK : constant Unsigned_32 := UART0_UARTFR_BUSY (ALL1);
+   UART0_UARTFR_BUSY_MASK : constant Unsigned_32 := UARTFR_GENERIC_BUSY_MASK;
    function UART0_UARTFR_DCD (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 2));
-   UART0_UARTFR_DCD_MASK : constant Unsigned_32 := UART0_UARTFR_DCD (ALL1);
+   UART0_UARTFR_DCD_MASK : constant Unsigned_32 := UARTFR_GENERIC_DCD_MASK;
    function UART0_UARTFR_DSR (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 1));
-   UART0_UARTFR_DSR_MASK : constant Unsigned_32 := UART0_UARTFR_DSR (ALL1);
+   UART0_UARTFR_DSR_MASK : constant Unsigned_32 := UARTFR_GENERIC_DSR_MASK;
    function UART0_UARTFR_CTS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 0));
-   UART0_UARTFR_CTS_MASK : constant Unsigned_32 := UART0_UARTFR_CTS (ALL1);
+   UART0_UARTFR_CTS_MASK : constant Unsigned_32 := UARTFR_GENERIC_CTS_MASK;
 
-   -- UARTILPR Register macros
+   -- UARTILPR Register macros   
    function UART0_UARTILPR_ILPDVSR (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#FF#, 0));
-   UART0_UARTILPR_ILPDVSR_MASK : constant Unsigned_32 := UART0_UARTILPR_ILPDVSR (ALL1);
+   UART0_UARTILPR_ILPDVSR_MASK : constant Unsigned_32 :=  UARTILPR_GENERIC_ILPDVSR_MASK;
 
    -- UARTIBRD Register macros
    function UART0_UARTIBRD_BAUD_DIVINT (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#FFFF#, 0));
-   UART0_UARTIBRD_BAUD_DIVINT_MASK : constant Unsigned_32 := UART0_UARTIBRD_BAUD_DIVINT (ALL1);
+   UART0_UARTIBRD_BAUD_DIVINT_MASK : constant Unsigned_32 := UARTIBRD_GENERIC_BAUD_DIVINT_MASK;
 
    -- UARTFBRD Register macros
    function UART0_UARTFBRD_BAUD_DIVFRAC (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#3F#, 0));
-   UART0_UARTFBRD_BAUD_DIVFRAC_MASK : constant Unsigned_32 := UART0_UARTFBRD_BAUD_DIVFRAC (ALL1);
+   UART0_UARTFBRD_BAUD_DIVFRAC_MASK : constant Unsigned_32 := UARTFBRD_GENERIC_BAUD_DIVFRAC_MASK;
 
    -- UARTLCR_H Register macros
+   UARTLCR_H_GENERIC_SPS_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   UARTLCR_H_GENERIC_WLEN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(3), 5);
+   UARTLCR_H_GENERIC_FEN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   UARTLCR_H_GENERIC_STP2_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   UARTLCR_H_GENERIC_EPS_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   UARTLCR_H_GENERIC_PEN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   UARTLCR_H_GENERIC_BRK_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function UART0_UARTLCR_H_SPS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 7));
-   UART0_UARTLCR_H_SPS_MASK : constant Unsigned_32 := UART0_UARTLCR_H_SPS (ALL1);
+   UART0_UARTLCR_H_SPS_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_SPS_MASK;
    function UART0_UARTLCR_H_WLEN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#3#, 5));
-   UART0_UARTLCR_H_WLEN_MASK : constant Unsigned_32 := UART0_UARTLCR_H_WLEN (ALL1);
+   UART0_UARTLCR_H_WLEN_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_WLEN_MASK;
    function UART0_UARTLCR_H_FEN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 4));
-   UART0_UARTLCR_H_FEN_MASK : constant Unsigned_32 := UART0_UARTLCR_H_FEN (ALL1);
+   UART0_UARTLCR_H_FEN_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_FEN_MASK;
    function UART0_UARTLCR_H_STP2 (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 3));
-   UART0_UARTLCR_H_STP2_MASK : constant Unsigned_32 := UART0_UARTLCR_H_STP2 (ALL1);
+   UART0_UARTLCR_H_STP2_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_STP2_MASK;
    function UART0_UARTLCR_H_EPS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 2));
-   UART0_UARTLCR_H_EPS_MASK : constant Unsigned_32 := UART0_UARTLCR_H_EPS (ALL1);
+   UART0_UARTLCR_H_EPS_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_EPS_MASK;
    function UART0_UARTLCR_H_PEN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 1));
-   UART0_UARTLCR_H_PEN_MASK : constant Unsigned_32 := UART0_UARTLCR_H_PEN (ALL1);
+   UART0_UARTLCR_H_PEN_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_PEN_MASK;
    function UART0_UARTLCR_H_BRK (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 0));
-   UART0_UARTLCR_H_BRK_MASK : constant Unsigned_32 := UART0_UARTLCR_H_BRK (ALL1);
+   UART0_UARTLCR_H_BRK_MASK : constant Unsigned_32 := UARTLCR_H_GENERIC_BRK_MASK;
 
    -- UARTCR Register macros
+   UARTCR_GENERIC_CTSEN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
+   UARTCR_GENERIC_RTSEN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);
+   UARTCR_GENERIC_OUT2_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
+   UARTCR_GENERIC_OUT1_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
+   UARTCR_GENERIC_RTS_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   UARTCR_GENERIC_DTR_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   UARTCR_GENERIC_RXE_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   UARTCR_GENERIC_TXE_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   UARTCR_GENERIC_LBE_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);  
+   UARTCR_GENERIC_SIRLP_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   UARTCR_GENERIC_SIREN_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   UARTCR_GENERIC_UARTEN_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function UART0_UARTCR_CTSEN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 15));
-   UART0_UARTCR_CTSEN_MASK : constant Unsigned_32 := UART0_UARTCR_CTSEN (ALL1);
+   UART0_UARTCR_CTSEN_MASK : constant Unsigned_32 := UARTCR_GENERIC_CTSEN_MASK;
    function UART0_UARTCR_RTSEN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 14));
-   UART0_UARTCR_RTSEN_MASK : constant Unsigned_32 := UART0_UARTCR_RTSEN (ALL1);
+   UART0_UARTCR_RTSEN_MASK : constant Unsigned_32 := UARTCR_GENERIC_RTSEN_MASK;
    function UART0_UARTCR_OUT2 (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 13));
-   UART0_UARTCR_OUT2_MASK : constant Unsigned_32 := UART0_UARTCR_OUT2 (ALL1);
+   UART0_UARTCR_OUT2_MASK : constant Unsigned_32 := UARTCR_GENERIC_OUT2_MASK;
    function UART0_UARTCR_OUT1 (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 12));
-   UART0_UARTCR_OUT1_MASK : constant Unsigned_32 := UART0_UARTCR_OUT1 (ALL1);
+   UART0_UARTCR_OUT1_MASK : constant Unsigned_32 := UARTCR_GENERIC_OUT1_MASK;
    function UART0_UARTCR_RTS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 11));
-   UART0_UARTCR_RTS_MASK : constant Unsigned_32 := UART0_UARTCR_RTS (ALL1);
+   UART0_UARTCR_RTS_MASK : constant Unsigned_32 := UARTCR_GENERIC_RTS_MASK;
    function UART0_UARTCR_DTR (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 10));
-   UART0_UARTCR_DTR_MASK : constant Unsigned_32 := UART0_UARTCR_DTR (ALL1);
+   UART0_UARTCR_DTR_MASK : constant Unsigned_32 := UARTCR_GENERIC_DTR_MASK;
    function UART0_UARTCR_RXE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 9));
-   UART0_UARTCR_RXE_MASK : constant Unsigned_32 := UART0_UARTCR_RXE (ALL1);
+   UART0_UARTCR_RXE_MASK : constant Unsigned_32 := UARTCR_GENERIC_RXE_MASK;
    function UART0_UARTCR_TXE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 8));
-   UART0_UARTCR_TXE_MASK : constant Unsigned_32 := UART0_UARTCR_TXE (ALL1);
+   UART0_UARTCR_TXE_MASK : constant Unsigned_32 := UARTCR_GENERIC_TXE_MASK;
    function UART0_UARTCR_LBE (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 7));
-   UART0_UARTCR_LBE_MASK : constant Unsigned_32 := UART0_UARTCR_LBE (ALL1);
+   UART0_UARTCR_LBE_MASK : constant Unsigned_32 := UARTCR_GENERIC_LBE_MASK;
    function UART0_UARTCR_SIRLP (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 2));
-   UART0_UARTCR_SIRLP_MASK : constant Unsigned_32 := UART0_UARTCR_SIRLP (ALL1);
+   UART0_UARTCR_SIRLP_MASK : constant Unsigned_32 := UARTCR_GENERIC_SIRLP_MASK;
    function UART0_UARTCR_SIREN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 1));
-   UART0_UARTCR_SIREN_MASK : constant Unsigned_32 := UART0_UARTCR_SIREN (ALL1);
+   UART0_UARTCR_SIREN_MASK : constant Unsigned_32 := UARTCR_GENERIC_SIREN_MASK;
    function UART0_UARTCR_UARTEN (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 0));
-   UART0_UARTCR_UARTEN_MASK : constant Unsigned_32 := UART0_UARTCR_UARTEN (ALL1);
+   UART0_UARTCR_UARTEN_MASK : constant Unsigned_32 := UARTCR_GENERIC_UARTEN_MASK;
 
-   -- UARTIFLS Register macros
+   -- UARTIFLS Register macros   
+   UARTIFLS_GENERIC_RXIFLSEL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7#), 3);
+   UARTIFLS_GENERIC_TXIFLSEL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7#), 0);
+   
    function UART0_UARTIFLS_RXIFLSEL (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#7#, 3));
-   UART0_UARTIFLS_RXIFLSEL_MASK : constant Unsigned_32 := UART0_UARTIFLS_RXIFLSEL (ALL1);
+   UART0_UARTIFLS_RXIFLSEL_MASK : constant Unsigned_32 := UARTIFLS_GENERIC_RXIFLSEL_MASK;
    function UART0_UARTIFLS_TXIFLSEL (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#7#, 0));
-   UART0_UARTIFLS_TXIFLSEL_MASK : constant Unsigned_32 := UART0_UARTIFLS_TXIFLSEL (ALL1);
+   UART0_UARTIFLS_TXIFLSEL_MASK : constant Unsigned_32 := UARTIFLS_GENERIC_TXIFLSEL_MASK;
 
-   -- UARTIMSC Register macros
+   -- UARTIMSC Register macros 
+   UARTIMSC_GENERIC_OEIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   UARTIMSC_GENERIC_BEIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   UARTIMSC_GENERIC_PEIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   UARTIMSC_GENERIC_FEIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   UARTIMSC_GENERIC_RTIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   UARTIMSC_GENERIC_TXIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   UARTIMSC_GENERIC_RXIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   UARTIMSC_GENERIC_DSRMIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   UARTIMSC_GENERIC_DCDMIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   UARTIMSC_GENERIC_CTSMIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   UARTIMSC_GENERIC_RIMIM_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function UART0_UARTIMSC_OEIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 10));
-   UART0_UARTIMSC_OEIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_OEIM (ALL1);
+   UART0_UARTIMSC_OEIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_OEIM_MASK;
    function UART0_UARTIMSC_BEIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 9));
-   UART0_UARTIMSC_BEIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_BEIM (ALL1);
+   UART0_UARTIMSC_BEIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_BEIM_MASK;
    function UART0_UARTIMSC_PEIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 8));
-   UART0_UARTIMSC_PEIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_PEIM (ALL1);
+   UART0_UARTIMSC_PEIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_PEIM_MASK;
    function UART0_UARTIMSC_FEIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 7));
-   UART0_UARTIMSC_FEIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_FEIM (ALL1);
+   UART0_UARTIMSC_FEIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_FEIM_MASK;
    function UART0_UARTIMSC_RTIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 6));
-   UART0_UARTIMSC_RTIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_RTIM (ALL1);
+   UART0_UARTIMSC_RTIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_RTIM_MASK;
    function UART0_UARTIMSC_TXIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 5));
-   UART0_UARTIMSC_TXIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_TXIM (ALL1);
+   UART0_UARTIMSC_TXIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_TXIM_MASK;
    function UART0_UARTIMSC_RXIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 4));
-   UART0_UARTIMSC_RXIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_RXIM (ALL1);
+   UART0_UARTIMSC_RXIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_RXIM_MASK;
    function UART0_UARTIMSC_DSRMIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 3));
-   UART0_UARTIMSC_DSRMIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_DSRMIM (ALL1);
+   UART0_UARTIMSC_DSRMIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_DSRMIM_MASK;
    function UART0_UARTIMSC_DCDMIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 2));
-   UART0_UARTIMSC_DCDMIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_DCDMIM (ALL1);
+   UART0_UARTIMSC_DCDMIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_DCDMIM_MASK;
    function UART0_UARTIMSC_CTSMIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 1));
-   UART0_UARTIMSC_CTSMIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_CTSMIM (ALL1);
+   UART0_UARTIMSC_CTSMIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_CTSMIM_MASK;
    function UART0_UARTIMSC_RIMIM (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 0));
-   UART0_UARTIMSC_RIMIM_MASK : constant Unsigned_32 := UART0_UARTIMSC_RIMIM (ALL1);
+   UART0_UARTIMSC_RIMIM_MASK : constant Unsigned_32 := UARTIMSC_GENERIC_RIMIM_MASK;
 
-   -- UARTRIS Register macros
+   -- UARTRIS Register macros  
+   UARTRIS_GENERIC_OERIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   UARTRIS_GENERIC_BERIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   UARTRIS_GENERIC_PERIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   UARTRIS_GENERIC_FERIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   UARTRIS_GENERIC_RTRIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   UARTRIS_GENERIC_TXRIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   UARTRIS_GENERIC_RXRIS_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   UARTRIS_GENERIC_DSRRMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   UARTRIS_GENERIC_DCDRMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   UARTRIS_GENERIC_CTSRMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   UARTRIS_GENERIC_RIRMIS_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
+   
    function UART0_UARTRIS_OERIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 10));
-   UART0_UARTRIS_OERIS_MASK : constant Unsigned_32 := UART0_UARTRIS_OERIS (ALL1);
+   UART0_UARTRIS_OERIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_OERIS_MASK;
    function UART0_UARTRIS_BERIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 9));
-   UART0_UARTRIS_BERIS_MASK : constant Unsigned_32 := UART0_UARTRIS_BERIS (ALL1);
+   UART0_UARTRIS_BERIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_BERIS_MASK;
    function UART0_UARTRIS_PERIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 8));
-   UART0_UARTRIS_PERIS_MASK : constant Unsigned_32 := UART0_UARTRIS_PERIS (ALL1);
+   UART0_UARTRIS_PERIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_PERIS_MASK;
    function UART0_UARTRIS_FERIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 7));
-   UART0_UARTRIS_FERIS_MASK : constant Unsigned_32 := UART0_UARTRIS_FERIS (ALL1);
+   UART0_UARTRIS_FERIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_FERIS_MASK;
    function UART0_UARTRIS_RTRIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 6));
-   UART0_UARTRIS_RTRIS_MASK : constant Unsigned_32 := UART0_UARTRIS_RTRIS (ALL1);
+   UART0_UARTRIS_RTRIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_RTRIS_MASK;
    function UART0_UARTRIS_TXRIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 5));
-   UART0_UARTRIS_TXRIS_MASK : constant Unsigned_32 := UART0_UARTRIS_TXRIS (ALL1);
+   UART0_UARTRIS_TXRIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_TXRIS_MASK;
    function UART0_UARTRIS_RXRIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 4));
-   UART0_UARTRIS_RXRIS_MASK : constant Unsigned_32 := UART0_UARTRIS_RXRIS (ALL1);
+   UART0_UARTRIS_RXRIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_RXRIS_MASK;
    function UART0_UARTRIS_DSRRMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 3));
-   UART0_UARTRIS_DSRRMIS_MASK : constant Unsigned_32 := UART0_UARTRIS_DSRRMIS (ALL1);
+   UART0_UARTRIS_DSRRMIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_DSRRMIS_MASK;
    function UART0_UARTRIS_DCDRMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 2));
-   UART0_UARTRIS_DCDRMIS_MASK : constant Unsigned_32 := UART0_UARTRIS_DCDRMIS (ALL1);
+   UART0_UARTRIS_DCDRMIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_DCDRMIS_MASK;
    function UART0_UARTRIS_CTSRMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 1));
-   UART0_UARTRIS_CTSRMIS_MASK : constant Unsigned_32 := UART0_UARTRIS_CTSRMIS (ALL1);
+   UART0_UARTRIS_CTSRMIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_CTSRMIS_MASK;
    function UART0_UARTRIS_RIRMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 0));
-   UART0_UARTRIS_RIRMIS_MASK : constant Unsigned_32 := UART0_UARTRIS_RIRMIS (ALL1);
+   UART0_UARTRIS_RIRMIS_MASK : constant Unsigned_32 := UARTRIS_GENERIC_RIRMIS_MASK;
 
    -- UARTMIS Register macros
+   UARTIMS_GENERIC_OEMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   UARTIMS_GENERIC_BEMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   UARTIMS_GENERIC_PEMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   UARTIMS_GENERIC_FEMIS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   
    function UART0_UARTMIS_OEMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 10));
-   UART0_UARTMIS_OEMIS_MASK : constant Unsigned_32 := UART0_UARTMIS_OEMIS (ALL1);
+   UART0_UARTMIS_OEMIS_MASK : constant Unsigned_32 := UARTIMS_GENERIC_OEMIS_MASK;
    function UART0_UARTMIS_BEMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 9));
-   UART0_UARTMIS_BEMIS_MASK : constant Unsigned_32 := UART0_UARTMIS_BEMIS (ALL1);
+   UART0_UARTMIS_BEMIS_MASK : constant Unsigned_32 := UARTIMS_GENERIC_BEMIS_MASK;
    function UART0_UARTMIS_PEMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 8));
-   UART0_UARTMIS_PEMIS_MASK : constant Unsigned_32 := UART0_UARTMIS_PEMIS (ALL1);
+   UART0_UARTMIS_PEMIS_MASK : constant Unsigned_32 := UARTIMS_GENERIC_PEMIS_MASK;
    function UART0_UARTMIS_FEMIS (V : Unsigned_32) return Unsigned_32 is (Shift_Left (V and 16#1#, 7));
+   UART0_UARTMIS_FEMIS_MASK : constant Unsigned_32 := UARTIMS_GENERIC_FEMIS_MASK;
 
 end RP2350_UART;
