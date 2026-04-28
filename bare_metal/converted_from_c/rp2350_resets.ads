@@ -26,6 +26,39 @@ with System;
 
 package RP2350_Resets is
    pragma Preelaborate;
+   
+   GENERIC_1_31_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 31);
+   GENERIC_1_30_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 30);
+   GENERIC_1_29_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 29);
+   GENERIC_1_28_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
+   GENERIC_1_27_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
+   GENERIC_1_26_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
+   GENERIC_1_25_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
+   GENERIC_1_24_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
+   GENERIC_1_23_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
+   GENERIC_1_22_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
+   GENERIC_1_21_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
+   GENERIC_1_20_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);
+   GENERIC_1_19_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
+   GENERIC_1_18_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
+   GENERIC_1_17_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
+   GENERIC_1_16_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
+   GENERIC_1_15_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
+   GENERIC_1_14_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);
+   GENERIC_1_13_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
+   GENERIC_1_12_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
+   GENERIC_1_11_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   GENERIC_1_10_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
+   GENERIC_1_9_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
+   GENERIC_1_8_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
+   GENERIC_1_7_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
+   GENERIC_1_6_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
+   GENERIC_1_5_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
+   GENERIC_1_4_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
+   GENERIC_1_3_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
+   GENERIC_1_2_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
+   GENERIC_1_1_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
+   GENERIC_1_0_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0);
 
    type RSVD_Array is array (0 .. 1020) of Unsigned_32;
 
@@ -137,78 +170,59 @@ package RP2350_Resets is
 
    --  RESET Register macros
    
-   RESET_GENERIC_USBCTRL_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
-   RESET_GENERIC_UART1_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
-   RESET_GENERIC_UART0_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
-   RESET_GENERIC_TRNG_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
-   RESET_GENERIC_TIMER1_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
-   RESET_GENERIC_TIMER0_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
-   RESET_GENERIC_TBMAN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
-   RESET_GENERIC_SYSINFO_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
-   RESET_GENERIC_SYSCFG_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);   
-   RESET_GENERIC_SPI1_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
-   RESET_GENERIC_SPI0_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
-   RESET_GENERIC_SHA256_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
-   RESET_GENERIC_PWM_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
-   RESET_GENERIC_PLL_USB_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
-   RESET_GENERIC_PLL_SYS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);
-   RESET_GENERIC_PIO2_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
-   RESET_GENERIC_PIO1_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
-   RESET_GENERIC_PIO0_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
-   
    function RESETS_RESET_USBCTRL(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 28));
-   RESETS_RESET_USBCTRL_MASK : constant Unsigned_32 := RESET_GENERIC_USBCTRL_MASK;  --  RESETS_RESET_USBCTRL(ALL1);
+   RESETS_RESET_USBCTRL_MASK : constant Unsigned_32 := GENERIC_1_28_MASK;
 
    function RESETS_RESET_UART1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 27));
-   RESETS_RESET_UART1_MASK : constant Unsigned_32 := RESET_GENERIC_UART1_MASK;
+   RESETS_RESET_UART1_MASK : constant Unsigned_32 := GENERIC_1_27_MASK;
 
    function RESETS_RESET_UART0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 26));
-   RESETS_RESET_UART0_MASK : constant Unsigned_32 := RESET_GENERIC_UART0_MASK;
+   RESETS_RESET_UART0_MASK : constant Unsigned_32 := GENERIC_1_26_MASK;
 
    function RESETS_RESET_TRNG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 25));
-   RESETS_RESET_TRNG_MASK : constant Unsigned_32 := RESET_GENERIC_TRNG_MASK;
+   RESETS_RESET_TRNG_MASK : constant Unsigned_32 := GENERIC_1_25_MASK;
 
    function RESETS_RESET_TIMER1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 24));
-   RESETS_RESET_TIMER1_MASK : constant Unsigned_32 := RESET_GENERIC_TIMER1_MASK;
+   RESETS_RESET_TIMER1_MASK : constant Unsigned_32 := GENERIC_1_24_MASK;
 
    function RESETS_RESET_TIMER0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 23));
-   RESETS_RESET_TIMER0_MASK : constant Unsigned_32 := RESET_GENERIC_TIMER0_MASK;
+   RESETS_RESET_TIMER0_MASK : constant Unsigned_32 := GENERIC_1_23_MASK;
 
    function RESETS_RESET_TBMAN(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 22));
-   RESETS_RESET_TBMAN_MASK : constant Unsigned_32 := RESET_GENERIC_TBMAN_MASK;
+   RESETS_RESET_TBMAN_MASK : constant Unsigned_32 := GENERIC_1_22_MASK;
 
    function RESETS_RESET_SYSINFO(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 21));
-   RESETS_RESET_SYSINFO_MASK : constant Unsigned_32 := RESET_GENERIC_SYSINFO_MASK;
+   RESETS_RESET_SYSINFO_MASK : constant Unsigned_32 := GENERIC_1_21_MASK;
 
    function RESETS_RESET_SYSCFG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 20));
-   RESETS_RESET_SYSCFG_MASK : constant Unsigned_32 := RESET_GENERIC_SYSCFG_MASK;
+   RESETS_RESET_SYSCFG_MASK : constant Unsigned_32 := GENERIC_1_20_MASK;
    
    function RESETS_RESET_SPI1 (v : Unsigned_32) return Unsigned_32 is (Shift_Left (v and 1, 19));  
-   RESETS_RESET_SPI1_MASK : constant Unsigned_32 := RESET_GENERIC_SPI1_MASK;  --  RESETS_RESET_SPI1(ALL1);
+   RESETS_RESET_SPI1_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
 
    function RESETS_RESET_SPI0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 18));
-   RESETS_RESET_SPI0_MASK : constant Unsigned_32 := RESET_GENERIC_SPI0_MASK;
+   RESETS_RESET_SPI0_MASK : constant Unsigned_32 := GENERIC_1_18_MASK;
 
    function RESETS_RESET_SHA256(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 17));
-   RESETS_RESET_SHA256_MASK : constant Unsigned_32 := RESET_GENERIC_SHA256_MASK;
+   RESETS_RESET_SHA256_MASK : constant Unsigned_32 := GENERIC_1_17_MASK;
 
    function RESETS_RESET_PWM(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 16));
-   RESETS_RESET_PWM_MASK : constant Unsigned_32 := RESET_GENERIC_PWM_MASK;
+   RESETS_RESET_PWM_MASK : constant Unsigned_32 := GENERIC_1_16_MASK;
 
    function RESETS_RESET_PLL_USB(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 15));
-   RESETS_RESET_PLL_USB_MASK : constant Unsigned_32 := RESET_GENERIC_PLL_USB_MASK;
+   RESETS_RESET_PLL_USB_MASK : constant Unsigned_32 := GENERIC_1_15_MASK;
 
    function RESETS_RESET_PLL_SYS(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 14));
-   RESETS_RESET_PLL_SYS_MASK : constant Unsigned_32 := RESET_GENERIC_PLL_SYS_MASK;
+   RESETS_RESET_PLL_SYS_MASK : constant Unsigned_32 := GENERIC_1_14_MASK;
 
    function RESETS_RESET_PIO2(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 13));
-   RESETS_RESET_PIO2_MASK : constant Unsigned_32 := RESET_GENERIC_PIO2_MASK;
+   RESETS_RESET_PIO2_MASK : constant Unsigned_32 := GENERIC_1_13_MASK;
 
    function RESETS_RESET_PIO1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 12));
-   RESETS_RESET_PIO1_MASK : constant Unsigned_32 := RESET_GENERIC_PIO1_MASK;
+   RESETS_RESET_PIO1_MASK : constant Unsigned_32 := GENERIC_1_12_MASK;
 
    function RESETS_RESET_PIO0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 11));
-   RESETS_RESET_PIO0_MASK : constant Unsigned_32 := RESET_GENERIC_PIO0_MASK;
+   RESETS_RESET_PIO0_MASK : constant Unsigned_32 := GENERIC_1_11_MASK;
 
    RESET_GENERIC_PADS_QSPI_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
    RESET_GENERIC_PADS_BANK0_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
@@ -256,212 +270,180 @@ package RP2350_Resets is
    RESETS_RESET_ADC_MASK : constant Unsigned_32 := RESET_GENERIC_ADC_MASK;
    
    function RESETS_RESET_DONE_USBCTRL(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 28));
-   RESETS_RESET_DONE_USBCTRL_MASK : constant Unsigned_32 := RESET_GENERIC_USBCTRL_MASK;
+   RESETS_RESET_DONE_USBCTRL_MASK : constant Unsigned_32 := GENERIC_1_28_MASK;
 
    function RESETS_RESET_DONE_UART1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 27));
-   RESETS_RESET_DONE_UART1_MASK : constant Unsigned_32 := RESET_GENERIC_UART1_MASK;
+   RESETS_RESET_DONE_UART1_MASK : constant Unsigned_32 := GENERIC_1_27_MASK;
 
    function RESETS_RESET_DONE_UART0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 26));
-   RESETS_RESET_DONE_UART0_MASK : constant Unsigned_32 := RESET_GENERIC_UART0_MASK;
+   RESETS_RESET_DONE_UART0_MASK : constant Unsigned_32 := GENERIC_1_26_MASK;
 
    function RESETS_RESET_DONE_TRNG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 25));
-   RESETS_RESET_DONE_TRNG_MASK : constant Unsigned_32 := RESET_GENERIC_TRNG_MASK;
+   RESETS_RESET_DONE_TRNG_MASK : constant Unsigned_32 := GENERIC_1_25_MASK;
 
    function RESETS_RESET_DONE_TIMER1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 24));
-   RESETS_RESET_DONE_TIMER1_MASK : constant Unsigned_32 := RESET_GENERIC_TIMER1_MASK;
+   RESETS_RESET_DONE_TIMER1_MASK : constant Unsigned_32 := GENERIC_1_24_MASK;
 
    function RESETS_RESET_DONE_TIMER0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 23));
-   RESETS_RESET_DONE_TIMER0_MASK : constant Unsigned_32 := RESET_GENERIC_TIMER0_MASK;
+   RESETS_RESET_DONE_TIMER0_MASK : constant Unsigned_32 := GENERIC_1_23_MASK;
 
    function RESETS_RESET_DONE_TBMAN(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 22));
-   RESETS_RESET_DONE_TBMAN_MASK : constant Unsigned_32 := RESET_GENERIC_TBMAN_MASK;
+   RESETS_RESET_DONE_TBMAN_MASK : constant Unsigned_32 := GENERIC_1_22_MASK;
    
    function RESETS_RESET_DONE_SYSINFO(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 21));
-   RESETS_RESET_DONE_SYSINFO_MASK : constant Unsigned_32 := RESET_GENERIC_SYSINFO_MASK;
+   RESETS_RESET_DONE_SYSINFO_MASK : constant Unsigned_32 := GENERIC_1_21_MASK;
 
    function RESETS_RESET_DONE_SYSCFG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 20));
-   RESETS_RESET_DONE_SYSCFG_MASK : constant Unsigned_32 := RESET_GENERIC_SYSCFG_MASK;
+   RESETS_RESET_DONE_SYSCFG_MASK : constant Unsigned_32 := GENERIC_1_20_MASK;
 
    function RESETS_RESET_DONE_SPI1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 19));
-   RESETS_RESET_DONE_SPI1_MASK : constant Unsigned_32 := RESET_GENERIC_SPI1_MASK;
+   RESETS_RESET_DONE_SPI1_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
 
    function RESETS_RESET_DONE_SPI0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 18));
-   RESETS_RESET_DONE_SPI0_MASK : constant Unsigned_32 := RESET_GENERIC_SPI0_MASK;
+   RESETS_RESET_DONE_SPI0_MASK : constant Unsigned_32 := GENERIC_1_18_MASK;
 
    function RESETS_RESET_DONE_SHA256(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 17));
-   RESETS_RESET_DONE_SHA256_MASK : constant Unsigned_32 := RESET_GENERIC_SHA256_MASK;
+   RESETS_RESET_DONE_SHA256_MASK : constant Unsigned_32 := GENERIC_1_17_MASK;
 
    function RESETS_RESET_DONE_PWM(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 16));
-   RESETS_RESET_DONE_PWM_MASK : constant Unsigned_32 := RESET_GENERIC_PWM_MASK;
+   RESETS_RESET_DONE_PWM_MASK : constant Unsigned_32 := GENERIC_1_16_MASK;
 
    function RESETS_RESET_DONE_PLL_USB(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 15));
-   RESETS_RESET_DONE_PLL_USB_MASK : constant Unsigned_32 := RESET_GENERIC_PLL_USB_MASK;
+   RESETS_RESET_DONE_PLL_USB_MASK : constant Unsigned_32 := GENERIC_1_15_MASK;
 
    function RESETS_RESET_DONE_PLL_SYS(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 14));
-   RESETS_RESET_DONE_PLL_SYS_MASK : constant Unsigned_32 := RESET_GENERIC_PLL_SYS_MASK;
+   RESETS_RESET_DONE_PLL_SYS_MASK : constant Unsigned_32 := GENERIC_1_14_MASK;
 
    function RESETS_RESET_DONE_PIO2(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 13));
-   RESETS_RESET_DONE_PIO2_MASK : constant Unsigned_32 := RESET_GENERIC_PIO2_MASK;
+   RESETS_RESET_DONE_PIO2_MASK : constant Unsigned_32 := GENERIC_1_13_MASK;
 
    function RESETS_RESET_DONE_PIO1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 12));
-   RESETS_RESET_DONE_PIO1_MASK : constant Unsigned_32 := RESET_GENERIC_PIO1_MASK;
+   RESETS_RESET_DONE_PIO1_MASK : constant Unsigned_32 := GENERIC_1_12_MASK;
 
    function RESETS_RESET_DONE_PIO0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 11));
-   RESETS_RESET_DONE_PIO0_MASK : constant Unsigned_32 := RESET_GENERIC_PIO0_MASK;
+   RESETS_RESET_DONE_PIO0_MASK : constant Unsigned_32 := GENERIC_1_11_MASK;
 
    function RESETS_RESET_DONE_PADS_QSPI(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 10));
-   RESETS_RESET_DONE_PADS_QSPI_MASK : constant Unsigned_32 := RESET_GENERIC_PADS_QSPI_MASK;
+   RESETS_RESET_DONE_PADS_QSPI_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
 
    function RESETS_RESET_DONE_PADS_BANK0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 9));
-   RESETS_RESET_DONE_PADS_BANK0_MASK : constant Unsigned_32 := RESET_GENERIC_PADS_BANK0_MASK;
+   RESETS_RESET_DONE_PADS_BANK0_MASK : constant Unsigned_32 := GENERIC_1_9_MASK;
 
    function RESETS_RESET_DONE_JTAG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 8));
-   RESETS_RESET_DONE_JTAG_MASK : constant Unsigned_32 := RESET_GENERIC_JTAG_MASK;
+   RESETS_RESET_DONE_JTAG_MASK : constant Unsigned_32 := GENERIC_1_8_MASK;
 
    function RESETS_RESET_DONE_IO_QSPI(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 7));
-   RESETS_RESET_DONE_IO_QSPI_MASK : constant Unsigned_32 := RESET_GENERIC_IO_QSPI_MASK;
+   RESETS_RESET_DONE_IO_QSPI_MASK : constant Unsigned_32 := GENERIC_1_7_MASK;
 
    function RESETS_RESET_DONE_IO_BANK0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 6));
-   RESETS_RESET_DONE_IO_BANK0_MASK : constant Unsigned_32 := RESET_GENERIC_IO_BANK0_MASK;
+   RESETS_RESET_DONE_IO_BANK0_MASK : constant Unsigned_32 := GENERIC_1_6_MASK;
 
    function RESETS_RESET_DONE_I2C1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 5));
-   RESETS_RESET_DONE_I2C1_MASK : constant Unsigned_32 := RESET_GENERIC_I2C1_MASK;
+   RESETS_RESET_DONE_I2C1_MASK : constant Unsigned_32 := GENERIC_1_5_MASK;
 
    function RESETS_RESET_DONE_I2C0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 4));
-   RESETS_RESET_DONE_I2C0_MASK : constant Unsigned_32 := RESET_GENERIC_I2C0_MASK;
+   RESETS_RESET_DONE_I2C0_MASK : constant Unsigned_32 := GENERIC_1_4_MASK;
 
    function RESETS_RESET_DONE_HSTX(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 3));
-   RESETS_RESET_DONE_HSTX_MASK : constant Unsigned_32 := RESET_GENERIC_HSTX_MASK;
+   RESETS_RESET_DONE_HSTX_MASK : constant Unsigned_32 := GENERIC_1_3_MASK;
 
    function RESETS_RESET_DONE_DMA(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 2));
-   RESETS_RESET_DONE_DMA_MASK : constant Unsigned_32 := RESET_GENERIC_DMA_MASK;
+   RESETS_RESET_DONE_DMA_MASK : constant Unsigned_32 := GENERIC_1_2_MASK;
 
    function RESETS_RESET_DONE_BUSCTRL(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 1));
-   RESETS_RESET_DONE_BUSCTRL_MASK : constant Unsigned_32 := RESET_GENERIC_BUSCTRL_MASK;
+   RESETS_RESET_DONE_BUSCTRL_MASK : constant Unsigned_32 := GENERIC_1_1_MASK;
 
    function RESETS_RESET_DONE_ADC(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 0));
-   RESETS_RESET_DONE_ADC_MASK : constant Unsigned_32 := RESET_GENERIC_ADC_MASK;
+   RESETS_RESET_DONE_ADC_MASK : constant Unsigned_32 := GENERIC_1_0_MASK;
 
    --  WDSEL Register macros
-   
-   --  RESET_GENERIC_USBCTRL_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 28);
-   --  RESET_GENERIC_UART1_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 27);
-   --  RESET_GENERIC_UART0_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 26);
-   --  RESET_GENERIC_TRNG_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 25);
-   --  RESET_GENERIC_TIMER1_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 24);
-   --  RESET_GENERIC_TIMER0_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 23);
-   --  RESET_GENERIC_TBMAN_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 22);
 
    function RESETS_WDSEL_USBCTRL(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 28));
-   RESETS_WDSEL_USBCTRL_MASK : constant Unsigned_32 := RESET_GENERIC_USBCTRL_MASK;
+   RESETS_WDSEL_USBCTRL_MASK : constant Unsigned_32 := GENERIC_1_28_MASK;
 
    function RESETS_WDSEL_UART1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 27));
-   RESETS_WDSEL_UART1_MASK : constant Unsigned_32 := RESET_GENERIC_UART1_MASK;
+   RESETS_WDSEL_UART1_MASK : constant Unsigned_32 := GENERIC_1_27_MASK;
 
    function RESETS_WDSEL_UART0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 26));
-   RESETS_WDSEL_UART0_MASK : constant Unsigned_32 := RESET_GENERIC_UART0_MASK;
+   RESETS_WDSEL_UART0_MASK : constant Unsigned_32 := GENERIC_1_26_MASK;
 
    function RESETS_WDSEL_TRNG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 25));
-   RESETS_WDSEL_TRNG_MASK : constant Unsigned_32 := RESET_GENERIC_TRNG_MASK;
+   RESETS_WDSEL_TRNG_MASK : constant Unsigned_32 := GENERIC_1_25_MASK;
 
    function RESETS_WDSEL_TIMER1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 24));
-   RESETS_WDSEL_TIMER1_MASK : constant Unsigned_32 := RESET_GENERIC_TIMER1_MASK;
+   RESETS_WDSEL_TIMER1_MASK : constant Unsigned_32 := GENERIC_1_24_MASK;
 
    function RESETS_WDSEL_TIMER0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 23));
-   RESETS_WDSEL_TIMER0_MASK : constant Unsigned_32 := RESET_GENERIC_TIMER0_MASK;
+   RESETS_WDSEL_TIMER0_MASK : constant Unsigned_32 := GENERIC_1_23_MASK;
 
    function RESETS_WDSEL_TBMAN(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 22));
-   RESETS_WDSEL_TBMAN_MASK : constant Unsigned_32 := RESET_GENERIC_TBMAN_MASK;
-   
-   --  RESET_GENERIC_SYSINFO_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 21);
-   --  RESET_GENERIC_SYSCFG_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 20);
-   --  RESET_GENERIC_SPI1_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 19);
-   --  RESET_GENERIC_SPI0_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 18);
-   --  RESET_GENERIC_SHA256_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 17);
-   --  RESET_GENERIC_PWM_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 16);
-   --  RESET_GENERIC_PLL_USB_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 15);
-   --  RESET_GENERIC_PLL_SYS_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 14);
-   --  RESET_GENERIC_PIO2_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 13);
-   --  RESET_GENERIC_PIO1_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 12);
-   --  RESET_GENERIC_PIO0_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 11);
+   RESETS_WDSEL_TBMAN_MASK : constant Unsigned_32 := GENERIC_1_22_MASK;
 
    function RESETS_WDSEL_SYSINFO(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 21));
-   RESETS_WDSEL_SYSINFO_MASK : constant Unsigned_32 := RESET_GENERIC_SYSINFO_MASK;
+   RESETS_WDSEL_SYSINFO_MASK : constant Unsigned_32 := GENERIC_1_21_MASK;
 
    function RESETS_WDSEL_SYSCFG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 20));
-   RESETS_WDSEL_SYSCFG_MASK : constant Unsigned_32 := RESET_GENERIC_SYSCFG_MASK;
+   RESETS_WDSEL_SYSCFG_MASK : constant Unsigned_32 := GENERIC_1_20_MASK;
 
    function RESETS_WDSEL_SPI1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 19));
-   RESETS_WDSEL_SPI1_MASK : constant Unsigned_32 := RESET_GENERIC_SPI1_MASK;
+   RESETS_WDSEL_SPI1_MASK : constant Unsigned_32 := GENERIC_1_19_MASK;
 
    function RESETS_WDSEL_SPI0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 18));
-   RESETS_WDSEL_SPI0_MASK : constant Unsigned_32 := RESET_GENERIC_SPI0_MASK;
+   RESETS_WDSEL_SPI0_MASK : constant Unsigned_32 := GENERIC_1_18_MASK;
  
    function RESETS_WDSEL_SHA256(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 17));
-   RESETS_WDSEL_SHA256_MASK : constant Unsigned_32 := RESET_GENERIC_SHA256_MASK;
+   RESETS_WDSEL_SHA256_MASK : constant Unsigned_32 := GENERIC_1_17_MASK;
 
    function RESETS_WDSEL_PWM(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 16));
-   RESETS_WDSEL_PWM_MASK : constant Unsigned_32 := RESET_GENERIC_PWM_MASK;
+   RESETS_WDSEL_PWM_MASK : constant Unsigned_32 := GENERIC_1_16_MASK;
 
    function RESETS_WDSEL_PLL_USB(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 15));
-   RESETS_WDSEL_PLL_USB_MASK : constant Unsigned_32 := RESET_GENERIC_PLL_USB_MASK;
+   RESETS_WDSEL_PLL_USB_MASK : constant Unsigned_32 := GENERIC_1_15_MASK;
 
    function RESETS_WDSEL_PLL_SYS(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 14));
-   RESETS_WDSEL_PLL_SYS_MASK : constant Unsigned_32 := RESET_GENERIC_PLL_SYS_MASK;
+   RESETS_WDSEL_PLL_SYS_MASK : constant Unsigned_32 := GENERIC_1_14_MASK;
 
    function RESETS_WDSEL_PIO2(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 13));
-   RESETS_WDSEL_PIO2_MASK : constant Unsigned_32 := RESET_GENERIC_PIO2_MASK;
+   RESETS_WDSEL_PIO2_MASK : constant Unsigned_32 := GENERIC_1_13_MASK;
 
    function RESETS_WDSEL_PIO1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 12));
-   RESETS_WDSEL_PIO1_MASK : constant Unsigned_32 := RESET_GENERIC_PIO1_MASK;
+   RESETS_WDSEL_PIO1_MASK : constant Unsigned_32 := GENERIC_1_12_MASK;
 
    function RESETS_WDSEL_PIO0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 11));
-   RESETS_WDSEL_PIO0_MASK : constant Unsigned_32 := RESET_GENERIC_PIO0_MASK;
+   RESETS_WDSEL_PIO0_MASK : constant Unsigned_32 := GENERIC_1_11_MASK;
    
-   --  RESET_GENERIC_PADS_QSPI_MASK  : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 10);
-   --  RESET_GENERIC_PADS_BANK0_MASK : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 9);
-   --  RESET_GENERIC_JTAG_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 8);
-   --  RESET_GENERIC_IO_QSPI_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 7);
-   --  RESET_GENERIC_IO_BANK0_MASK   : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 6);
-   --  RESET_GENERIC_I2C1_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 5);
-   --  RESET_GENERIC_I2C0_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 4);
-   --  RESET_GENERIC_HSTX_MASK       : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 3);
-   --  RESET_GENERIC_DMA_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 2);
-   --  RESET_GENERIC_BUSCTRL_MASK    : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 1);
-   --  RESET_GENERIC_ADC_MASK        : constant Unsigned_32 := Shift_Left (Unsigned_32'(1), 0)
-
    function RESETS_WDSEL_PADS_QSPI(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 10));
-   RESETS_WDSEL_PADS_QSPI_MASK : constant Unsigned_32 := RESET_GENERIC_PADS_QSPI_MASK;
+   RESETS_WDSEL_PADS_QSPI_MASK : constant Unsigned_32 := GENERIC_1_10_MASK;
 
    function RESETS_WDSEL_PADS_BANK0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 9));
-   RESETS_WDSEL_PADS_BANK0_MASK : constant Unsigned_32 := RESET_GENERIC_PADS_BANK0_MASK;
+   RESETS_WDSEL_PADS_BANK0_MASK : constant Unsigned_32 := GENERIC_1_9_MASK;
 
    function RESETS_WDSEL_JTAG(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 8));
-   RESETS_WDSEL_JTAG_MASK : constant Unsigned_32 := RESET_GENERIC_JTAG_MASK;
+   RESETS_WDSEL_JTAG_MASK : constant Unsigned_32 := GENERIC_1_8_MASK;
 
    function RESETS_WDSEL_IO_QSPI(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 7));
-   RESETS_WDSEL_IO_QSPI_MASK : constant Unsigned_32 := RESET_GENERIC_IO_QSPI_MASK;
+   RESETS_WDSEL_IO_QSPI_MASK : constant Unsigned_32 := GENERIC_1_7_MASK;
 
    function RESETS_WDSEL_IO_BANK0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 6));
-   RESETS_WDSEL_IO_BANK0_MASK : constant Unsigned_32 := RESET_GENERIC_IO_BANK0_MASK;
+   RESETS_WDSEL_IO_BANK0_MASK : constant Unsigned_32 := GENERIC_1_6_MASK;
 
    function RESETS_WDSEL_I2C1(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 5));
-   RESETS_WDSEL_I2C1_MASK : constant Unsigned_32 := RESET_GENERIC_I2C1_MASK;
+   RESETS_WDSEL_I2C1_MASK : constant Unsigned_32 := GENERIC_1_5_MASK;
 
    function RESETS_WDSEL_I2C0(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 4));
-   RESETS_WDSEL_I2C0_MASK : constant Unsigned_32 := RESET_GENERIC_I2C0_MASK;
+   RESETS_WDSEL_I2C0_MASK : constant Unsigned_32 := GENERIC_1_4_MASK;
 
    function RESETS_WDSEL_HSTX(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 3));
-   RESETS_WDSEL_HSTX_MASK : constant Unsigned_32 := RESET_GENERIC_HSTX_MASK;
+   RESETS_WDSEL_HSTX_MASK : constant Unsigned_32 := GENERIC_1_3_MASK;
 
    function RESETS_WDSEL_DMA(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 2));
-   RESETS_WDSEL_DMA_MASK : constant Unsigned_32 := RESET_GENERIC_DMA_MASK;
+   RESETS_WDSEL_DMA_MASK : constant Unsigned_32 := GENERIC_1_2_MASK;
 
    function RESETS_WDSEL_BUSCTRL(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 1));
-   RESETS_WDSEL_BUSCTRL_MASK : constant Unsigned_32 := RESET_GENERIC_BUSCTRL_MASK;
+   RESETS_WDSEL_BUSCTRL_MASK : constant Unsigned_32 := GENERIC_1_1_MASK;
 
    function RESETS_WDSEL_ADC(v : Unsigned_32) return Unsigned_32 is (Shift_Left(v and 1, 0));
-   RESETS_WDSEL_ADC_MASK : constant Unsigned_32 := RESET_GENERIC_ADC_MASK;
+   RESETS_WDSEL_ADC_MASK : constant Unsigned_32 := GENERIC_1_0_MASK;
 
    --  RESET_DONE Register macros (Note: These are identical to the ones above as per original C code)
    --  Redeclared here conceptually to match the C source structure, though in Ada they are already visible.

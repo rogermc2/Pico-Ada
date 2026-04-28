@@ -2,6 +2,7 @@ with Interfaces; use Interfaces;
 with System;
 
 package RP2350_USB is
+   pragma Preelaborate;
 
    --  Copyright (c) 2024-2025 Douglas H. Summerville (dsummer@binghamton.edu) 
     -- 
@@ -25,8 +26,6 @@ package RP2350_USB is
     --  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
     --  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     --  DEALINGS IN THE SOFTWARE.
-    
-   pragma Preelaborate;
     
    GENERIC_7_5_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#7#), 5); 
    GENERIC_F_0_MASK     : constant Unsigned_32 := Shift_Left (Unsigned_32'(16#F#), 0);  
