@@ -1,0 +1,8 @@
+pragma License (Modified_Gpl);
+pragma Ada_2022;
+pragma Extensions_Allowed (On);
+pragma Profile (Jorvik);
+
+-- vim: set textwidth=0 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab :
+-- vim: set filetype=ada fileencoding=utf8 fileformat=unix foldmethod=expr :
+-- vim: set nospell spelllang=en_gb :
