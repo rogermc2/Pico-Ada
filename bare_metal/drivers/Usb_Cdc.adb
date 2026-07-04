@@ -5,8 +5,7 @@ with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
 package body USB_CDC is
-   
-   
+    
    function USBRAM_OFFSET (Addr : System.Address) return Unsigned_32;
 
    procedure Clear_EP_State (EP : Integer) is

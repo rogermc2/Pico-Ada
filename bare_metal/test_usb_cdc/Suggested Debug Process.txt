@@ -1,0 +1,18 @@
+
+
+1. Every overlaid peripheral object:
+   with Address => ..., Volatile;
+   pragma Import (Ada, Object);
+
+2. Every generated register-spec package:
+   pragma Preelaborate;
+   no MASK := Function(ALL1);
+
+3. Reset code:
+   verify actual RP2350 RESET/SET/CLR/DONE offsets.
+
+4. USB clock:
+   configure PLL_USB or correct 48 MHz source before waiting on CLK_USB_SELECTED.
+
+5. Interrupts:
+   enable USB IRQ only after handler/vector is valid.
