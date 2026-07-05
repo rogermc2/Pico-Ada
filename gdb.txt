@@ -2,6 +2,8 @@
 openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg -c "adapter speed 5000" -c "init; reset halt"
 If this fails, disconnect then reconnect the debugger.
 
+unset CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH SDKROOT CFLAGS CPPFLAGS ADA_OBJECTS_PATH GPR_PROJECT_PATH
+
 If terminal IO required, in another terminal:
 ls /dev/cu*      --  get available ports
 Roger@Rogers-Mac-mini ~ % screen /dev/<port> 115200

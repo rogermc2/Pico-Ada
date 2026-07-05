@@ -1,7 +1,15 @@
 
+with RP2350;
+
 package RP2350_GPIO is
-   procedure Init_Output_15;
-   procedure Set_High_15;
-   procedure Set_Low_15;
-   procedure Toggle_15;
+
+   subtype Pin_Number is RP2350.UInt32;
+
+   Pin_15 : constant Pin_Number := 16#0000_8000#;
+   Pin_25 : constant Pin_Number := 16#0200_0000#;
+   procedure Init_Output_Pin (Pin : Pin_Number);
+   procedure Set_High_Pin (Pin : Pin_Number);
+   procedure Set_Low_Pin (Pin : Pin_Number);
+   procedure Toggle_Pin (Pin : Pin_Number);
+   
 end RP2350_GPIO;
