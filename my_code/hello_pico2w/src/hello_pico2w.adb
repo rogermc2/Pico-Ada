@@ -1,4 +1,4 @@
-with RP2350_GPIO;
+with RP2350_GPIO; use RP2350_GPIO;
 with Interfaces; use Interfaces;
 
 procedure Hello_Pico2W is
@@ -13,13 +13,14 @@ procedure Hello_Pico2W is
    end Delay_Loop;
 
 begin
-   RP2350_GPIO.Init_Output_15;
+   RP2350_GPIO.Init_Output (Pin_15);
 
    loop
-      RP2350_GPIO.Set_High_15;
+      RP2350_GPIO.Set_High (Pin_15);
       Delay_Loop;
 
-      RP2350_GPIO.Set_Low_15;
+      RP2350_GPIO.Set_Low (Pin_15);
       Delay_Loop;
    end loop;
+ 
 end Hello_Pico2W;

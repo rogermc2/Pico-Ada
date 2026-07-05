@@ -6,7 +6,7 @@ with RP2350.SIO;
 
 package body RP2350_GPIO is
 
-   procedure Init_Output_Pin (Pin : RP2350.UInt32) is
+   procedure Init_Output (Pin : RP2350.UInt32) is
    use rp2350;
    begin
       RP2350.RESETS.RESETS_Periph.RESET.IO_BANK0   := 0;
@@ -60,21 +60,21 @@ package body RP2350_GPIO is
       end case;
       RP2350.SIO.SIO_Periph.GPIO_OE_SET := Pin;
       
-   end Init_Output_Pin;
+   end Init_Output;
 
-   procedure Set_High_Pin (Pin : Pin_Number) is
+   procedure Set_High (Pin : Pin_Number) is
    begin
       RP2350.SIO.SIO_Periph.GPIO_OUT_SET := Pin;
-   end Set_High_Pin;
+   end Set_High;
 
-   procedure Set_Low_Pin (Pin : Pin_Number) is
+   procedure Set_Low (Pin : Pin_Number) is
    begin
       RP2350.SIO.SIO_Periph.GPIO_OUT_CLR := Pin;
-   end Set_Low_Pin;
+   end Set_Low;
 
-   procedure Toggle_Pin (Pin : Pin_Number) is
+   procedure Toggle (Pin : Pin_Number) is
    begin
       RP2350.SIO.SIO_Periph.GPIO_OUT_XOR := Pin;
-   end Toggle_Pin;
+   end Toggle;
 
 end RP2350_GPIO;
