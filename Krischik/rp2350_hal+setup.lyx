@@ -1,0 +1,549 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Setting For RP2350 HAL
+\end_layout
+
+\begin_layout Standard
+For Alire,
+ the direct equivalent of the RP2040 HAL (pico_bsp or similar local packages) is the embedded_rp2350 crate.
+ It provides the necessary Ada/SPARK runtimes for the GNAT compiler targeting the RP2350's ARM Cortex-M33 architecture.For a complete development ecosystem with Alire,
+ the environment consists of:
+\end_layout
+
+\begin_layout Section
+The Runtime Environment
+\end_layout
+
+\begin_layout Standard
+To run bare-metal Ada tasks on the RP2350 Alire uses the community-bb-runtimes repository.
+ 
+\end_layout
+
+\begin_layout Standard
+Standard profiles can be pulled depending on needs:
+\end_layout
+
+\begin_layout Itemize
+light
+\end_layout
+
+\begin_layout Itemize
+light-tasking (for Ravenscar tasking)
+\end_layout
+
+\begin_layout Itemize
+embedded.
+\end_layout
+
+\begin_layout Section
+Setting Up A Project
+\end_layout
+
+\begin_layout Standard
+To use the equivalent of the old pico_bsp structure,
+ configure the <Project_Name>.gpr file to import the new board definitions and target architectures:
+\end_layout
+
+\begin_layout Standard
+with "config/hello_pico_config.gpr";
+\end_layout
+
+\begin_layout Standard
+with "embedded_rp2350.gpr";
+\end_layout
+
+\begin_layout Standard
+project Hello_Pico is
+\end_layout
+
+\begin_layout Standard
+for Target use "thumbv8m.main-none-eabihf";
+ -- Cortex-M33 target
+\end_layout
+
+\begin_layout Standard
+for Runtime ("Ada") use "light-tasking";
+ -- Or another selected profile
+\end_layout
+
+\begin_layout Standard
+for Source_Dirs use ("src/",
+ "config/");
+\end_layout
+
+\begin_layout Standard
+for Object_Dir use "obj";
+\end_layout
+
+\begin_layout Standard
+for Main use ("main.adb");
+\end_layout
+
+\begin_layout Standard
+package Linker is
+\end_layout
+
+\begin_layout Standard
+for Switches ("Ada") use Embedded_RP2350.Linker_Switches & ("-Wl,--gc-sections");
+\end_layout
+
+\begin_layout Standard
+end Linker;
+\end_layout
+
+\begin_layout Standard
+end Hello_Pico;
+\end_layout
+
+\begin_layout Section
+Targeting Both ARM Cores
+\end_layout
+
+\begin_layout Standard
+Because the RP2350 boots both cores into the same architecture by default,
+ utilizing Core 0 and Core 1 as ARM cores requires configuring the Ada runtime to coordinate dual-core tasking or manually booting Core 1 via the hardware registers.
+\end_layout
+
+\begin_layout Subsection
+The GPR Project File Configuration
+\end_layout
+
+\begin_layout Standard
+Ensure your project file explicitly locks onto the ARMv8-M (Cortex-M33) instruction set with Hard Floating Point support (-eabihf):
+\end_layout
+
+\begin_layout LyX-Code
+with "config/hello_pico_config.gpr";
+\end_layout
+
+\begin_layout LyX-Code
+with "embedded_rp2350.gpr";
+\end_layout
+
+\begin_layout LyX-Code
+project Hello_Pico is
+\end_layout
+
+\begin_layout LyX-Code
+-- Locks the project to the ARM Cortex-M33 architecture
+\end_layout
+
+\begin_layout LyX-Code
+for Target use "thumbv8m.main-none-eabihf";
+ 
+\end_layout
+
+\begin_layout LyX-Code
+-- "light-tasking" allows Ravenscar/Jorvik multiprocessor tasking profiles
+\end_layout
+
+\begin_layout LyX-Code
+for Runtime ("Ada") use "light-tasking";
+ 
+\end_layout
+
+\begin_layout LyX-Code
+for Source_Dirs use ("src/",
+ "config/");
+\end_layout
+
+\begin_layout LyX-Code
+for Object_Dir use "obj";
+\end_layout
+
+\begin_layout LyX-Code
+for Main use ("main.adb");
+\end_layout
+
+\begin_layout LyX-Code
+package Linker is
+\end_layout
+
+\begin_layout LyX-Code
+for Switches ("Ada") use Embedded_RP2350.Linker_Switches & ("-Wl,--gc-sections");
+\end_layout
+
+\begin_layout LyX-Code
+end Linker;
+\end_layout
+
+\begin_layout LyX-Code
+end Hello_Pico;
+\end_layout
+
+\begin_layout Subsection
+Multi-Core Execution Models in Ada
+\end_layout
+
+\begin_layout Standard
+Depending on the level of complexity you want,
+ there are two primary ways to manage both ARM cores:
+\end_layout
+
+\begin_layout Subsubsection
+Option A:
+ The Ravenscar / Jorvik Multiprocessor Way (Recommended)
+\end_layout
+
+\begin_layout Standard
+If your light-tasking profile supports Symmetric Multiprocessing (SMP) for the RP2350 package the Ada runtime handles the second core automatically.
+ 
+\end_layout
+
+\begin_layout Standard
+You distribute tasks across the cores using the CPU aspect:
+\end_layout
+
+\begin_layout LyX-Code
+pragma Profile (Ravenscar);
+\end_layout
+
+\begin_layout LyX-Code
+package Core_Tasks is
+\end_layout
+
+\begin_layout LyX-Code
+-- This task will run exclusively on Core 0
+\end_layout
+
+\begin_layout LyX-Code
+task Core_0_Worker with
+\end_layout
+
+\begin_layout LyX-Code
+CPU => 1;
+ -- Ada CPU IDs start at 1 (Core 0)
+\end_layout
+
+\begin_layout LyX-Code
+-- This task will run exclusively on Core 1
+\end_layout
+
+\begin_layout LyX-Code
+task Core_1_Worker with
+\end_layout
+
+\begin_layout LyX-Code
+CPU => 2;
+ -- (Core 1)
+\end_layout
+
+\begin_layout LyX-Code
+end Core_Tasks;
+\end_layout
+
+\begin_layout LyX-Code
+package body Core_Tasks is
+\end_layout
+
+\begin_layout LyX-Code
+task body Core_0_Worker is
+\end_layout
+
+\begin_layout LyX-Code
+begin
+\end_layout
+
+\begin_layout LyX-Code
+loop
+\end_layout
+
+\begin_layout LyX-Code
+-- Core 0 specific workload (e.g.,
+ USB or Main state machine)
+\end_layout
+
+\begin_layout LyX-Code
+null;
+\end_layout
+
+\begin_layout LyX-Code
+end loop;
+\end_layout
+
+\begin_layout LyX-Code
+end body Core_0_Worker;
+\end_layout
+
+\begin_layout LyX-Code
+task body Core_1_Worker is
+\end_layout
+
+\begin_layout LyX-Code
+begin
+\end_layout
+
+\begin_layout LyX-Code
+loop
+\end_layout
+
+\begin_layout LyX-Code
+-- Core 1 specific workload (e.g.,
+ PIO management or math calculations)
+\end_layout
+
+\begin_layout LyX-Code
+null;
+\end_layout
+
+\begin_layout LyX-Code
+end loop;
+\end_layout
+
+\begin_layout LyX-Code
+end body Core_1_Worker;
+\end_layout
+
+\begin_layout LyX-Code
+end Core_Tasks;
+\end_layout
+
+\begin_layout Subsubsection
+Option B:
+ Manual Core-1 Booting (Sequential Control)
+\end_layout
+
+\begin_layout Standard
+If a bare-bones implementation without the tasking runtime (light profile) is preferred Core 1 stays sleeping at boot.
+ 
+\end_layout
+
+\begin_layout Standard
+Core 1 must be woken up using the RP2350's hardware control blocks.
+\end_layout
+
+\begin_layout Standard
+The embedded_rp2350 or peripheral HAL libraries provide bindings to the SIO (Single-Cycle IO) block:
+\end_layout
+
+\begin_layout Enumerate
+Clear FIFO status flags via SIO registers.
+\end_layout
+
+\begin_layout Enumerate
+Send the wake sequence (Launch command,
+ Vector Table address,
+ Stack Pointer,
+ and Entry Point) to Core 1's FIFO.
+\end_layout
+
+\begin_layout Enumerate
+Core 1 wakes up directly executing your designated secondary Ada procedure.
+\end_layout
+
+\begin_layout Section
+Migrate Alire Configuration File
+\end_layout
+
+\begin_layout Standard
+To migrate an Alire configuration file (alire.toml) from the RP2040 to the RP2350 the device HAL,
+ Board Support Package (BSP),
+ and runtime environment packages must be swapped out for their RP2350-specific equivalents.
+\end_layout
+
+\begin_layout Standard
+Assuming that the ARM cores are being used,
+ amend the alire.toml file to use the code block:
+\end_layout
+
+\begin_layout LyX-Code
+[[depends-on]]
+\end_layout
+
+\begin_layout LyX-Code
+rp2350_hal = "^1.0"
+\end_layout
+
+\begin_layout LyX-Code
+pico2_bsp = "^1.0"
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+light_tasking_rp2350 = "^1.0"
+\end_layout
+
+\begin_layout LyX-Code
+[configuration.values]
+\end_layout
+
+\begin_layout LyX-Code
+rp2350_hal.Use_Startup = false
+\end_layout
+
+\begin_layout LyX-Code
+rp2350_hal.Interrupts = "bb_runtimes"
+\end_layout
+
+\begin_layout LyX-Code
+light_tasking_rp2350.Max_CPUs = 2
+\end_layout
+
+\begin_layout LyX-Code
+light_tasking_rp2350.Board = "rpi_pico2"
+\end_layout
+
+\begin_layout Subsection
+Key Changes Made
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+rp2040_hal → rp2350_hal
+\series default
+ swaps the peripheral drivers for the new RP2350 architecture.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+pico_bsp → pico2_bsp
+\series default
+ targets the Raspberry Pi Pico 2 hardware pinout mapping instead of the original Pico.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+light_tasking_rp2040 → light_tasking_rp2350
+\series default
+ pulls down the light-tasking bare-metal multi-processor runtime built specifically for the ARM Cortex-M33 cores.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Board = "rpi_pico" → "rpi_pico2"
+\series default
+ tells the Alire configuration system to inject variables specifically tailored for the newer board layout.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Max_CPUs = 2
+\series default
+ is retained.
+\end_layout
+
+\begin_layout Standard
+This configures the runtime to properly distribute tasks across both available Cortex-M33 cores.
+\end_layout
+
+\begin_layout Subsection
+Final Step
+\end_layout
+
+\begin_layout Standard
+After saving the changes to the alire.toml file drop,
+ using terminal inside the project directory run the Alire update command (alr update) to pull the new dependencies and generate updated GPR project files:
+\end_layout
+
+\end_body
+\end_document

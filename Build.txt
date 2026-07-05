@@ -1,0 +1,19 @@
+
+
+******
+unset CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH SDKROOT CFLAGS CPPFLAGS
+For Ada: Also unset ADA_OBJECTS_PATH GPR_PROJECT_PATH
+
+rm -rf build
+cmake -B build -S . -DPICO_BOARD=pico2_w
+cmake --build build
+
+CMakeList setting for USB port
+
+Flash:
+picotool load <...>.uf2
+
+
+
+
+
