@@ -11,11 +11,8 @@ with RP2350_GPIO; use RP2350_GPIO;
 --  Sample to make both the internal and an external LED blink at
 --  different rates using both cores of th
 package Two_Blinking_LEDs is
--- GPIO points for the internal (on-board) and external LED
---  Internal_LED : RP.GPIO.GPIO_Point renames Pico.GP25;
---  External_LED : RP.GPIO.GPIO_Point renames Pico.GP15;
-External_LED : Pin_Number renames Pin_15;
-Internal_LED : Pin_Number renames Pin_25;
+   External_LED : Pin_Number renames Pin_15;
+   Internal_LED : Pin_Number renames Pin_25;
 
 --  Task that runs on the second core of the RP2040.
 --  As a single task (not a type) it is automatically activated at startup.
@@ -27,7 +24,6 @@ Internal_LED : Pin_Number renames Pin_25;
 --  @param LED GPIO pin the LED is connected to
 --  @param On_Time Duration the LED stays on
 --  @param Off_Time Duration the LED stays off
-procedure Blink_LED
-   (LED : out Pin_Number; On_Time, Off_Time : Duration);
+procedure Blink_LED (LED : Pin_Number; On_Time, Off_Time : Duration);
 
 end Two_Blinking_LEDs;

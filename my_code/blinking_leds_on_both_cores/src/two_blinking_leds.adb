@@ -3,23 +3,30 @@ with Ada.Real_Time; use Ada.Real_Time;
 
 package body Two_Blinking_LEDs is
 
-   procedure Blink_LED
-      (LED : out Pin_Number; On_Time, Off_Time : in Duration) is
+   --  Dummy : Unsigned_32 := 0
+   --    with Volatile;
+
+   --  procedure Delay_Loop (Max_I : positive) is
+   --  begin
+   --     for I in 1 .. Max_I loop
+   --        Dummy := Dummy + 1;
+   --     end loop;
+   --  end Delay_Loop;
+   
+   procedure Blink_LED (LED : Pin_Number; On_Time, Off_Time : in Duration) is
       On_Period  : constant Time_Span := To_Time_Span (On_Time);
       Off_Period : constant Time_Span := To_Time_Span (Off_Time);
       Next       : Time := Clock;
+      Max_I : positive := 10000000;
    begin
-      --  LED.Configure (RP.GPIO.Output);
       Init_Output (LED);
       loop
          Set_High (LED);
          Next := Next + On_Period;
-         --  LED.Set;
          delay until Next;
 
          Set_Low (LED);
          Next := Next + Off_Period;
-         --  LED.Clear;
          delay until Next;
       end loop;
 

@@ -4,10 +4,11 @@ If this fails, disconnect then reconnect the debugger.
 
 unset CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH SDKROOT CFLAGS CPPFLAGS ADA_OBJECTS_PATH GPR_PROJECT_PATH
 
+GDB automatically changes its expression syntax to match the source language of the file being debugged.
+
 If terminal IO required, in another terminal:
 ls /dev/cu*      --  get available ports
 Roger@Rogers-Mac-mini ~ % screen /dev/<port> 115200
-
 
 In another terminal:
 gdb:
