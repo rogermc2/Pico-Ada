@@ -1,0 +1,156 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Using the explicit SVD enumerated types (ENABLE,
+ XOSC_Clksrc,
+ clk_ref) makes your bare-metal setup highly readable and using the aggregate others => <> correctly satisfies Ada’s strict safety requirements.
+\end_layout
+
+\begin_layout Standard
+Now that this hardware configuration block compiles cleanly the Pico 2 W clock tree will properly scale up to the external 12 MHz crystal on boot which ensures that the PROC0 tick engine begins pulsing every microsecond,
+ satisfying the hardware real-time timer requirement that the Ravenscar task scheduler relies on to manage task switches and delay until timers.
+\end_layout
+
+\begin_layout Section
+A Crucial Step to Check
+\end_layout
+
+\begin_layout Standard
+Before flashing code to the Pico 2 W check how the onboard wireless LED is handled.
+\end_layout
+
+\begin_layout Standard
+On the wireless Pico 2 W the green onboard LED is not physically wired to a standard RP2350 microcontroller pin (unlike the standard Pico 2 which uses GPIO 25).
+ Instead,
+ it is routed through the Infineon CYW43439 wireless chip via an internal SPI interface.
+\end_layout
+
+\begin_layout Standard
+If a concurrent task loop is trying to toggle a direct microcontroller pin like Pico.LED or a raw GPIO register via SVD the task will execute perfectly but the physical LED on the board won’t light up.
+\end_layout
+
+\begin_layout Section
+How to Verify That Tasks Are Running
+\end_layout
+
+\begin_layout Standard
+To confirm that a multi-tasking scheduler is actively looping without having to initialize the entire wireless SPI network stack use a physical test setup:
+\end_layout
+
+\begin_layout Standard
+1.
+ Wire an external LED and a 220Ω resistor to a physical pin such as GPIO 15.
+\end_layout
+
+\begin_layout Standard
+2.
+ Configure that pin as an output using GPIO SVD or HAL.
+\end_layout
+
+\begin_layout Standard
+3.
+ Update the task body to toggle that specific GPIO pin instead of the internal LED.
+\end_layout
+
+\begin_layout Standard
+If the external LED flashes then the Ravenscar runtime,
+ hardware initialization routine and background task loop are working flawlessly.
+\end_layout
+
+\end_body
+\end_document

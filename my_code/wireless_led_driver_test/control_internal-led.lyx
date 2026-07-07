@@ -1,0 +1,584 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Controlling the onboard LED on the Pico 2 W via a task is significantly more complex than standard GPIO toggling.
+ 
+\end_layout
+
+\begin_layout Standard
+On the wireless board variant the green LED is not connected to the RP2350 microcontroller directly but is wired to the WL_GPIO0 pin on the Infineon CYW43439 wireless chip.
+ [1,
+ 2,
+ 3] 
+\end_layout
+
+\begin_layout Standard
+To turn it on or off from an Ada task,
+ your program must orchestrate a low-level SPI and bit-banging communication sequence to send packets over to the external chip.
+ [2,
+ 4] 
+\end_layout
+
+\begin_layout Section
+The Architecture:
+ How the RP2350 Talks to the LED
+\end_layout
+
+\begin_layout Standard
+To change the state of the onboard LED four distinct pins on your RP2350 must be dynamically coordinated:
+ [1,
+ 5] 
+\end_layout
+
+\begin_layout Itemize
+GPIO 23:
+ Power control / Reset to the Infineon chip.
+\end_layout
+
+\begin_layout Itemize
+GPIO 25:
+ The chip select (CS) line to initiate communication.
+\end_layout
+
+\begin_layout Itemize
+GPIO 29:
+ The shared SPI clock (CLK) line.
+\end_layout
+
+\begin_layout Itemize
+GPIO 24:
+ The bi-directional SPI Data line (DIO/IRQ).
+ [1,
+ 5]
+\end_layout
+
+\begin_layout Standard
+Because this involves state tracking,
+ utilizing an Ada Protected Object is the best architectural pattern to prevent multiple tasks from trying to access the shared SPI communication wires at the same time.
+ [6] 
+\end_layout
+
+\begin_layout Section
+Step 1:
+ Create the Protected SPI Driver
+\end_layout
+
+\begin_layout Standard
+The protected object serves as a thread-safe abstraction layer that directly interfaces with the SVD packages to manipulate the internal registers.
+\end_layout
+
+\begin_layout Standard
+with RP2350.GPIO;
+ use RP2350.GPIO;
+\end_layout
+
+\begin_layout Standard
+package Wireless_LED_Driver is
+\end_layout
+
+\begin_layout Standard
+-- Thread-safe controller for wireless chip interactions
+\end_layout
+
+\begin_layout Standard
+protected Wireless_Bus is
+\end_layout
+
+\begin_layout Standard
+procedure Initialize;
+\end_layout
+
+\begin_layout Standard
+procedure Set_LED_State (Enabled :
+ Boolean);
+\end_layout
+
+\begin_layout Standard
+private
+\end_layout
+
+\begin_layout Standard
+-- Local tracks to handle protocol frames
+\end_layout
+
+\begin_layout Standard
+procedure Send_SPI_Word (Data :
+ UInt32);
+\end_layout
+
+\begin_layout Standard
+end Wireless_Bus;
+\end_layout
+
+\begin_layout Standard
+end Wireless_LED_Driver;
+\end_layout
+
+\begin_layout Standard
+ Step 2:
+ Build the Bit-Banged Driver Logic
+\end_layout
+
+\begin_layout Standard
+Because the CYW43439 chip uses a custom SPI communication structure,
+ your driver body must physically reset the chip,
+ send a command block to initialize its internal functional registers,
+ and then pass a proprietary bit stream targeting the WL_GPIO0 output pin.
+ [2,
+ 3,
+ 7] 
+\end_layout
+
+\begin_layout Standard
+package body Wireless_LED_Driver is
+\end_layout
+
+\begin_layout Standard
+protected body Wireless_Bus is
+\end_layout
+
+\begin_layout Standard
+procedure Initialize is
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- 1.
+ Take GPIO 23 high to turn on power to the Infineon chip
+\end_layout
+
+\begin_layout Standard
+-- Map your SVD GPIO registers for pins 23,
+ 24,
+ 25,
+ 29 here
+\end_layout
+
+\begin_layout Standard
+null;
+ 
+\end_layout
+
+\begin_layout Standard
+-- 2.
+ Pull CS (GPIO 25) high,
+ CLK (GPIO 29) low to establish initial idle states
+\end_layout
+
+\begin_layout Standard
+null;
+\end_layout
+
+\begin_layout Standard
+end Initialize;
+\end_layout
+
+\begin_layout Standard
+procedure Send_SPI_Word (Data :
+ UInt32) is
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- Bit-bang or utilize a hardware SPI controller to stream 32 bits
+\end_layout
+
+\begin_layout Standard
+-- Drop CS low,
+ cycle CLK for each bit of the payload,
+ raise CS back up
+\end_layout
+
+\begin_layout Standard
+null;
+\end_layout
+
+\begin_layout Standard
+end Send_SPI_Word;
+\end_layout
+
+\begin_layout Standard
+procedure Set_LED_State (Enabled :
+ Boolean) is
+\end_layout
+
+\begin_layout Standard
+-- Custom Infineon command payload architecture
+\end_layout
+
+\begin_layout Standard
+-- Command structure format:
+ Write Window -> Function 1 -> Register Address
+\end_layout
+
+\begin_layout Standard
+Cmd_Header :
+ UInt32 := 16#A0000000#;
+ -- Example write frame flag
+\end_layout
+
+\begin_layout Standard
+Data_Frame :
+ UInt32 := 0;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+if Enabled then
+\end_layout
+
+\begin_layout Standard
+Data_Frame := 16#01#;
+ -- Set bit 0 high for WL_GPIO0
+\end_layout
+
+\begin_layout Standard
+else
+\end_layout
+
+\begin_layout Standard
+Data_Frame := 16#00#;
+ -- Set bit 0 low
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+-- Send the protocol packet across the bus
+\end_layout
+
+\begin_layout Standard
+Send_SPI_Word (Cmd_Header);
+\end_layout
+
+\begin_layout Standard
+Send_SPI_Word (Data_Frame);
+\end_layout
+
+\begin_layout Standard
+end Set_LED_State;
+\end_layout
+
+\begin_layout Standard
+end Wireless_Bus;
+\end_layout
+
+\begin_layout Standard
+end Wireless_LED_Driver;
+\end_layout
+
+\begin_layout Standard
+ Step 3:
+ Implement the Concurrent Task
+\end_layout
+
+\begin_layout Standard
+Now that the safe hardware wrapper exists,
+ your background task loop becomes clean and straightforward.
+ It calls the protected object directly,
+ eliminating any possibility of task race conditions or bus lockups.
+\end_layout
+
+\begin_layout Standard
+with Ada.Real_Time;
+ use Ada.Real_Time;
+\end_layout
+
+\begin_layout Standard
+with Wireless_LED_Driver;
+ use Wireless_LED_Driver;
+\end_layout
+
+\begin_layout Standard
+procedure Main_Program is
+\end_layout
+
+\begin_layout Standard
+-- Define the multitasking blink construct
+\end_layout
+
+\begin_layout Standard
+task Wireless_Blink_Task;
+\end_layout
+
+\begin_layout Standard
+task body Wireless_Blink_Task is
+\end_layout
+
+\begin_layout Standard
+Blink_Interval :
+ constant Time_Span := Milliseconds(1000);
+\end_layout
+
+\begin_layout Standard
+Next_Blink :
+ Time := Clock;
+\end_layout
+
+\begin_layout Standard
+LED_On :
+ Boolean := False;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- Initialize the hardware bus before looping
+\end_layout
+
+\begin_layout Standard
+Wireless_Bus.Initialize;
+\end_layout
+
+\begin_layout Standard
+loop
+\end_layout
+
+\begin_layout Standard
+-- Alternate states cleanly
+\end_layout
+
+\begin_layout Standard
+LED_On := not LED_On;
+\end_layout
+
+\begin_layout Standard
+Wireless_Bus.Set_LED_State (LED_On);
+\end_layout
+
+\begin_layout Standard
+-- Relinquish CPU execution control back to the Ravenscar scheduler
+\end_layout
+
+\begin_layout Standard
+Next_Blink := Next_Blink + Blink_Interval;
+\end_layout
+
+\begin_layout Standard
+delay until Next_Blink;
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+end Wireless_Blink_Task;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- Initialize clocks using your successful SVD initialization routine
+\end_layout
+
+\begin_layout Standard
+Initialize_Hardware_Clocks;
+\end_layout
+
+\begin_layout Standard
+loop
+\end_layout
+
+\begin_layout Standard
+delay until Clock + Days(1);
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+end Main_Program;
+\end_layout
+
+\begin_layout Standard
+------------------------------
+\end_layout
+
+\begin_layout Standard
+ Important Practical Tradeoffs
+\end_layout
+
+\begin_layout Standard
+Writing a bare-metal custom driver in Ada to manually parse the [CYW43439 SPI control structures](https://pip.raspberrypi.com/documents/RP-008304-DS-pico-2-w-datasheet.pdf) requires substantial register-level mapping.
+ [1,
+ 4] 
+\end_layout
+
+\begin_layout Standard
+If your goal is building a large-scale project rather than writing educational,
+ raw registers,
+ the alternative path is importing the pre-built C-based Pico SDK drivers (pico_cyw43_arch) directly into your Ada project.
+ You can do this by using Ada's built-in Foreign Function Interface (FFI):
+ [8] 
+\end_layout
+
+\begin_layout Standard
+-- Interface to import the pre-written driver library via C linkage
+\end_layout
+
+\begin_layout Standard
+procedure cyw43_arch_gpio_put (Pin :
+ Interfaces.C.int;
+ Value :
+ Interfaces.C.int)
+\end_layout
+
+\begin_layout Standard
+with Import => True,
+ Convention => C,
+ External_Name => "cyw43_arch_gpio_put";
+\end_layout
+
+\begin_layout Standard
+Would you like to continue building out the raw,
+ register-level bit-bang sequence inside your Ada protected object,
+ or should we set up the Ada-to-C FFI bindings to leverage the official Pico SDK drivers instead?
+ [8] 
+\end_layout
+
+\begin_layout Standard
+[1] [https://pip.raspberrypi.com](https://pip.raspberrypi.com/documents/RP-008304-DS-pico-2-w-datasheet.pdf)
+\end_layout
+
+\begin_layout Standard
+[2] [https://forums.raspberrypi.com](https://forums.raspberrypi.com/viewtopic.php?t=383054)
+\end_layout
+
+\begin_layout Standard
+[3] [https://dronebotworkshop.com](https://dronebotworkshop.com/picow-arduino/)
+\end_layout
+
+\begin_layout Standard
+[4] [https://forums.raspberrypi.com](https://forums.raspberrypi.com/viewtopic.php?t=336860)
+\end_layout
+
+\begin_layout Standard
+[5] [https://github.com](https://github.com/micropython/micropython/issues/10248)
+\end_layout
+
+\begin_layout Standard
+[6] [https://iotdesignpro.com](https://iotdesignpro.com/articles/getting-started-with-raspberry-pi-pico-w-using-arduino-ide)
+\end_layout
+
+\begin_layout Standard
+[7] [https://smist08.wordpress.com](https://smist08.wordpress.com/2022/08/26/introducing-the-raspberry-pi-pico-w/)
+\end_layout
+
+\begin_layout Standard
+[8] [https://www.youtube.com](https://www.youtube.com/watch?v=HV2Cjlw5eRc&t=64)
+\end_layout
+
+\end_body
+\end_document

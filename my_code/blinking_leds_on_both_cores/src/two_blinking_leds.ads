@@ -17,8 +17,8 @@ package Two_Blinking_LEDs is
 --  Task that runs on the second core of the RP2040.
 --  As a single task (not a type) it is automatically activated at startup.
 task Core_2 with
-   CPU => 2
- ;  
+   CPU => 2,
+   Storage_Size => 4096;
 --  Blinks an LED attached to a Raspberry Pi Pico
 procedure Blink_LED (LED : Pin_Number; On_Time, Off_Time : Duration);
 
