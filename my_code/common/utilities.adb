@@ -1,9 +1,14 @@
 
+
+with RP2350.Clocks; use RP2350.Clocks;
+with RP2350.XOSC;
+with RP2350.Ticks; use RP2350.Ticks;
+
 package body Utilities is
 
 procedure Initialize_Hardware_Clocks is
     use RP2350.XOSC;
-    use rp2350;
+    use RP2350;
     begin
        --  Step 1: Initialize the External Crystal Oscillator (XOSC)
        --  Set startup delay to give the crystal time to physically stabilize
