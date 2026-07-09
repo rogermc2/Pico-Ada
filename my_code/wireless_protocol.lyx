@@ -1,0 +1,289 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+To write a true bare-metal operating system or assembly payload without the Raspberry Pi SDK there is no single document explicitly titled "Bare Metal LED Programming" because toggling that LED requires writing an entire software driver for a second,
+ separate processor.
+\end_layout
+
+\begin_layout Standard
+Here is the precise structural layout and bare-metal protocol chain you need to implement to turn that LED on:
+\end_layout
+
+\begin_layout Section
+The Hardware Architecture
+\end_layout
+
+\begin_layout Standard
+On the standard Pico 2 the LED is wired to an RP2350 GPIO register.
+ 
+\end_layout
+
+\begin_layout Standard
+On the Pico 2 W,
+ the LED is isolated.
+\end_layout
+
+\begin_layout Itemize
+The LED is physically soldered to Pin WL_GPIO0 of the Infineon CYW43439 wireless chip.
+\end_layout
+
+\begin_layout Itemize
+The RP2350 cannot see or access WL_GPIO0 directly through its memory-mapped registers.
+\end_layout
+
+\begin_layout Itemize
+The RP2350 must act as an SPI Master and talk to the CYW43439 as an SPI Slave to request a pin toggle.
+ [1,
+ 2,
+ 3]
+\end_layout
+
+\begin_layout Section
+Step-by-Step Bare-Metal Execution Chain
+\end_layout
+
+\begin_layout Subsection
+Step A:
+ Configure the RP2350 SPI Boundary Pins
+\end_layout
+
+\begin_layout Standard
+First,
+ your bare-metal setup code must manipulate the RP2350's IO_BANK0 registers to configure four specific internal pins for wireless SPI communication:
+ [2] 
+\end_layout
+
+\begin_layout Standard
+* GPIO 24:
+ Configure function as SPI Data / IRQ (SDIO).
+\end_layout
+
+\begin_layout Standard
+* GPIO 25:
+ Configure function as Digital Output for SPI Chip Select (CSn).
+\end_layout
+
+\begin_layout Standard
+* GPIO 29:
+ Configure function as SPI Clock (CLK).
+\end_layout
+
+\begin_layout Standard
+* GPIO 23:
+ Configure function as Digital Output for wireless power-on (WL_REG_ON).
+ [2] 
+\end_layout
+
+\begin_layout Subsection
+Step B:
+ Power Cycle the Wireless Co-Processor
+\end_layout
+
+\begin_layout Standard
+Before the wireless chip will acknowledge any SPI traffic,
+ you must manually boot its internal power management:
+\end_layout
+
+\begin_layout Standard
+1.
+ Drive RP2350 GPIO 23 (WL_REG_ON) HIGH.
+\end_layout
+
+\begin_layout Standard
+2.
+ Wait a minimum of 250 microseconds in an assembly loop to let the Infineon crystal oscillator stabilize.
+ [2] 
+\end_layout
+
+\begin_layout Subsection
+Step C:
+ Speak the gSPI (Generic SPI) Protocol
+\end_layout
+
+\begin_layout Standard
+The CYW43439 does not use a standard microcontroller SPI register protocol;
+ it uses a proprietary format called gSPI (Broadcom/Infineon Generic SPI).
+\end_layout
+
+\begin_layout Standard
+To change a pin status,
+ your code must manually forge 32-bit transaction packets over the SPI data line:
+\end_layout
+
+\begin_layout Itemize
+The SPI Header:
+ Write a 32-bit command word detailing a Write Transaction,
+ targeting the internal Backplane Window,
+ with a specific increments address size.
+\end_layout
+
+\begin_layout Itemize
+The Target Registers:
+ You must read/write to the gSPI Control Registers to configure the wireless chip's bus properties (such as setting word lengths to 32 bits and handling response delays).
+\end_layout
+
+\begin_layout Subsection
+Step D:
+ Issue the GPIO Command Payload
+\end_layout
+
+\begin_layout Standard
+Once the gSPI bus communication is established,
+ you must issue a read-modify-write sequence to the CYW43439 Function 1 (Backplane) Registers:
+\end_layout
+
+\begin_layout Standard
+1.
+ Issue a write payload to the GPIO_OUT register inside the CYW43439 chip map.
+\end_layout
+
+\begin_layout Standard
+2.
+ Bit 0 of this configuration register maps to WL_GPIO0 (the physical LED).
+\end_layout
+
+\begin_layout Standard
+3.
+ Setting Bit 0 to 1 turns the LED on;
+ setting it to 0 turns it off.
+ [2] 
+\end_layout
+
+\begin_layout Standard
+ Official Registers Documentation
+\end_layout
+
+\begin_layout Standard
+To find the literal bitfields and clock specifications for these steps,
+ you must cross-reference three hardware manuals:
+\end_layout
+
+\begin_layout Itemize
+For the RP2350 side:
+ The [RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf) (Chapter 2 for IO_BANK0 register layouts and Chapter 4 for SPI interface structures).
+\end_layout
+
+\begin_layout Itemize
+For the Board schematic:
+ The [Raspberry Pi Pico 2 W Datasheet](https://pip.raspberrypi.com/documents/RP-008304-DS-pico-2-w-datasheet.pdf) (Section 2.2 explicitly tracking the SPI multiplexing system).
+\end_layout
+
+\begin_layout Itemize
+For the Protocol side:
+ The Infineon CYW43439 Datasheet (specifically the sections detailing the gSPI Interface Protocol and internal Backplane GPIO registers).
+ [2]
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+[1] [https://forums.raspberrypi.com](https://forums.raspberrypi.com/viewtopic.php?t=383054)
+\end_layout
+
+\begin_layout Standard
+[2] [https://pip.raspberrypi.com](https://pip.raspberrypi.com/documents/RP-008304-DS-pico-2-w-datasheet.pdf)
+\end_layout
+
+\begin_layout Standard
+[3] [https://pip.raspberrypi.com](https://pip.raspberrypi.com/documents/RP-008304-DS-pico-2-w-datasheet.pdf)
+\end_layout
+
+\end_body
+\end_document
