@@ -1,3 +1,6 @@
+
+with Pico_W_Registers; use Pico_W_Registers;
+
 package Pico_W_Hardware is
    type Word is mod 2**32 with Size => 32;
 

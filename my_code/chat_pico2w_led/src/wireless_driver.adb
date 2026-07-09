@@ -1,4 +1,7 @@
 
+with Pico2w_Support; use Pico2w_Support;
+with Pico_W_Registers; use Pico_W_Registers;
+
 package body Wireless_Driver is
 
    protected body CYW43439_Bus is

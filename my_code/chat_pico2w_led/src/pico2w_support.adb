@@ -16,9 +16,11 @@ begin
    -- 3. Power-cycle the Infineon transceiver chip: drive Pin 23 HIGH
    SIO_GPIO_OUT_SET := 2**23;
    
-   -- 4. CRITICAL BARE-METAL TIMING: Implement a loop to stall execution for at least 250 microseconds
-   -- This delay ensures the internal wireless crystal clock stabilizes.
-   Delay_Microseconds(250);
+   -- 4. CRITICAL BARE-METAL TIMING: Implement a loop to stall execution
+   --   for at least 250 microseconds
+   --   This delay ensures the internal wireless crystal clock stabilizes.
+   Delay (0.0001);
+   --  Delay_Microseconds(250);
 
    -- 5. Configure GPIO 24 (SDIO), 25 (CSn), and 29 (CLK) to use alternative SPI profiles
    -- Refer to Chapter 2 of the RP2350 Datasheet for the exact FUNCSEL values matching the chip layout.

@@ -1,4 +1,6 @@
 
+with Pico_W_Registers; use Pico_W_Registers;
+
 package Pico2W_Support is
 
 type GSPI_Command is record

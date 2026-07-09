@@ -2,6 +2,19 @@ package Pico_W_Registers is
    pragma Preelaborate;
 
    type Word is mod 2**32 with Size => 32;
+   type Bit is mod 2 ** 1 with Size => 1;
+   for Bit'Alignment use 1;
+
+   type Bits_2  is mod 2 ** 2  with Size => 2;
+   type Bits_3  is mod 2 ** 3  with Size => 3;
+   type Bits_4  is mod 2 ** 4  with Size => 4;
+   type Bits_5  is mod 2 ** 5  with Size => 5;
+   type Bits_6  is mod 2 ** 6  with Size => 6;
+   type Bits_7  is mod 2 ** 7  with Size => 7;
+   type Bits_8  is mod 2 ** 8  with Size => 8;
+   type Bits_16 is mod 2 ** 16 with Size => 16;
+   type Bits_24 is mod 2 ** 24 with Size => 24;
+   type Bits_31 is mod 2 ** 31 with Size => 31;
 
    -- Bitmask for GPIO control overrides
    type Drive_Strength is (Drive_2mA, Drive_4mA, Drive_8mA, Drive_12mA);
@@ -30,8 +43,11 @@ package Pico_W_Registers is
 
    -- Memory Addresses for RP2350 SIO (Single-cycle IO block)
    SIO_Base         : constant := 16#D000_0000#;
-   SIO_GPIO_OUT_SET : volatile Word with Address => System'To_Address (SIO_Base + 16#0014#);
-   SIO_GPIO_OUT_CLR : volatile Word with Address => System'To_Address (SIO_Base + 16#0018#);
-   SIO_GPIO_OE_SET  : volatile Word with Address => System'To_Address (SIO_Base + 16#0024#);
+   SIO_GPIO_OUT_SET : Word with Address =>
+      System'To_Address (SIO_Base + 16#0014#);
+   SIO_GPIO_OUT_CLR : Word with Address =>
+      System'To_Address (SIO_Base + 16#0018#);
+   SIO_GPIO_OE_SET  : Word with Address =>
+      System'To_Address (SIO_Base + 16#0024#);
 
 end Pico_W_Registers;
