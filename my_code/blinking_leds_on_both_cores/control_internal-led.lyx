@@ -97,42 +97,95 @@
 
 \begin_layout Standard
 Choosing the pure bare-metal path means implementing the complete,
- low-level serial frame protocol required to configure the external Infineon CYW43439 chip over a shared SPI-like layout.Because the CYW43439 relies on a dynamic host bus interface,
+ low-level serial frame protocol required to configure the external Infineon CYW43439 chip over a shared SPI-like layout.
+\end_layout
+
+\begin_layout Standard
+Because the CYW43439 relies on a dynamic host bus interface,
  setting a simple LED state requires communicating with its inner gSPI (generic SPI) module.
- On the Pico 2 W,
- this interface is wired directly to specific microchip pins rather than a standard peripheral controller,
- meaning we will use raw SVD registers to manually bit-bang the communication sequences.
+ 
 \end_layout
 
 \begin_layout Standard
+On the Pico 2 W this interface is wired directly to specific microchip pins rather than a standard peripheral controller meaning that raw SVD registers must be used to manually bit-bang the communication sequences.
+\end_layout
+
+\begin_layout Section
 Phase 1:
- Microcontroller Hardware Pin MappingTo control the external chip,
- configure the following four pins via your RP2350.GPIO SVD layout:GPIO 23 (WL_REG_ON):
- Power control/Hardware reset.
- Must be set as an Output.GPIO 25 (WL_CS):
- Chip Select.
- Must be set as an Output (Active Low).GPIO 29 (WL_CLK):
- SPI Clock line.
- Must be set as an Output.GPIO 24 (WL_DIO):
- Bi-directional data stream.
- Dynamically toggles between Output (sending frames) and Input (reading status).Phase 2:
- Implementation of the Pure Ada DriverTo keep your concurrent background task structure safe,
- encapsulate this entire bit-bang routine inside a Thread-Safe Protected Object.
- This configuration prevents other modules from interrupting a transmission mid-byte.
+ Microcontroller Hardware Pin Mapping
 \end_layout
 
 \begin_layout Standard
+To control the external chip,
+ configure the following four pins via the RP2350.GPIO SVD layout:
+\end_layout
+
+\begin_layout Itemize
+GPIO 23 (WL_REG_ON):
+\begin_inset Newline newline
+\end_inset
+
+ Power control/Hardware reset must be set as an Output.
+\end_layout
+
+\begin_layout Itemize
+GPIO 25 (WL_CS):
+\begin_inset Newline newline
+\end_inset
+
+ Chip Select must be set as an Output (Active Low).
+\end_layout
+
+\begin_layout Itemize
+GPIO 29 (WL_CLK):
+\begin_inset Newline newline
+\end_inset
+
+ SPI Clock line must be set as an Output.
+\end_layout
+
+\begin_layout Itemize
+GPIO 24 (WL_DIO):
+ 
+\begin_inset Newline newline
+\end_inset
+
+A bi-directional data stream that dynamically toggles between Output (sending frames) and Input (reading status).
+\end_layout
+
+\begin_layout Section
+Phase 2:
+ Implementation of the Pure Ada Driver
+\end_layout
+
+\begin_layout Standard
+To keep the existing concurrent background task structure safe,
+ encapsulate this entire bit-bang routine inside a Thread-Safe Protected Object which will prevent other modules from interrupting a transmission mid-byte.
+\end_layout
+
+\begin_layout Section
 Phase 3:
- Update Your Library Task LooperUpdate your background task in your library architecture to replace the placeholder null;
- markers with explicit calls to your new,
+ Update The Library Task Looper
+\end_layout
+
+\begin_layout Standard
+Update yhe background task in the library architecture to replace the placeholder null;
+ markers with explicit calls to the new,
  protected bare-metal driver:
 \end_layout
 
+\begin_layout Section
+Critical Troubleshooting Note
+\end_layout
+
 \begin_layout Standard
-Critical Troubleshooting NoteBecause we are directly manipulating data wires using high-speed software code execution,
- if your loops run too fast,
+Because data wires are being directly manipulated using high-speed software code execution,
+ if the loops run too fast,
  the physical rising edges of your clock pin (GPIO 29) might not fully reach 3.3V before the data pin updates.
- If the LED doesn't start flashing right away,
+\end_layout
+
+\begin_layout Standard
+If the LED doesn't start flashing right away,
  increase the loop bounds inside Bit_Bang_Write_32 (e.g.,
  change for J in 1 ..
  5 loop to 1 ..

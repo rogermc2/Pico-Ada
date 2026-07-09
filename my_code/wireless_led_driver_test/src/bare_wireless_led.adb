@@ -1,6 +1,8 @@
 
 with rp2350; use rp2350; -- Gives access to SIO_Periph
+with RP2350.IO_BANK0; use RP2350.IO_BANK0;
 with RP2350.SIO; use RP2350.SIO;
+
 
 package body Bare_Wireless_LED is
 
@@ -29,7 +31,7 @@ package body Bare_Wireless_LED is
        procedure Bit_Bang_Write_32 (Val : Unsigned_32) is
          Bit_Mask : UInt32 := 16#8000_0000#;
       begin
-         for I in 1 .. 32 loop
+         for I in 1 .. 2000 loop
             -- 1. Setup the target Data pin state (GPIO 24)
             Set_Pin_Level (Pin => 24, High => ((UInt32 (Val) and Bit_Mask) /= 0));
 
@@ -44,6 +46,7 @@ package body Bare_Wireless_LED is
             
             Bit_Mask := Shift_Right (Bit_Mask, 1);
          end loop;
+         
       end Bit_Bang_Write_32;
 
       --  gSPI Protocol Packet Builder
@@ -63,7 +66,8 @@ package body Bare_Wireless_LED is
          Command := Command or 4; -- 4 Bytes payload size
 
          --  Drop Chip Select low (GPIO 25) to start the SPI frame
-         SIO_Periph.CTRL (25).OUT_k := 0;
+         --  SIO_Periph.CTRL (25).OUT_k := 0;
+         Set_Pin_Level (Pin => 25, High => False); -- CS Low
 
          --  Stream the Command Header across the pins
          Bit_Bang_Write_32 (Command);
@@ -72,43 +76,55 @@ package body Bare_Wireless_LED is
          Bit_Bang_Write_32 (Data);
 
          --  Raise Chip Select back high (GPIO 25) to end transaction safely
-         SIO_Periph.CTRL (25).OUT_k := 1;
+         --  SIO_Periph.CTRL (25).OUT_k := 1;
+         Set_Pin_Level (Pin => 25, High => True);  -- CS High
+
       end Write_CYW43_Register;
 
         -- System Wake/Power Initialization
       procedure Initialize is
       begin
-         --  Configure lines as generic system outputs using your SVD records
-         --  (Ensure GPIO 23, 24, 25, and 29 are set to Output configurations)
-         
-         --  Pull down power line (GPIO 23) to physically trigger hardware reset
-         SIO_Periph.CTRL (23).OUT_k := 0;
-         SIO_Periph.CTRL (25).OUT_k := 1; -- Keep CS High
-         SIO_Periph.CTRL (29).OUT_k := 0; -- Keep Clock Low
-         
-         --  Wait for chip internal discharge
-         for I in 1 .. 1000 loop
-            null;
-         end loop;
+      --  Route Physical Pins to SIO (Single-Cycle IO Function 5)
+      --  On the RP2350, Function value 5 routes standard pins to the SIO block.
+      --  Check your SVD record names. If it uses a flat layout or custom type,
+      --  use the correct aggregate representation mapping.
+      IO_BANK0_Periph.GPIO23_CTRL := (FUNCSEL => siob_proc_23, others => <>); -- WL_REG_ON (Power)
+      IO_BANK0_Periph.GPIO24_CTRL := (FUNCSEL => siob_proc_24, others => <>); -- WL_DIO (Data)
+      IO_BANK0_Periph.GPIO25_CTRL := (FUNCSEL => siob_proc_25, others => <>); -- WL_CS (Chip Select)
+      IO_BANK0_Periph.GPIO29_CTRL := (FUNCSEL => siob_proc_29, others => <>); -- WL_CLK (Clock)
 
-         --  Drive power line high (GPIO 23) to wake up the Infineon silicon
-         SIO_Periph.CTRL (23).OUT_k := 1;
-         
-         --  Give the internal firmware state machine time to clear its boot vectors
-         for I in 1 .. 50000 loop
-            null;
-         end loop;
+      -- Set Pad Directionality Enforcements
+      -- SIO output logic requires enabling the output override buffer mask.
+      -- Pin bits: Bit 23, 24, 25, 29 must have their output drivers turned on.
+      declare
+         Dir_Mask : constant UInt32 := (2**23) or (2**24) or (2**25) or (2**29);
+      begin
+         SIO_Periph.GPIO_OE_SET := Dir_Mask;
+      end;
 
-         --  Command sequence: Initialize gSPI block and configure clock parameters
-         --  Target Function 0 (SPI Internal Core), Register 16#00# (Bus Control)
-         --  Setting bit 0 configures the chip interface for word-wide alignment
-         Write_CYW43_Register
-          (Function_Num => 0, Address => 16#00#, Data => 16#0000_0001#);
+      --  Physical Wireless Hardware Reset Sequence
+      Set_Pin_Level (Pin => 23, High => False); -- Pull Power down (Reset)
+      Set_Pin_Level (Pin => 25, High => True);  -- Keep CS High (Idle)
+      Set_Pin_Level (Pin => 29, High => False); -- Keep Clock Low (Idle)
+      
+      for I in 1 .. 5000 loop
+         null; 
+      end loop;
 
+      -- Power up the Infineon Chip
+      Set_Pin_Level (Pin => 23, High => True);  
+      
+      -- Allow the external module to finish loading boot firmware parameters
+      for I in 1 .. 250_000 loop
+         null; 
+      end loop;
+
+      -- Send the gSPI orientation initialization packet
+      Write_CYW43_Register (Function_Num => 0, Address => 16#00#, Data => 16#0000_0001#);
       end Initialize;
 
       -- Route Toggles Directly to the Target Pin
-       procedure Set_LED (LED_State : Boolean) is
+      procedure Set_LED (LED_State : Boolean) is
          --  The onboard LED is linked to WL_GPIO0 on the chip.
          --  To modify it, target Function 1 (Backplane Core), 
          --  specifically routing to the GPIO Control Register Map address 16#18003#
