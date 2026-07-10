@@ -1,3 +1,4 @@
+
 with "runtime_build.gpr";
 with "config/pico2w_led_config.gpr";
 with "ravenscar_build.gpr"; -- Required explicitly for light_tasking_rp2350 profiles

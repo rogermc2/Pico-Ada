@@ -1,3 +1,6 @@
+
+with System;
+
 package Pico_W_Registers is
    pragma Preelaborate;
 
@@ -12,7 +15,11 @@ package Pico_W_Registers is
    type Bits_6  is mod 2 ** 6  with Size => 6;
    type Bits_7  is mod 2 ** 7  with Size => 7;
    type Bits_8  is mod 2 ** 8  with Size => 8;
+   type Bits_11 is mod 2 ** 11 with Size => 11;
    type Bits_16 is mod 2 ** 16 with Size => 16;
+   type Bits_17 is mod 2 ** 17 with Size => 17;
+   type Bits_20 is mod 2 ** 20 with Size => 20;
+   type Bits_21 is mod 2 ** 21 with Size => 21;
    type Bits_24 is mod 2 ** 24 with Size => 24;
    type Bits_31 is mod 2 ** 31 with Size => 31;
 
@@ -43,11 +50,12 @@ package Pico_W_Registers is
 
    -- Memory Addresses for RP2350 SIO (Single-cycle IO block)
    SIO_Base         : constant := 16#D000_0000#;
+    -- Pointers for driving the pins
    SIO_GPIO_OUT_SET : Word with Address =>
       System'To_Address (SIO_Base + 16#0014#);
    SIO_GPIO_OUT_CLR : Word with Address =>
       System'To_Address (SIO_Base + 16#0018#);
-   SIO_GPIO_OE_SET  : Word with Address =>
-      System'To_Address (SIO_Base + 16#0024#);
+   SIO_GPIO_OE_SET : Word with Address =>
+    System'To_Address (SIO_Base + 16#0024#);
 
 end Pico_W_Registers;

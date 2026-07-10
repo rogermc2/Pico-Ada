@@ -1,4 +1,6 @@
 
+with System;
+
 package Wireless_Driver is
 
    protected CYW43439_Bus is

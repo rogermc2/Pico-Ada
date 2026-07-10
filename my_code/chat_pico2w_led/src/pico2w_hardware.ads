@@ -1,8 +1,8 @@
 
 with Pico_W_Registers; use Pico_W_Registers;
 
-package Pico_W_Hardware is
-   type Word is mod 2**32 with Size => 32;
+package Pico2W_Hardware is
+   --  type Word is mod 2**32 with Size => 32;
 
    -- Pad control register layout for controlling electrical characteristics
    type Pad_Ctrl is record
@@ -33,7 +33,7 @@ package Pico_W_Hardware is
       OUTOVER  : Bits_2;  -- Peripheral output override
       OEOVER   : Bits_2;  -- Output enable override
       INOVER   : Bits_2;  -- Input override
-      Reserved : Bits_21;
+      --  Reserved : Bits_21;
    end record with Size => 32;
 
    for GPIO_Ctrl use record
@@ -41,17 +41,17 @@ package Pico_W_Hardware is
       OUTOVER  at 0 range 8 .. 9;
       OEOVER   at 0 range 12 .. 13;
       INOVER   at 0 range 16 .. 17;
-      Reserved at 0 range 5 .. 7; -- Note split range mapping
+      --  Reserved at 0 range 5 .. 7; -- Note split range mapping
    end record;
 
    -- Hardware Register Base Mapping
-   IO_BANK0_BASE   : constant := 16#40014000#;
+   IO_BANK0_BASE   : constant := 16#40028000#;  --  16#40014000#;
    PADS_BANK0_BASE : constant := 16#40038000#;
    SIO_BASE        : constant := 16#d0000000#; -- Single-cycle IO block
 
    -- Example pointers for driving the pins
-   SIO_GPIO_OUT_SET : volatile Word with Address => To_Address(SIO_BASE + 16#014#);
-   SIO_GPIO_OUT_CLR : volatile Word with Address => To_Address(SIO_BASE + 16#018#);
-   SIO_GPIO_OE_SET  : volatile Word with Address => To_Address(SIO_BASE + 16#024#);
+   --  SIO_GPIO_OUT_SET : Word with Address => To_Address(SIO_BASE + 16#014#);
+   --  SIO_GPIO_OUT_CLR : Word with Address => To_Address(SIO_BASE + 16#018#);
+   --  SIO_GPIO_OE_SET  : Word with Address => To_Address(SIO_BASE + 16#024#);
 
-end Pico_W_Hardware;
+end Pico2W_Hardware;
