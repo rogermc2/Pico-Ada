@@ -39,7 +39,9 @@ package body Bare_Wireless_LED is
             Set_Pin_Level (Pin => 29, High => True);
             
             -- Keep line stretched to meet setup/hold timing thresholds
-            for J in 1 .. 20 loop null; end loop;
+            for J in 1 .. 20 loop
+                null;
+            end loop;
 
             -- 3. Pull the Clock line Low (GPIO 29)
             Set_Pin_Level (Pin => 29, High => False);

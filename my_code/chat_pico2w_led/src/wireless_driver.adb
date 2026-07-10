@@ -12,7 +12,8 @@ package body Wireless_Driver is
             Power_On_Infineon_Chip;
             
             -- Set up IO_BANK0 pin multiplexing functions here
-            -- Map GPIO 24, 25, and 29 to the internal SPI block      
+            -- Map GPIO 24, 25, and 29 to the internal SPI block 
+            Initialize_Wireless_Bus;
             Initialized := True;
          end if;
       end Initialize;
