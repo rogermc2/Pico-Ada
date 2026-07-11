@@ -1,16 +1,11 @@
 
-  with RP2350.IO_BANK0; use RP2350.IO_BANK0;
-  with RP2350.PADS_BANK0; use RP2350.PADS_BANK0;
-  with RP2350.SIO; use RP2350.SIO;
+with RP2350.IO_BANK0; use RP2350.IO_BANK0;
+with RP2350.PADS_BANK0; use RP2350.PADS_BANK0;
+with RP2350.SIO; use RP2350.SIO;
 
 package body SVD_Support is
 
 procedure Configure_SIO_With_SVD is
-   --  Group definitions for specific pins
-   REG_ON_MASK   : constant := 2**23;
-   DATA_MASK     : constant := 2**24;
-   CS_MASK       : constant := 2**25;
-   CLK_MASK      : constant := 2**29;
    -- Combined mask for establishing output enables
    All_Wifi_Pins : constant := REG_ON_MASK + DATA_MASK + CS_MASK + CLK_MASK;
 begin
@@ -49,11 +44,47 @@ begin
    
    -- 7. Delay ~50ms to allow the wireless internal boot ROM to execute
    Delay (0.0001);
-   
+
    -- 8. Drive Chip Select (CS) HIGH to put the SPI bus into idle state
    SIO_Periph.GPIO_OUT_SET := CS_MASK;
 
 end Configure_SIO_With_SVD;
 
+procedure Bit_Bang_Send_Word (Word : UInt32) is
+   Current_Bit : UInt32;
+   
+   -- Reusing your working pin logic masks
+   DATA_MASK   : constant UInt32 := 2**24;
+   CLK_MASK    : constant UInt32 := 2**29;
+begin
+   -- Explicitly force GPIO 24 into an Output Mode 
+   SIO_Periph.GPIO_OE_SET := DATA_MASK;
+
+   -- Loop through all 32 bits from MSB (bit 31) down to LSB (bit 0)
+   for I in reverse 0 .. 31 loop
+      -- Isolate the targeted single bit
+      Current_Bit := Shift_Right(Word, I) and 1;
+      
+      -- 1. Setup Data Line: Write the single bit value to GPIO 24
+      if Current_Bit = 1 then
+         SIO_Periph.GPIO_OUT_SET := DATA_MASK;
+      else
+         SIO_Periph.GPIO_OUT_CLR := DATA_MASK;
+      end if;
+      
+      -- Small pipeline settle delay if running the RP2350 core at full 150MHz
+      -- asm volatile ("nop"); 
+
+      -- 2. Pulse the Clock HIGH (Rising Edge - CYW43439 samples the data line)
+      SIO_Periph.GPIO_OUT_SET := CLK_MASK;
+      
+      -- Settle delay for SPI Clock High time
+      -- asm volatile ("nop");
+
+      -- 3. Pull Clock LOW (Falling Edge - Preparing for the next bit step)
+      SIO_Periph.GPIO_OUT_CLR := CLK_MASK;
+   end loop;
+
+end Bit_Bang_Send_Word;
 
 end SVD_Support;
