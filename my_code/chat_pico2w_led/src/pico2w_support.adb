@@ -5,44 +5,21 @@ with Ada.Real_Time; use Ada.Real_Time;
 
 with Pico2W_Hardware; use Pico2W_Hardware;
 with Pico_W_Registers; use Pico_W_Registers;
+  with RP2350.SIO; use RP2350.SIO;
 with SVD_Support; use SVD_Support;
 
 package body Pico2W_Support is
 
 --  CYW43439 Hardware Mapping Details
 --  GPIO 23 (WL_REG_ON): Wireless power supply reset pin.
---  GPIO 24 (WL_DATA): Bidirectional SPI data line.GPIO 25 (WL_CS): Chip Select line.GPIO 29 (WL_CLK): SPI clock line.
+--  GPIO 24 (WL_DATA): Bidirectional SPI data line.
+--  GPIO 25 (WL_CS): Chip Select line.
+--  GPIO 29 (WL_CLK): SPI clock line.
 
 procedure Initialize_Wireless_Bus is
 
 begin
    Configure_SIO_With_SVD;
-   -- 1. Route Pin 23 (WL_REG_ON) to the SIO block to behave as a standard 
-   --    software GPIO.
-   -- 2. Configure Pin 23 as an output to handle the
-   --    wireless power control rail.
-   --  SIO_GPIO_OE_SET := 2**23;
-
-   -- 3. Power-cycle the Infineon transceiver chip: drive Pin 23 HIGH
-   --  SIO_GPIO_OUT_SET := 2**23;
-   
-   -- 4. CRITICAL BARE-METAL TIMING: Implement a loop to stall execution
-   --   for at least 250 microseconds
-   --   This delay ensures stabilization of the internal
-   --  --   wireless crystal clock.
-   --  Delay (0.0001);
-   --  Delay_Microseconds(250);
-
-   --  5. Configure GPIO 24 (SDIO), 25 (CSn), and 29 (CLK) to use
-   --    alternative SPI profiles.
-   --    Refer to Chapter 2 of the RP2350 Datasheet for the exact FUNCSEL
-   --    values matching the chip layout.
-   --  SIO_GPIO_OUT_SET := 2**24;
-   --  SIO_GPIO_OUT_SET := 2**25;
-   --  SIO_GPIO_OUT_SET := 2**29;
-   --  for J in 1 .. 20 loop
-   --     null;
-   --  end loop;
 
 end Initialize_Wireless_Bus;
 
@@ -52,11 +29,11 @@ procedure Power_On_Infineon_Chip is
    Startup_Delay : constant Time_Span := Microseconds (250);
 begin
    -- Configure GPIO 23 (WL_REG_ON) as an output inside SIO
-   SIO_GPIO_OE_SET := 2**23;
+   SIO_Periph.GPIO_OE_SET := REG_ON_MASK;
 
    -- Capture current ticks, then drive the hardware power rail HIGH
    Wake_Time := Clock;
-   SIO_GPIO_OUT_SET := 2**23;
+   SIO_Periph.GPIO_OUT_SET := REG_ON_MASK;
 
    -- Suspend the current execution task safely, letting other Ravenscar tasks yield
    delay until (Wake_Time + Startup_Delay);
@@ -83,9 +60,11 @@ begin
 
    -- Execute gSPI Transaction sequence:
    -- 1. Pull CSn (GPIO 25) LOW
+   SIO_Periph.GPIO_OUT_CLR := CS_MASK;
    -- 2. Transmit the 32-bit Cmd record across the SPI bus
    -- 3. Transmit the 32-bit Payload word across the SPI bus
    -- 4. Push CSn (GPIO 25) HIGH
+   SIO_Periph.GPIO_OUT_SET := CS_MASK;
 end Set_Onboard_LED;
 
 end Pico2W_Support;
