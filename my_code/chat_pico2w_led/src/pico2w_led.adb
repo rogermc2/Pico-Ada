@@ -14,7 +14,6 @@ begin
 
    loop
       LED_State := not LED_State;
-      
       -- Dispatch the command safely to the protected SPI structure
       Wireless_Driver.CYW43439_Bus.Set_LED (LED_State);
 

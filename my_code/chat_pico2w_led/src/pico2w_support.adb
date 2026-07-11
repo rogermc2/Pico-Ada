@@ -45,13 +45,11 @@ procedure Set_Onboard_LED (State : Boolean) is
    Payload : Word := 0;
 begin
    -- Configure token to write exactly 4 bytes into Function 1 (Backplane)
-   Cmd := (Write_Mode => True,
-           Auto_Inc   => True,
-           Function_N => 1,
-           Address    => 16#18005#, -- Top 17 bits of register address
-           Data_Length=> 4);
+   Cmd := (Write_Mode  => True,  Auto_Inc   => True, Function_N => 1,
+           Address     => 16#18005#, -- Top 17 bits of register address
+           Data_Length => 4);
 
-   -- Bit 0 corresponds strictly to WL_GPIO0
+   -- Bit 0 corresponds to WL_GPIO0
    if State then
       Payload := 16#01#;
    else
