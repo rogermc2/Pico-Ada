@@ -1,5 +1,6 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Unchecked_Conversion;
 
 with RP2350.IO_BANK0; use RP2350.IO_BANK0;
 with RP2350.PADS_BANK0; use RP2350.PADS_BANK0;
@@ -55,43 +56,76 @@ begin
 end Configure_SIO_With_SVD;
 
 procedure Bit_Bang_Send_Word (Word : UInt32) is
-   Next_Time     : Time;
+   DATA_MASK   : constant UInt32 := 2**24;
+   CLK_MASK    : constant UInt32 := 2**29;
+   Next_Time   : Time;
    Current_Bit : UInt32;  
-   --  Working pin logic masks
-   DATA_MASK : constant UInt32 := 2**24;
-   CLK_MASK  : constant UInt32 := 2**29;
+ begin
+    --  Explicitly force GPIO 24 into an Output Mode 
+    SIO_Periph.GPIO_OE_SET := DATA_MASK;
+
+    -- Loop through all 32 bits from MSB (bit 31) down to LSB (bit 0)
+    for I in reverse 0 .. 31 loop
+       --  Isolate the targeted single bit
+       Current_Bit := Shift_Right(Word, I) and 1;
+      
+       --  1. Setup Data Line: Write the single bit value to GPIO 24
+       if Current_Bit = 1 then
+          SIO_Periph.GPIO_OUT_SET := DATA_MASK;
+       else
+          SIO_Periph.GPIO_OUT_CLR := DATA_MASK;
+       end if;
+      
+       --  Small pipeline settle delay if running the RP2350 core at full 150MHz
+       --  asm volatile ("nop");
+       Next_Time := Clock + Milliseconds (50);
+       delay until Next_Time;
+
+       -- 2. Pulse the Clock HIGH (Rising Edge - CYW43439 samples the data line)
+       SIO_Periph.GPIO_OUT_SET := CLK_MASK;  
+       -- Settle delay for SPI Clock High time
+       -- asm volatile ("nop");
+      Next_Time := Clock + Milliseconds (50);
+      delay until Next_Time;
+
+       -- 3. Pull Clock LOW (Falling Edge - Preparing for the next bit step)
+       SIO_Periph.GPIO_OUT_CLR := CLK_MASK;
+   end loop;
+
+end Bit_Bang_Send_Word;
+
+procedure Send_SVD_Command (Cmd : GSPI_Command) is
+   
+   -- Convert your type-safe record to a 32-bit word
+   function To_Word is new Ada.Unchecked_Conversion 
+       (Source => GSPI_Command, Target => UInt32);
+
+   Raw_Word    : constant UInt32 := To_Word (Cmd);
+   DATA_MASK   : constant UInt32 := 2**24;
+   CLK_MASK    : constant UInt32 := 2**29;
+   Current_Bit : UInt32;
 begin
-   --  Explicitly force GPIO 24 into an Output Mode 
+   -- Explicitly force the shared data line to remain an output
    SIO_Periph.GPIO_OE_SET := DATA_MASK;
 
-   -- Loop through all 32 bits from MSB (bit 31) down to LSB (bit 0)
+   -- MSB-First transmission loop (Processes Bit 31 "Write_Mode" immediately)
    for I in reverse 0 .. 31 loop
-      --  Isolate the targeted single bit
-      Current_Bit := Shift_Right(Word, I) and 1;
+      Current_Bit := Shift_Right(Raw_Word, I) and 1;
       
-      --  1. Setup Data Line: Write the single bit value to GPIO 24
+      -- Set Data line state
       if Current_Bit = 1 then
          SIO_Periph.GPIO_OUT_SET := DATA_MASK;
       else
          SIO_Periph.GPIO_OUT_CLR := DATA_MASK;
       end if;
       
-      --  Small pipeline settle delay if running the RP2350 core at full 150MHz
-      --  asm volatile ("nop");
-      Next_Time := Clock + Milliseconds (50);
-      delay until Next_Time;
-
-      -- 2. Pulse the Clock HIGH (Rising Edge - CYW43439 samples the data line)
-      SIO_Periph.GPIO_OUT_SET := CLK_MASK;  
-      -- Settle delay for SPI Clock High time
-      -- asm volatile ("nop");
-      Next_Time := Clock + Milliseconds (50);
-      delay until Next_Time;
-
-      -- 3. Pull Clock LOW (Falling Edge - Preparing for the next bit step)
+      -- Pulse Clock High (The CYW43439 samples on this rising edge)
+      SIO_Periph.GPIO_OUT_SET := CLK_MASK;
+      
+      -- Clear Clock Low (Prepares for the next bit transmission)
       SIO_Periph.GPIO_OUT_CLR := CLK_MASK;
    end loop;
 
-end Bit_Bang_Send_Word;
+end Send_SVD_Command;
 
 end SVD_Support;

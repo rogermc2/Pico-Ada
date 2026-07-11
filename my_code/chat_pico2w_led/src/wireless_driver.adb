@@ -13,7 +13,7 @@ package body Wireless_Driver is
       procedure Initialize is
       begin
          if not Initialized then
-            Power_On_Infineon_Chip;
+            --  Power_On_Infineon_Chip;
             
             -- Set up IO_BANK0 pin multiplexing functions here
             -- Map GPIO 24, 25, and 29 to the internal SPI block 
