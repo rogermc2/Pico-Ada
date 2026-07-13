@@ -164,6 +164,7 @@ package body RP2350_CYW43439 is
       -- Bits 10-0: Data size in bytes (4 bytes for a 32-bit register write)
       
       -- CYW43439 ChipCommon GPIO Control address is 16#1800_0000# offset
+      -- CYW43439 Backplane Register for ChipCommon GPIO (Function 1)
       GPIO_Out_Addr  : constant Unsigned_32 := 16#1800_0064#; 
       
       -- gSPI Command Header Generation Formula
@@ -174,19 +175,25 @@ package body RP2350_CYW43439 is
                          Shift_Left (GPIO_Out_Addr, 11) or -- Target memory address
                          4;                                -- Length of payload (4 Bytes)
                          
-      Payload_Value  : Unsigned_32 := 16#0000_0000#;
+      Payload_Value  : Unsigned_32 := 0;
    begin
       -- Determine payload state for WL_GPIO0
       if Enable then
-         Payload_Value := 16#0000_0001#; -- Drive WL_GPIO0 High (LED On)
+         Payload_Value := 1; -- Drive WL_GPIO0 High (LED On)
       else
-         Payload_Value := 16#0000_0000#; -- Drive WL_GPIO0 Low (LED Off)
+         Payload_Value := 0; -- Drive WL_GPIO0 Low (LED Off)
       end if;
 
       -- Execute the gSPI bus cycle transaction
       Out_Clr := Mask_CS; -- Assert Chip Select Low to begin transaction
       Write_gSPI_Word32 (SPI_Header);    -- Stream Header over SPI line
+     
+      -- CRITICAL CRUX: The gSPI Turnaround Delay
+      -- The CYW43439 requires a brief gap here to process the command 
+      -- before you stream the actual payload bits.
+      Wait (Milliseconds (5));
       Write_gSPI_Word32 (Payload_Value); -- Stream Data Payload over SPI line
+      Wait (Milliseconds (5));
       Out_Set := Mask_CS; -- Deassert Chip Select High to conclude transfer
 
    end Set_Onboard_LED;
