@@ -24,18 +24,22 @@ package RP2350_CYW43439 is
    SIO_GPIO_OE_CLR_Offset  : constant := 16#028#;
 
    -- Pin definitions matching Pico 2 W topology
-   Pin_DATA : constant := 24;
-   Pin_CS   : constant := 25;
-   Pin_CLK  : constant := 29;
+
+   Pin_REG_ON : constant := 23;
+   Pin_DATA   : constant := 24;
+   Pin_CS     : constant := 25;
+   Pin_CLK    : constant := 29;
 
    -- Bitmasks
-   Mask_DATA : constant Volatile_Word := 2**Pin_DATA;
-   Mask_CS   : constant Volatile_Word := 2**Pin_CS;
-   Mask_CLK  : constant Volatile_Word := 2**Pin_CLK;
+   Mask_REG_ON : constant Volatile_Word := 2**Pin_REG_ON;
+   Mask_DATA   : constant Volatile_Word := 2**Pin_DATA;
+   Mask_CS     : constant Volatile_Word := 2**Pin_CS;
+   Mask_CLK    : constant Volatile_Word := 2**Pin_CLK;
 
    procedure Initialize_gSPI;
-   function Read_gSPI_Byte return Interfaces.Unsigned_8;
+   function Read_gSPI_Byte return Unsigned_8;
    procedure Set_Onboard_LED (Enable : Boolean);
-   procedure Write_gSPI_Byte (Data : Interfaces.Unsigned_8);
+   procedure Write_gSPI_Byte (Data : Unsigned_8);
+   procedure Write_gSPI_Word32 (Value : Unsigned_32);
 
 end RP2350_CYW43439;

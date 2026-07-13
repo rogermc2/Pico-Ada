@@ -1,0 +1,8 @@
+.terminal, .xterm-viewport, .xterm-screen, .xterm-rows {
+    background-color: #f7f9fa !important;
+    color: #24292e !important;
+}
+/* Ensures the terminal prompt and cursor stay clearly visible */
+.xterm-cursor {
+    background-color: #0366d6 !important;
+}
