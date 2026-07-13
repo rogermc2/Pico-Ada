@@ -15,14 +15,20 @@ package Registers is
 
    -- Register Map Addresses
    IO_BANK0_Base : constant := 16#40028000#;
-   SIO_Base      : constant := 16#40014000#;
+   SIO_Base      : constant := 16#D0000000#;
+   --  SIO_Base      : constant := 16#40014000#;
 
-   -- SIO Register Offsets (Direct GPIO access)
-   SIO_GPIO_OUT_SET_Offset : constant := 16#014#;
-   SIO_GPIO_OUT_CLR_Offset : constant := 16#018#;
+   --  -- SIO Register Offsets (Direct GPIO access)
+   --  SIO_GPIO_OUT_SET_Offset : constant := 16#014#;
+   --  SIO_GPIO_OUT_CLR_Offset : constant := 16#018#;
+   --  SIO_GPIO_IN_Offset      : constant := 16#004#;
+   --  SIO_GPIO_OE_SET_Offset  : constant := 16#024#;
+   --  SIO_GPIO_OE_CLR_Offset  : constant := 16#028#;
+   SIO_GPIO_OUT_SET_Offset : constant := 16#018#;
+   SIO_GPIO_OUT_CLR_Offset : constant := 16#020#;
    SIO_GPIO_IN_Offset      : constant := 16#004#;
-   SIO_GPIO_OE_SET_Offset  : constant := 16#024#;
-   SIO_GPIO_OE_CLR_Offset  : constant := 16#028#;
+   SIO_GPIO_OE_SET_Offset  : constant := 16#038#;
+   SIO_GPIO_OE_CLR_Offset  : constant := 16#040#;
 
    -- Pin definitions matching Pico 2 W topology
 
