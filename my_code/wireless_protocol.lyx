@@ -149,8 +149,9 @@ First,
 \end_layout
 
 \begin_layout Standard
-* GPIO 24:
- Configure function as SPI Data / IRQ (SDIO).
+* GPIO 23:
+ Configure function as Digital Output for wireless power-on (WL_REG_ON).
+ [2] 
 \end_layout
 
 \begin_layout Standard
@@ -159,14 +160,13 @@ First,
 \end_layout
 
 \begin_layout Standard
-* GPIO 29:
- Configure function as SPI Clock (CLK).
+* GPIO 24:
+ Configure function as SPI Data / IRQ (SDIO).
 \end_layout
 
 \begin_layout Standard
-* GPIO 23:
- Configure function as Digital Output for wireless power-on (WL_REG_ON).
- [2] 
+* GPIO 29:
+ Configure function as SPI Clock (CLK).
 \end_layout
 
 \begin_layout Subsection
@@ -267,10 +267,6 @@ For the Board schematic:
 For the Protocol side:
  The Infineon CYW43439 Datasheet (specifically the sections detailing the gSPI Interface Protocol and internal Backplane GPIO registers).
  [2]
-\end_layout
-
-\begin_layout Standard
-
 \end_layout
 
 \begin_layout Standard
