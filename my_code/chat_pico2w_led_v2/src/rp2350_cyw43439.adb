@@ -15,6 +15,32 @@ package body RP2350_CYW43439 is
       return Word_Convert.To_Pointer (Addr);
    end Reg_Ptr;
 
+function Check_Chip_Communication return Interfaces.Unsigned_32 is
+   Out_Set : Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
+   Out_Clr : Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;  
+   -- Read (Bit 31 = 0), Function 0, Address 16#14# (Test Register), Length 4 Bytes
+   Read_Header : constant Interfaces.Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
+   Result      : Interfaces.Unsigned_32 := 0;
+begin
+   Out_Clr := Mask_CS;
+
+   -- Send Read Request Header
+   Write_gSPI_Word32 (Read_Header);
+
+   -- Enforce turnaround delay for hardware line direction swap
+   for I in 1 .. 50 loop null; end loop;
+
+   -- Read 4 bytes back from the chip
+   Result := Shift_Left(Unsigned_32(Read_gSPI_Byte), 24) or
+             Shift_Left(Unsigned_32(Read_gSPI_Byte), 16) or
+             Shift_Left(Unsigned_32(Read_gSPI_Byte), 8)  or
+             Unsigned_32(Read_gSPI_Byte);
+
+   Out_Set := Mask_CS;
+   return Result;
+
+   end Check_Chip_Communication;
+
    procedure Initialize_gSPI is
       -- Control registers for mapping functions
       GPIO23_Ctrl : Volatile_Word renames
