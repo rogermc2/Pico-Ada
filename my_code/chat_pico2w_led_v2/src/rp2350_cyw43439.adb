@@ -1,13 +1,9 @@
 
-with Ada.Real_Time; use Ada.Real_Time;
-
 with System;
 
 with Registers; use Registers;
 
 package body RP2350_CYW43439 is
-
-   procedure Wait (Duration : Time_Span);
 
    -- Use the conversion instance to safely create pointers from addresses
    function Reg_Ptr (Addr : System.Address) return Word_Convert.Object_Pointer is
@@ -15,20 +11,23 @@ package body RP2350_CYW43439 is
       return Word_Convert.To_Pointer (Addr);
    end Reg_Ptr;
 
-function Check_Chip_Communication return Interfaces.Unsigned_32 is
-   Out_Set : Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
-   Out_Clr : Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;  
+function Check_Chip_Communication return Unsigned_32 is
+   Out_Set : Volatile_Word renames
+    Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
+   Out_Clr : Volatile_Word renames
+    Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;  
    -- Read (Bit 31 = 0), Function 0, Address 16#14# (Test Register), Length 4 Bytes
-   Read_Header : constant Interfaces.Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
-   Result      : Interfaces.Unsigned_32 := 0;
+   Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
+   Result      : Unsigned_32 := 0;
 begin
-   Out_Clr := Mask_CS;
+   Out_Clr := Volatile_Word (Mask_CS);
 
    -- Send Read Request Header
    Write_gSPI_Word32 (Read_Header);
 
    -- Enforce turnaround delay for hardware line direction swap
-   for I in 1 .. 50 loop null; end loop;
+   Wait (Milliseconds (5));
+   --  for I in 1 .. 50 loop null; end loop;
 
    -- Read 4 bytes back from the chip
    Result := Shift_Left(Unsigned_32(Read_gSPI_Byte), 24) or
@@ -36,7 +35,8 @@ begin
              Shift_Left(Unsigned_32(Read_gSPI_Byte), 8)  or
              Unsigned_32(Read_gSPI_Byte);
 
-   Out_Set := Mask_CS;
+   Out_Set := Volatile_Word (Mask_CS);
+
    return Result;
 
    end Check_Chip_Communication;
@@ -71,25 +71,28 @@ begin
       GPIO29_Ctrl := 5; -- CLK
 
       -- 2. Configure default output directions
-      OE_Set  := Mask_CS or Mask_CLK or Mask_DATA or Mask_REG_ON;
-      Out_Set := Mask_CS; -- Drive CS high (Idle)
+      OE_Set  :=  Volatile_Word (All_Pins_Mask);
 
-      Out_Clr := Mask_REG_ON;
+      -- 3. Set idle state
+      Out_Set := Volatile_Word (Mask_CS or Mask_REG_ON);
+
+      Out_Clr := Volatile_Word (Mask_REG_ON);
       Wait (Milliseconds (50));
       --  For I in 1 .. 50000 loop  -- Settle delay
       --     null;
       --  end loop;
 
-      Out_Set := Mask_REG_ON;
+      Out_Set := Volatile_Word (Mask_REG_ON);
       --  Wait for internal wireless boot ROM to execute
-      For I in 1 .. 25000 loop
-         null;
-      end loop;
-      Out_Clr := Mask_CS; 
+      Wait (Milliseconds (25));
+      --  For I in 1 .. 25000 loop
+      --     null;
+      --  end loop;
+      Out_Clr := Volatile_Word (Mask_CS); 
 
       Write_gSPI_Word32 (Wake_Header);
       Write_gSPI_Byte (2);  --  Request active HT internal clock
-      Out_Set := Mask_CS;
+      Out_Set := Volatile_Word (Mask_CS);
 
       Wait (Milliseconds (100));
       --  For I in 1 .. 100000 loop  -- Settle delay
@@ -103,28 +106,28 @@ begin
        Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
       Out_Clr : Volatile_Word renames
        Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;
-      OE_Set  : Volatile_Word renames
-       Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OE_SET_Offset)).all;
+      --  OE_Set  : Volatile_Word renames
+      --   Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OE_SET_Offset)).all;
       Temp    : Unsigned_8 := Data;
    begin
       -- Ensure host drives the shared data line
-      OE_Set := Mask_DATA;
+      --  OE_Set := Volatile_Word (Mask_DATA);
 
       -- Send MSB First
       for Bit in 1 .. 8 loop
-         Out_Clr := Mask_CLK; -- Clock Low
+         Out_Clr := Volatile_Word (Mask_CLK); -- Clock Low
 
          if (Temp and 16#80#) /= 0 then
-            Out_Set := Mask_DATA;
+            Out_Set := Volatile_Word (Mask_DATA);
          else
-            Out_Clr := Mask_DATA;
+            Out_Clr := Volatile_Word (Mask_DATA);
          end if;
 
          -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
          Wait (Milliseconds (5));
          --  for I in 1 .. 5 loop null; end loop;
 
-         Out_Set := Mask_CLK; -- Clock High (CYW43439 samples on rising edge)
+         Out_Set := Volatile_Word (Mask_CLK); -- Clock High (CYW43439 samples on rising edge)
          Temp    := Shift_Left (Temp, 1);
          
          Wait (Milliseconds (5));
@@ -145,17 +148,17 @@ begin
       Result  : Unsigned_8 := 0;
    begin
       -- Relinquish host drive control so CYW43439 can transmit
-      OE_Clr := Mask_DATA;
+      OE_Clr := Volatile_Word (Mask_DATA);
 
       for Bit in 1 .. 8 loop
-         Out_Clr := Mask_CLK; -- Clock Low
+         Out_Clr := Volatile_Word (Mask_CLK); -- Clock Low
          for I in 1 .. 5 loop null; end loop;
 
-         Out_Set := Mask_CLK; -- Clock High
+         Out_Set := Volatile_Word (Mask_CLK); -- Clock High
          Result  := Shift_Left (Result, 1);
 
          -- Sample line after edge propagation delay
-         if (GPIO_In and Mask_DATA) /= 0 then
+         if (GPIO_In and Volatile_Word (Mask_DATA)) /= 0 then
             Result := Result or 16#01#;
          end if;
 
@@ -211,7 +214,7 @@ begin
       end if;
 
       -- Execute the gSPI bus cycle transaction
-      Out_Clr := Mask_CS; -- Assert Chip Select Low to begin transaction
+      Out_Clr := Volatile_Word (Mask_CS); -- Assert Chip Select Low to begin transaction
       Write_gSPI_Word32 (SPI_Header);    -- Stream Header over SPI line
      
       -- CRITICAL CRUX: The gSPI Turnaround Delay
@@ -220,7 +223,7 @@ begin
       Wait (Milliseconds (5));
       Write_gSPI_Word32 (Payload_Value); -- Stream Data Payload over SPI line
       Wait (Milliseconds (5));
-      Out_Set := Mask_CS; -- Deassert Chip Select High to conclude transfer
+      Out_Set := Volatile_Word (Mask_CS); -- Deassert Chip Select High to conclude transfer
 
    end Set_Onboard_LED;
 

@@ -1,5 +1,8 @@
 
 with System.Address_To_Access_Conversions; 
+with System.Vs_Int;
+
+with Interfaces; use Interfaces;
 
 package Registers is
    --  pragma Preelaborate;
@@ -29,9 +32,10 @@ package Registers is
    Pin_CLK    : constant := 29;
 
    -- Bitmasks
-   Mask_REG_ON : constant Volatile_Word := 2**Pin_REG_ON;
-   Mask_DATA   : constant Volatile_Word := 2**Pin_DATA;
-   Mask_CS     : constant Volatile_Word := 2**Pin_CS;
-   Mask_CLK    : constant Volatile_Word := 2**Pin_CLK;
+   Mask_REG_ON   : constant Unsigned_32 := 16#0080_0000#;
+   Mask_DATA     : constant Unsigned_32 := 16#0100_0000#;
+   Mask_CS       : constant Unsigned_32 := 16#0200_0000#;
+   Mask_CLK      : constant Unsigned_32 := 16#2000_0000#;
+   All_Pins_Mask : constant Unsigned_32 := 16#2380_0000#;
 
 end;
