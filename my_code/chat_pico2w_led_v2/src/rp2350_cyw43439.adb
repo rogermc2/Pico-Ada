@@ -1,9 +1,15 @@
 
+with Ada.Real_Time; use Ada.Real_Time;
+
 with System;
+
+with Registers; use Registers;
 
 package body RP2350_CYW43439 is
 
-      -- Use the conversion instance to safely create pointers from addresses
+   procedure Wait (Duration : Time_Span);
+
+   -- Use the conversion instance to safely create pointers from addresses
    function Reg_Ptr (Addr : System.Address) return Word_Convert.Object_Pointer is
    begin
       return Word_Convert.To_Pointer (Addr);
@@ -43,9 +49,10 @@ package body RP2350_CYW43439 is
       Out_Set := Mask_CS; -- Drive CS high (Idle)
 
       Out_Clr := Mask_REG_ON;
-      For I in 1 .. 50000 loop  -- Settle delay
-         null;
-      end loop;
+      Wait (Milliseconds (50));
+      --  For I in 1 .. 50000 loop  -- Settle delay
+      --     null;
+      --  end loop;
 
       Out_Set := Mask_REG_ON;
       --  Wait for internal wireless boot ROM to execute
@@ -58,9 +65,10 @@ package body RP2350_CYW43439 is
       Write_gSPI_Byte (2);  --  Request active HT internal clock
       Out_Set := Mask_CS;
 
-      For I in 1 .. 100000 loop  -- Settle delay
-         null;
-      end loop;
+      Wait (Milliseconds (100));
+      --  For I in 1 .. 100000 loop  -- Settle delay
+      --     null;
+      --  end loop;
 
    end Initialize_gSPI;
 
@@ -87,13 +95,16 @@ package body RP2350_CYW43439 is
          end if;
 
          -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
-         for I in 1 .. 5 loop null; end loop;
+         Wait (Milliseconds (5));
+         --  for I in 1 .. 5 loop null; end loop;
 
          Out_Set := Mask_CLK; -- Clock High (CYW43439 samples on rising edge)
          Temp    := Shift_Left (Temp, 1);
          
-         for I in 1 .. 5 loop null; end loop;
+         Wait (Milliseconds (5));
+         --  for I in 1 .. 5 loop null; end loop;
       end loop;
+
    end Write_gSPI_Byte;
 
    function Read_gSPI_Byte return Unsigned_8 is
@@ -121,7 +132,9 @@ package body RP2350_CYW43439 is
          if (GPIO_In and Mask_DATA) /= 0 then
             Result := Result or 16#01#;
          end if;
-         for I in 1 .. 5 loop null; end loop;
+
+         Wait (Milliseconds (5));
+         --  for I in 1 .. 5 loop null; end loop;
       end loop;
 
       return Result;
@@ -138,8 +151,10 @@ package body RP2350_CYW43439 is
    end Write_gSPI_Word32;
 
    procedure Set_Onboard_LED (Enable : Boolean) is
-      Out_Set : Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
-      Out_Clr : Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;
+      Out_Set : Volatile_Word renames
+       Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
+      Out_Clr : Volatile_Word renames
+       Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;
       
       -- CYW43439 gSPI Protocol Header definitions:
       -- Bit 31: Write Command (1)
@@ -175,5 +190,12 @@ package body RP2350_CYW43439 is
       Out_Set := Mask_CS; -- Deassert Chip Select High to conclude transfer
 
    end Set_Onboard_LED;
+
+   procedure Wait (Duration : Time_Span) is
+      Wait_Time : constant Time := Clock + Duration;
+   begin
+      delay until Wait_Time;
+
+   end Wait;
 
 end RP2350_CYW43439;
