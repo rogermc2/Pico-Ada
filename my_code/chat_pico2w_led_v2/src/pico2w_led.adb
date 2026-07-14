@@ -7,8 +7,6 @@ with RP2350_CYW43439; use RP2350_CYW43439;
 
 procedure Pico2w_LED is
    -- Establish a periodic timing loop using Ravenscar's Real_Time clock
-   Next_Time   : Time := Clock;
-   Period      : constant Time_Span := Milliseconds (500);
    LED_State   : Boolean := False;
    Test_Val    : Unsigned_32;
 begin
