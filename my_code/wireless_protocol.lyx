@@ -207,9 +207,7 @@ To change a pin status,
 
 \begin_layout Itemize
 The SPI Header:
- Write a 32-bit command word detailing a Write Transaction,
- targeting the internal Backplane Window,
- with a specific increments address size.
+ Write a 32-bit command word detailing a Write Transaction targeting the internal Backplane Window with a specific increments address size.
 \end_layout
 
 \begin_layout Itemize
