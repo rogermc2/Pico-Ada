@@ -6,7 +6,6 @@ with Ada.Real_Time; use Ada.Real_Time;
 with RP2350_CYW43439; use RP2350_CYW43439;
 
 procedure Pico2w_LED is
-   -- Establish a periodic timing loop using Ravenscar's Real_Time clock
    LED_State   : Boolean := False;
    Test_Val    : Unsigned_32;
 begin

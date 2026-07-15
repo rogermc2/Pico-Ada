@@ -1,12 +1,10 @@
 
 with System.Address_To_Access_Conversions; 
 
-with Interfaces; use Interfaces;
-
 with RP2350; use RP2350;
 
 package Registers is
-   --  pragma Preelaborate;
+   pragma Preelaborate;
 
  type Volatile_Word is mod 2**32;
    pragma Volatile (Volatile_Word);
@@ -19,20 +17,7 @@ package Registers is
    --  SIO_Base      : constant := 16#D0000000#;
    --  SIO_Base      : constant := 16#40014000#;
 
-   --  -- SIO Register Offsets (Direct GPIO access)
-   --  SIO_GPIO_OUT_SET_Offset : constant := 16#014#;
-   --  SIO_GPIO_OUT_CLR_Offset : constant := 16#018#;
-   --  SIO_GPIO_IN_Offset      : constant := 16#004#;
-   --  SIO_GPIO_OE_SET_Offset  : constant := 16#024#;
-   --  SIO_GPIO_OE_CLR_Offset  : constant := 16#028#;
-   --  SIO_GPIO_OUT_SET_Offset : constant := 16#018#;
-   --  SIO_GPIO_OUT_CLR_Offset : constant := 16#020#;
-   --  SIO_GPIO_IN_Offset      : constant := 16#004#;
-   --  SIO_GPIO_OE_SET_Offset  : constant := 16#038#;
-   --  SIO_GPIO_OE_CLR_Offset  : constant := 16#040#;
-
    -- Pin definitions matching Pico 2 W topology
-
    Pin_REG_ON : constant := 23;
    Pin_DATA   : constant := 24;
    Pin_CS     : constant := 25;
@@ -44,10 +29,5 @@ package Registers is
    Mask_CS       : constant uint32 := 16#0200_0000#;
    Mask_CLK      : constant uint32 := 16#2000_0000#;
    All_Pins_Mask : constant uint32 := 16#2380_0000#;
-   --  Mask_REG_ON   : constant Unsigned_32 := 16#0080_0000#;
-   --  Mask_DATA     : constant Unsigned_32 := 16#0100_0000#;
-   --  Mask_CS       : constant Unsigned_32 := 16#0200_0000#;
-   --  Mask_CLK      : constant Unsigned_32 := 16#2000_0000#;
-   --  All_Pins_Mask : constant Unsigned_32 := 16#2380_0000#
 
 end;
