@@ -8,12 +8,6 @@ with RP2350.SIO; use RP2350.SIO;
 
 package body RP2350_CYW43439 is
 
-   -- Use the conversion instance to safely create pointers from addresses
-   function Reg_Ptr (Addr : System.Address) return Word_Convert.Object_Pointer is
-   begin
-      return Word_Convert.To_Pointer (Addr);
-   end Reg_Ptr;
-
 function Check_Chip_Communication return Unsigned_32 is
      Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
    Periph      : SIO_Peripheral;
@@ -25,13 +19,12 @@ begin
 
    -- Enforce turnaround delay for hardware line direction swap
    Wait (Milliseconds (5));
-   --  for I in 1 .. 50 loop null; end loop;
 
    -- Read 4 bytes back from the chip
-   Result := Shift_Left(Unsigned_32(Read_gSPI_Byte), 24) or
-             Shift_Left(Unsigned_32(Read_gSPI_Byte), 16) or
-             Shift_Left(Unsigned_32(Read_gSPI_Byte), 8)  or
-             Unsigned_32(Read_gSPI_Byte);
+   Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
+             Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
+             Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
+             Unsigned_32 (Read_gSPI_Byte);
 
    Periph.GPIO_OUT_SET := Mask_CS;
    return Result;
@@ -46,7 +39,7 @@ begin
       GPIO25_Ctrl : IO_BANK0.GPIO25_CTRL_Register;
       GPIO29_Ctrl : IO_BANK0.GPIO29_CTRL_Register;
     
-       Wake_Header : constant Unsigned_32 :=
+      Wake_Header : constant Unsigned_32 :=
         16#8000_0000# or 16#4000_0000# or
          Shift_Left (16#1800_00A2#, 11) or 1;
       Periph : SIO_Peripheral;
@@ -65,16 +58,10 @@ begin
 
       Periph.GPIO_OUT_CLR := Mask_REG_ON;
       Wait (Milliseconds (50));
-      --  For I in 1 .. 50000 loop  -- Settle delay
-      --     null;
-      --  end loop;
 
       Periph.GPIO_OUT_SET :=  Mask_REG_ON;
       --  Wait for internal wireless boot ROM to execute
       Wait (Milliseconds (25));
-      --  For I in 1 .. 25000 loop
-      --     null;
-      --  end loop;
       Periph.GPIO_OUT_CLR := Mask_CS;
 
       Write_gSPI_Word32 (Wake_Header);
@@ -82,9 +69,6 @@ begin
       Periph.GPIO_OUT_SET := Mask_CS;
 
       Wait (Milliseconds (100));
-      --  For I in 1 .. 100000 loop  -- Settle delay
-      --     null;
-      --  end loop;
 
    end Initialize_gSPI;
 
@@ -106,13 +90,11 @@ begin
 
          -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
          Wait (Milliseconds (5));
-         --  for I in 1 .. 5 loop null; end loop;
          -- Clock High (CYW43439 samples on rising edge)
          Periph.GPIO_OUT_SET := Mask_CLK;
          Temp := Shift_Left (Temp, 1);
          
          Wait (Milliseconds (5));
-         --  for I in 1 .. 5 loop null; end loop;
       end loop;
 
    end Write_gSPI_Byte;
@@ -125,9 +107,7 @@ begin
       -- Relinquish host drive control so CYW43439 can transmit
        Periph.GPIO_OE_CLR := Mask_DATA;
       for Bit in 1 .. 8 loop
-          Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
-         for I in 1 .. 5 loop null; end loop;
-
+         Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
          Periph.GPIO_OUT_SET := Mask_CLK; -- Clock High
          Result  := Shift_Left (Result, 1);
 
@@ -137,7 +117,6 @@ begin
          end if;
 
          Wait (Milliseconds (5));
-         --  for I in 1 .. 5 loop null; end loop;
       end loop;
 
       return Result;
@@ -190,7 +169,7 @@ begin
      
       -- CRITICAL CRUX: The gSPI Turnaround Delay
       -- The CYW43439 requires a brief gap here to process the command 
-      -- before you stream the actual payload bits.
+      -- before streaming the actual payload bits.
       Wait (Milliseconds (5));
       Write_gSPI_Word32 (Payload_Value); -- Stream Data Payload over SPI line
       Wait (Milliseconds (5));
