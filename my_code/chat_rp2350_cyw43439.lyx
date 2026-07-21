@@ -1,0 +1,426 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+with Interfaces;
+ use Interfaces;
+\end_layout
+
+\begin_layout Standard
+with System;
+\end_layout
+
+\begin_layout Standard
+package body RP2350.CYW43439 is
+\end_layout
+
+\begin_layout Standard
+type Volatile_Word is mod 2**32;
+\end_layout
+
+\begin_layout Standard
+pragma Volatile (Volatile_Word);
+\end_layout
+
+\begin_layout Standard
+function Reg_Ptr (Addr :
+ System.Address) return access Volatile_Word is
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+return To_Pointer (Addr);
+\end_layout
+
+\begin_layout Standard
+end Reg_Ptr;
+\end_layout
+
+\begin_layout Standard
+procedure Initialize_gSPI is
+\end_layout
+
+\begin_layout Standard
+-- Control registers for mapping functions
+\end_layout
+
+\begin_layout Standard
+GPIO24_Ctrl :
+ Volatile_Word renames Reg_Ptr (System'To_Address (IO_BANK0_Base + 16#0C4#)).all;
+\end_layout
+
+\begin_layout Standard
+GPIO25_Ctrl :
+ Volatile_Word renames Reg_Ptr (System'To_Address (IO_BANK0_Base + 16#0CC#)).all;
+\end_layout
+
+\begin_layout Standard
+GPIO29_Ctrl :
+ Volatile_Word renames Reg_Ptr (System'To_Address (IO_BANK0_Base + 16#0EC#)).all;
+\end_layout
+
+\begin_layout Standard
+-- Output enables via SIO
+\end_layout
+
+\begin_layout Standard
+OE_Set :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OE_SET_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+Out_Set :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- 1.
+ Route pins to SIO function (Function 5 on RP2350)
+\end_layout
+
+\begin_layout Standard
+GPIO24_Ctrl := 5;
+ -- DATA
+\end_layout
+
+\begin_layout Standard
+GPIO25_Ctrl := 5;
+ -- CS
+\end_layout
+
+\begin_layout Standard
+GPIO29_Ctrl := 5;
+ -- CLK
+\end_layout
+
+\begin_layout Standard
+-- 2.
+ Configure default output directions
+\end_layout
+
+\begin_layout Standard
+OE_Set := Mask_CS or Mask_CLK or Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+Out_Set := Mask_CS;
+ -- Drive CS high (Idle)
+\end_layout
+
+\begin_layout Standard
+end Initialize_gSPI;
+\end_layout
+
+\begin_layout Standard
+procedure Write_gSPI_Byte (Data :
+ Interfaces.Unsigned_8) is
+\end_layout
+
+\begin_layout Standard
+Out_Set :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+Out_Clr :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+OE_Set :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OE_SET_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+Temp :
+ Interfaces.Unsigned_8 := Data;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- Ensure host drives the shared data line
+\end_layout
+
+\begin_layout Standard
+OE_Set := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+-- Send MSB First
+\end_layout
+
+\begin_layout Standard
+for Bit in 1 ..
+ 8 loop
+\end_layout
+
+\begin_layout Standard
+Out_Clr := Mask_CLK;
+ -- Clock Low
+\end_layout
+
+\begin_layout Standard
+if (Temp and 16#80#) /= 0 then
+\end_layout
+
+\begin_layout Standard
+Out_Set := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+else
+\end_layout
+
+\begin_layout Standard
+Out_Clr := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+-- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
+\end_layout
+
+\begin_layout Standard
+for I in 1 ..
+ 5 loop null;
+ end loop;
+\end_layout
+
+\begin_layout Standard
+Out_Set := Mask_CLK;
+ -- Clock High (CYW43439 samples on rising edge)
+\end_layout
+
+\begin_layout Standard
+Temp := Shift_Left (Temp,
+ 1);
+\end_layout
+
+\begin_layout Standard
+for I in 1 ..
+ 5 loop null;
+ end loop;
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+end Write_gSPI_Byte;
+\end_layout
+
+\begin_layout Standard
+function Read_gSPI_Byte return Interfaces.Unsigned_8 is
+\end_layout
+
+\begin_layout Standard
+Out_Set :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_SET_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+Out_Clr :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OUT_CLR_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+OE_Clr :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_OE_CLR_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+GPIO_In :
+ Volatile_Word renames Reg_Ptr (System'To_Address (SIO_Base + SIO_GPIO_IN_Offset)).all;
+\end_layout
+
+\begin_layout Standard
+Result :
+ Interfaces.Unsigned_8 := 0;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- Relinquish host drive control so CYW43439 can transmit
+\end_layout
+
+\begin_layout Standard
+OE_Clr := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+for Bit in 1 ..
+ 8 loop
+\end_layout
+
+\begin_layout Standard
+Out_Clr := Mask_CLK;
+ -- Clock Low
+\end_layout
+
+\begin_layout Standard
+for I in 1 ..
+ 5 loop null;
+ end loop;
+\end_layout
+
+\begin_layout Standard
+Out_Set := Mask_CLK;
+ -- Clock High
+\end_layout
+
+\begin_layout Standard
+Result := Shift_Left (Result,
+ 1);
+\end_layout
+
+\begin_layout Standard
+-- Sample line after edge propagation delay
+\end_layout
+
+\begin_layout Standard
+if (GPIO_In and Mask_DATA) /= 0 then
+\end_layout
+
+\begin_layout Standard
+Result := Result or 16#01#;
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+for I in 1 ..
+ 5 loop null;
+ end loop;
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+return Result;
+\end_layout
+
+\begin_layout Standard
+end Read_gSPI_Byte;
+\end_layout
+
+\begin_layout Standard
+end RP2350.CYW43439;
+\end_layout
+
+\end_body
+\end_document
