@@ -1,8 +1,9 @@
 
-with RP2350; use RP2350;
-with RP2350.IO_BANK0;
 with System;
 
+with RP2350; use RP2350;
+with RP2350.IO_BANK0;
+with RP2350.PADS_BANK0;
 with RP2350.SIO; use RP2350.SIO;
 
 package body RP2350_CYW43439 is
@@ -45,11 +46,14 @@ begin
       GPIO24_Ctrl : IO_BANK0.GPIO24_CTRL_Register;
       GPIO25_Ctrl : IO_BANK0.GPIO25_CTRL_Register;
       GPIO29_Ctrl : IO_BANK0.GPIO29_CTRL_Register;
-    
-      Wake_Header : constant Unsigned_32 :=
-        16#8000_0000# or 16#4000_0000# or
-         Shift_Left (16#1800_00A2#, 11) or 1;
-      Wifi : SIO_Peripheral;
+
+      GPIO24_Periph : PADS_BANK0.PADS_BANK0_Peripheral :=
+       (IE => 1, PUE => 1, DRIVE => 3, others => 0);
+      GPIO25_Periph : PADS_BANK0.PADS_BANK0_Peripheral;
+      GPIO29_Periph : PADS_BANK0.PADS_BANK0_Peripheral;
+      Wifi          : SIO_Peripheral;
+      Wake_Header   : constant Unsigned_32 :=
+      16#8000_0000# or Shift_Left(16#00A2#, 11) or 1;
    begin
       -- 1. Route pins to SIO function (Function 5 on RP2350)
       GPIO23_Ctrl.FUNCSEL := IO_BANK0.siob_proc_23;

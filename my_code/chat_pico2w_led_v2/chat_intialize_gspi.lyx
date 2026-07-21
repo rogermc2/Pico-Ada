@@ -1,0 +1,493 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Ah,
+ using the SVD (System View Description) Peripheral Access Crate changes the approach entirely!
+ This rules out incorrect hand-rolled record structures or manual memory layout configurations.
+ [1] 
+\end_layout
+
+\begin_layout Standard
+When your gdbgui readouts show GPIO_OE = 1 and GPIO_OUT = 0 despite compiling,
+ it indicates that the code is modifying local temporary stack values instead of the real registers.
+ In Ada SVD bindings,
+ calling a generated cluster layout modifying field properties copies records by value unless you force volatile assignment references or leverage the atomic peripheral register blocks.
+\end_layout
+
+\begin_layout Standard
+By switching directly to the structured SVD packages (likely named something like RP.SIO,
+ RP.IO_BANK0,
+ and RP.PADS_BANK0),
+ you can clean up the configuration.
+\end_layout
+
+\begin_layout Standard
+## 1.
+ Re-writing with your SVD bindings
+\end_layout
+
+\begin_layout Standard
+Here is how to structure your initialization code cleanly using standard automated SVD crate representations.
+\end_layout
+
+\begin_layout Standard
+with RP.SIO;
+ -- Adjust to match your exact SVD package names
+\end_layout
+
+\begin_layout Standard
+with RP.IO_BANK0;
+\end_layout
+
+\begin_layout Standard
+with RP.PADS_BANK0;
+\end_layout
+
+\begin_layout Standard
+with Interfaces;
+ use Interfaces;
+\end_layout
+
+\begin_layout Standard
+procedure Initialize_gSPI is
+\end_layout
+
+\begin_layout Standard
+-- Combine our pin masks for 23,
+ 24,
+ 25,
+ 29 using the SVD's native unsigned sizes
+\end_layout
+
+\begin_layout Standard
+All_Pins_Mask :
+ constant Unsigned_32 := Mask_CS or Mask_CLK or Mask_DATA or Mask_REG_ON;
+\end_layout
+
+\begin_layout Standard
+Wake_Header :
+ constant Unsigned_32 := 16#8000_0000# or Shift_Left(16#00A2#,
+ 11) or 1;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- 1.
+ Route Pin Functions to SIO (Function 5) via SVD array mappings
+\end_layout
+
+\begin_layout Standard
+RP.IO_BANK0.Periph.GPIO (23).CTRL.FSEL := 5;
+ -- WL_REG_ON
+\end_layout
+
+\begin_layout Standard
+RP.IO_BANK0.Periph.GPIO (24).CTRL.FSEL := 5;
+ -- DATA
+\end_layout
+
+\begin_layout Standard
+RP.IO_BANK0.Periph.GPIO (25).CTRL.FSEL := 5;
+ -- CS
+\end_layout
+
+\begin_layout Standard
+RP.IO_BANK0.Periph.GPIO (29).CTRL.FSEL := 5;
+ -- CLK
+\end_layout
+
+\begin_layout Standard
+-- 2.
+ CRITICAL STEP:
+ Configure the Input Enable (IE) using SVD PADS types
+\end_layout
+
+\begin_layout Standard
+-- Bit 6 = IE,
+ Bit 3 = PUE (Pull-Up),
+ Bits 4-5 = Drive Strength (12mA)
+\end_layout
+
+\begin_layout Standard
+-- Ensure these assign directly to the volatile hardware block:
+\end_layout
+
+\begin_layout Standard
+RP.PADS_BANK0.Periph.GPIO (24) := (IE => 1,
+ PUE => 1,
+ DRIVE => 3,
+ others => 0);
+ -- DATA
+\end_layout
+
+\begin_layout Standard
+RP.PADS_BANK0.Periph.GPIO (25) := (DRIVE => 3,
+ others => 0);
+ -- CS
+\end_layout
+
+\begin_layout Standard
+RP.PADS_BANK0.Periph.GPIO (29) := (DRIVE => 3,
+ others => 0);
+ -- CLK
+\end_layout
+
+\begin_layout Standard
+-- 3.
+ Open Output Enable directions (Assign straight to the absolute hardware register)
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OE_SET := All_Pins_Mask;
+\end_layout
+
+\begin_layout Standard
+-- 4.
+ Drive Bus to Idle (CS High,
+ Power High)
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;
+\end_layout
+
+\begin_layout Standard
+-- 5.
+ Cycle physical hardware power to CYW43439
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR := Mask_REG_ON;
+\end_layout
+
+\begin_layout Standard
+-- Call your custom hardware timer counter loop here
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (50_000);
+ 
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET := Mask_REG_ON;
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (250_000);
+\end_layout
+
+\begin_layout Standard
+-- 6.
+ Execute clock wake frame over the bus
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR := Mask_CS;
+\end_layout
+
+\begin_layout Standard
+Write_gSPI_Word32 (Wake_Header);
+\end_layout
+
+\begin_layout Standard
+Write_gSPI_Byte (16#02#);
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET := Mask_CS;
+\end_layout
+
+\begin_layout Standard
+end Initialize_gSPI;
+\end_layout
+
+\begin_layout Standard
+## 2.
+ Updating the Bit-Bang IO operations
+\end_layout
+
+\begin_layout Standard
+In your bit-banging functions,
+ replace the hand-rolled pointers with direct access to your SVD instances to verify the processor pushes true electrical updates:
+\end_layout
+
+\begin_layout Standard
+procedure Write_gSPI_Byte (Data :
+ Unsigned_8) is
+\end_layout
+
+\begin_layout Standard
+Temp :
+ Unsigned_8 := Data;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+for Bit in 1 ..
+ 8 loop
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR := Mask_CLK;
+\end_layout
+
+\begin_layout Standard
+if (Temp and 16#80#) /= 0 then
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+else
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (2);
+ -- Stable bit hold period
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET := Mask_CLK;
+ 
+\end_layout
+
+\begin_layout Standard
+Temp := Shift_Left (Temp,
+ 1);
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (2);
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+end Write_gSPI_Byte;
+\end_layout
+
+\begin_layout Standard
+function Read_gSPI_Byte return Unsigned_8 is
+\end_layout
+
+\begin_layout Standard
+Result :
+ Unsigned_8 := 0;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- Relinquish host drive so the CYW43439 can modulate the line
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OE_CLR := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+for Bit in 1 ..
+ 8 loop
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR := Mask_CLK;
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (2);
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET := Mask_CLK;
+\end_layout
+
+\begin_layout Standard
+Result := Shift_Left (Result,
+ 1);
+\end_layout
+
+\begin_layout Standard
+-- Read the pin status out of the SIO peripheral's live hardware state register
+\end_layout
+
+\begin_layout Standard
+if (RP.SIO.Periph.GPIO_IN and Mask_DATA) /= 0 then
+\end_layout
+
+\begin_layout Standard
+Result := Result or 16#01#;
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (2);
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+return Result;
+\end_layout
+
+\begin_layout Standard
+end Read_gSPI_Byte;
+\end_layout
+
+\begin_layout Standard
+## 3.
+ Check the GDB Console Verification
+\end_layout
+
+\begin_layout Standard
+Refactor using the exact component naming convention specified by your SVD generator tool,
+ flash the board,
+ and use the gdbgui terminal once more to run the verification:
+\end_layout
+
+\begin_layout Standard
+x/1wx 0x4001401c
+\end_layout
+
+\begin_layout Standard
+If it returns 0x23800000,
+ your SVD instructions are mapping successfully to the physical registers,
+ which allows RP.SIO.Periph.GPIO_IN to read values instead of remaining frozen at zero.
+\end_layout
+
+\begin_layout Standard
+If you hit any compiler semantic errors regarding the exact naming scheme or field records generated by your SVD layout,
+ let me know the field names and we can align them perfectly!
+\end_layout
+
+\begin_layout Standard
+[1] [https://arm-software.github.io](https://arm-software.github.io/CMSIS_5/SVD/html/svd_Format_pg.html)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document
