@@ -1,0 +1,193 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+function Read_gSPI_Byte return Interfaces.Unsigned_8 is
+\end_layout
+
+\begin_layout Standard
+Result :
+ Interfaces.Unsigned_8 := 0;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+-- 1.
+ Relinquish host drive control so CYW43439 can transmit on the line
+\end_layout
+
+\begin_layout Standard
+Hardware_SIO.GPIO_OE_Clr := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+for Bit in 1 ..
+ 8 loop
+\end_layout
+
+\begin_layout Standard
+Hardware_SIO.GPIO_Out_Clr := Mask_CLK;
+ -- Clock Low
+\end_layout
+
+\begin_layout Standard
+for I in 1 ..
+ 10 loop null;
+ end loop;
+ -- Minimum pulse width hold delay
+\end_layout
+
+\begin_layout Standard
+Hardware_SIO.GPIO_Out_Set := Mask_CLK;
+ -- Clock High
+\end_layout
+
+\begin_layout Standard
+-- Shift our tracking register to make room for the next incoming bit
+\end_layout
+
+\begin_layout Standard
+Result := Shift_Left (Result,
+ 1);
+\end_layout
+
+\begin_layout Standard
+-- 2.
+ FIX:
+ Capture the pin's current electrical level from hardware input
+\end_layout
+
+\begin_layout Standard
+if (Hardware_SIO.GPIO_In and Mask_DATA) /= 0 then
+\end_layout
+
+\begin_layout Standard
+Result := Result or 16#01#;
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+for I in 1 ..
+ 10 loop null;
+ end loop;
+ -- Stability wait window
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+return Result;
+\end_layout
+
+\begin_layout Standard
+end Read_gSPI_Byte;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document
