@@ -1,0 +1,18 @@
+
+ Configure default output directions and isolate bus with CS high Wifi.
+GPIO_OE_SET :=  All_Pins_Mask;  0x23800000
+Wifi.GPIO_OUT_SET := Mask_CS   0x2000000;
+
+Set idle state, Cycle physical Power to the CYW43439
+Wifi.GPIO_OUT_CLR := Mask_REG_ON  0x800000
+Wait
+Wifi.GPIO_OUT_SET 0x800000
+Wifi.GPIO_OUT_CLR := Mask_REG_ON  0x800000
+Wait
+Wifi.GPIO_OUT_SET := Mask_REG_ON  0x800000
+
+Write_gSPI_Word32 (Wake_Header);
+Write_gSPI_Byte (2)    Request active HT internal clock
+Wifi.GPIO_OUT_SET := Mask_CS   0x2000000
+
+

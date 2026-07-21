@@ -57,22 +57,23 @@ begin
       GPIO25_Ctrl.FUNCSEL := IO_BANK0.siob_proc_25; -- CS
       GPIO29_Ctrl.FUNCSEL := IO_BANK0.siob_proc_29; -- CLK
 
-      -- 2. Configure default output directions
-      Wifi.GPIO_OE_SET  :=  All_Pins_Mask;
+      -- 2. Configure default output directions and isolate bus with CS high
+      Wifi.GPIO_OE_SET  :=  All_Pins_Mask;    --  0x23800000
+      Wifi.GPIO_OUT_SET := Mask_CS;           --  0x2000000
 
-      -- 3. Set idle state
-      Wifi.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;
-      Wifi.GPIO_OUT_CLR := Mask_REG_ON;
+      -- 3. Set idle state, Cycle physical Power to the CYW43439
+      --  Wifi.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
+      Wifi.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
       Wait (Milliseconds (50));
 
-      Wifi.GPIO_OUT_SET :=  Mask_REG_ON;
+      Wifi.GPIO_OUT_SET :=  Mask_REG_ON;  --  0x800000
       --  Wait for internal wireless boot ROM to execute
-      Wait (Milliseconds (25));
-      Wifi.GPIO_OUT_CLR := Mask_CS;
+      Wait (Milliseconds (250));
+      Wifi.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
 
       Write_gSPI_Word32 (Wake_Header);
       Write_gSPI_Byte (2);  --  Request active HT internal clock
-      Wifi.GPIO_OUT_SET := Mask_CS;
+      Wifi.GPIO_OUT_SET := Mask_CS;  --  0x2000000
 
       Wait (Milliseconds (100));
 
@@ -112,10 +113,10 @@ begin
    begin
       -- Relinquish host drive control so CYW43439 can transmit
        Wifi.GPIO_OE_CLR := Mask_DATA;
-      for Bit in 1 .. 8 loop
+      for Bit_Num in 1 .. 8 loop
          Wifi.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
          Wifi.GPIO_OUT_SET := Mask_CLK; -- Clock High
-         Result  := Shift_Left (Result, 1);
+         Result := Shift_Left (Result, 1);
 
          -- Sample line after edge propagation delay
          if (Wifi.GPIO_IN and Mask_DATA) /= 0 then
