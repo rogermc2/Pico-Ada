@@ -115,11 +115,13 @@ begin
        Wifi.GPIO_OE_CLR := Mask_DATA;
       for Bit_Num in 1 .. 8 loop
          Wifi.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
+         Wait (Milliseconds (5));
          Wifi.GPIO_OUT_SET := Mask_CLK; -- Clock High
+         --  Shift tracking register to make room for next incoming bit
          Result := Shift_Left (Result, 1);
-
-         -- Sample line after edge propagation delay
+         --  Capture pin level from hardware input
          if (Wifi.GPIO_IN and Mask_DATA) /= 0 then
+            -- Push 1 into LSB of result
             Result := Result or 16#01#;
          end if;
 

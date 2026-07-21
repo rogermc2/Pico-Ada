@@ -159,6 +159,10 @@ if (Hardware_SIO.GPIO_In and Mask_DATA) /= 0 then
 \end_layout
 
 \begin_layout Standard
+– Push 1 into LSB of result.
+\end_layout
+
+\begin_layout Standard
 Result := Result or 16#01#;
 \end_layout
 
