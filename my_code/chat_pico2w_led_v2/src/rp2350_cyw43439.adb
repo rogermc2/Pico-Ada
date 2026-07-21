@@ -47,8 +47,7 @@ begin
       GPIO25_Ctrl : IO_BANK0.GPIO25_CTRL_Register;
       GPIO29_Ctrl : IO_BANK0.GPIO29_CTRL_Register;
 
-      GPIO24_Periph : PADS_BANK0.PADS_BANK0_Peripheral :=
-       (IE => 1, PUE => 1, DRIVE => 3, others => 0);
+      GPIO24_Periph : PADS_BANK0.PADS_BANK0_Peripheral;
       GPIO25_Periph : PADS_BANK0.PADS_BANK0_Peripheral;
       GPIO29_Periph : PADS_BANK0.PADS_BANK0_Peripheral;
       Wifi          : SIO_Peripheral;
@@ -61,34 +60,42 @@ begin
       GPIO25_Ctrl.FUNCSEL := IO_BANK0.siob_proc_25; -- CS
       GPIO29_Ctrl.FUNCSEL := IO_BANK0.siob_proc_29; -- CLK
 
-      -- 2. Configure default output directions and isolate bus with CS high
-      Wifi.GPIO_OE_SET  :=  All_Pins_Mask;    --  0x23800000
-      Wifi.GPIO_OUT_SET := Mask_CS;           --  0x2000000
+      -- 2.  Configure the Input Enable (IE) using SVD PADS types
+      -- Bit 6 = IE, Bit 3 = PUE (Pull-Up), Bits 4-5 = Drive Strength (12mA)
+      GPIO24_Periph.GPIO24.IE := 1;
+      GPIO24_Periph.GPIO24.PUE := 1;
+      GPIO24_Periph.GPIO24.DRIVE := PADS_BANK0.Val_12mA;
 
-      -- 3. Set idle state, Cycle physical Power to the CYW43439
-      --  Wifi.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
+      GPIO24_Periph.GPIO25.DRIVE := PADS_BANK0.Val_12mA;
+      GPIO24_Periph.GPIO29.DRIVE := PADS_BANK0.Val_12mA;
+
+      -- 3. Configure default output directions and isolate bus with CS high
+      Wifi.GPIO_OE_SET  :=  All_Pins_Mask;    --  0x23800000
+
+      -- 4. Set idle state, Cycle physical Power to the CYW43439
+      Wifi.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
+      -- 5. Cycle physical hardware power to CYW43439
       Wifi.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
       Wait (Milliseconds (50));
 
       Wifi.GPIO_OUT_SET :=  Mask_REG_ON;  --  0x800000
       --  Wait for internal wireless boot ROM to execute
       Wait (Milliseconds (250));
-      Wifi.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
 
+      -- 6. Execute clock wake frame over the bus
+      Wifi.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
       Write_gSPI_Word32 (Wake_Header);
       Write_gSPI_Byte (2);  --  Request active HT internal clock
       Wifi.GPIO_OUT_SET := Mask_CS;  --  0x2000000
-
-      Wait (Milliseconds (100));
 
    end Initialize_gSPI;
 
    procedure Write_gSPI_Byte (Data : Unsigned_8) is
       Wifi  : SIO_Peripheral;
-      Temp    : Unsigned_8 := Data;
+      Temp  : Unsigned_8 := Data;
    begin
       -- Ensure host drives the shared data line
-      Wifi.GPIO_OE_SET  :=  Mask_DATA;
+      --  Wifi.GPIO_OE_SET  :=  Mask_DATA;
 
       -- Send MSB First
       for Bit in 1 .. 8 loop
@@ -100,12 +107,11 @@ begin
          end if;
 
          -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
-         Wait (Milliseconds (5));
+         Wait (Microseconds (5));
          -- Clock High (CYW43439 samples on rising edge)
          Wifi.GPIO_OUT_SET := Mask_CLK;
          Temp := Shift_Left (Temp, 1);
-         
-         Wait (Milliseconds (5));
+         Wait (Microseconds (5));
       end loop;
 
    end Write_gSPI_Byte;
@@ -119,7 +125,7 @@ begin
        Wifi.GPIO_OE_CLR := Mask_DATA;
       for Bit_Num in 1 .. 8 loop
          Wifi.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
-         Wait (Milliseconds (5));
+         Wait (Microseconds (5));
          Wifi.GPIO_OUT_SET := Mask_CLK; -- Clock High
          --  Shift tracking register to make room for next incoming bit
          Result := Shift_Left (Result, 1);
@@ -129,7 +135,7 @@ begin
             Result := Result or 16#01#;
          end if;
 
-         Wait (Milliseconds (5));
+         Wait (Microseconds (5));
       end loop;
 
       return Result;
