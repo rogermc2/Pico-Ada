@@ -96,14 +96,18 @@
 \begin_body
 
 \begin_layout Standard
-Using the SVD (System View Description) Peripheral Access Crate  rules out incorrect hand-rolled record structures or manual memory layout configurations.
+Using the SVD (System View Description) Peripheral Access Crate rules out incorrect hand-rolled record structures or manual memory layout configurations.
  [1] 
 \end_layout
 
 \begin_layout Standard
 When your gdbgui readouts show GPIO_OE = 1 and GPIO_OUT = 0 despite compiling,
  it indicates that the code is modifying local temporary stack values instead of the real registers.
- In Ada SVD bindings,
+ 
+\end_layout
+
+\begin_layout Standard
+In Ada SVD bindings,
  calling a generated cluster layout modifying field properties copies records by value unless you force volatile assignment references or leverage the atomic peripheral register blocks.
 \end_layout
 
@@ -115,7 +119,7 @@ By switching directly to the structured SVD packages (likely named something lik
 \end_layout
 
 \begin_layout Standard
-## 1.
+1.
  Re-writing with your SVD bindings
 \end_layout
 
@@ -299,7 +303,7 @@ end Initialize_gSPI;
 \end_layout
 
 \begin_layout Standard
-## 2.
+2.
  Updating the Bit-Bang IO operations
 \end_layout
 
@@ -454,7 +458,7 @@ end Read_gSPI_Byte;
 \end_layout
 
 \begin_layout Standard
-## 3.
+3.
  Check the GDB Console Verification
 \end_layout
 
@@ -481,6 +485,10 @@ If you hit any compiler semantic errors regarding the exact naming scheme or fie
 
 \begin_layout Standard
 [1] [https://arm-software.github.io](https://arm-software.github.io/CMSIS_5/SVD/html/svd_Format_pg.html)
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \end_body

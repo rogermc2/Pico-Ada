@@ -95,33 +95,22 @@
 
 \begin_body
 
-\begin_layout Standard
-That is a major milestone!
- Having the native VS Code Ada debugger working makes monitoring everything significantly easier because you no longer have to manually type raw hex memory addresses into a console prompt.
+\begin_layout Section
+Harnessing the VS Code SVD View
 \end_layout
 
 \begin_layout Standard
-You can now use VS Code’s visual panel tools to watch the SVD peripheral structures expand in real-time as you step over lines of code.
-\end_layout
-
-\begin_layout Standard
-## 1.
- Harnessing the VS Code SVD View
-\end_layout
-
-\begin_layout Standard
-To verify that your compiler isn't dropping write operations or operating on temporary local copies:
+To verify that the compiler isn't dropping write operations or operating on temporary local copies:
 \end_layout
 
 \begin_layout Standard
 1.
- Look at your VS Code Debug pane on the left-hand sidebar during an active breakpoint.
+ Look at the VS Code Debug pane on the left-hand sidebar during an active breakpoint.
 \end_layout
 
 \begin_layout Standard
 2.
- If you installed a standard cortex-debug extension,
- look for the Cortex Peripherals or X域 (SVD) Variables view.
+ If a standard cortex-debug extension is installed look for the Cortex Peripherals or X域 (SVD) Variables view.
 \end_layout
 
 \begin_layout Standard
@@ -132,19 +121,17 @@ To verify that your compiler isn't dropping write operations or operating on tem
 \begin_layout Standard
 4.
  Step over Initialize_gSPI.
- If those fields do not visually light up with your target masks,
- it confirms that your SVD variable initialization statement is modifying local stack memory instead of absolute register memory.
+ 
+\begin_inset Newline newline
+\end_inset
+
+If those fields do not visually light up with the target masks it confirms that the SVD variable initialization statement is modifying local stack memory instead of absolute register memory.
  [1,
  2] 
 \end_layout
 
-\begin_layout Standard
-------------------------------
-\end_layout
-
-\begin_layout Standard
-## 2.
- Ensuring Volatile Assignment
+\begin_layout Section
+Ensuring Volatile Assignment
 \end_layout
 
 \begin_layout Standard
@@ -248,13 +235,8 @@ end loop;
 end Write_gSPI_Byte;
 \end_layout
 
-\begin_layout Standard
-------------------------------
-\end_layout
-
-\begin_layout Standard
-## 3.
- Your Diagnostic Next Step
+\begin_layout Section
+Your Diagnostic Next Step
 \end_layout
 
 \begin_layout Standard
