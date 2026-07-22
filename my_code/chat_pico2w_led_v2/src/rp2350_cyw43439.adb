@@ -87,12 +87,8 @@ begin
       use RP2350.SIO;
       Temp  : Unsigned_8 := Data;
    begin
-      -- Ensure host drives the shared data line
-      --  Wifi.GPIO_OE_SET  :=  Mask_DATA;
-
       -- Send MSB First
       for Bit in 1 .. 8 loop
-
          SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
          if (Temp and 16#80#) /= 0 then
             SIO_Periph.GPIO_OUT_SET := Mask_DATA;
@@ -115,7 +111,7 @@ begin
       Result : Unsigned_8 := 0;
    begin
       -- Relinquish host drive control so CYW43439 can transmit
-       SIO_Periph.GPIO_OE_CLR := Mask_DATA;
+      SIO_Periph.GPIO_OE_CLR := Mask_DATA;
       for Bit_Num in 1 .. 8 loop
          SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
          Wait (Microseconds (5));
@@ -175,7 +171,7 @@ begin
       end if;
 
       -- Execute the gSPI bus cycle transaction
-       -- Assert Chip Select Low to begin transaction
+      -- Assert Chip Select Low to begin transaction
       SIO_Periph.GPIO_OUT_CLR  := Mask_CS;
       Write_gSPI_Word32 (SPI_Header);    -- Stream Header over SPI line
      
