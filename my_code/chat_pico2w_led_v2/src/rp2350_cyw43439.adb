@@ -66,8 +66,8 @@ begin
       GPIO24_Periph.GPIO24.PUE := 1;
       GPIO24_Periph.GPIO24.DRIVE := PADS_BANK0.Val_12mA;
 
-      GPIO24_Periph.GPIO25.DRIVE := PADS_BANK0.Val_12mA;
-      GPIO24_Periph.GPIO29.DRIVE := PADS_BANK0.Val_12mA;
+      GPIO24_Periph.GPIO25 := (0, 0, 0, 0, PADS_BANK0.Val_12mA, 0, 0, 0, 0);
+      GPIO24_Periph.GPIO29 := (0, 0, 0, 0, PADS_BANK0.Val_12mA, 0, 0, 0, 0);
 
       -- 3. Configure default output directions and isolate bus with CS high
       Wifi.GPIO_OE_SET  :=  All_Pins_Mask;    --  0x23800000
