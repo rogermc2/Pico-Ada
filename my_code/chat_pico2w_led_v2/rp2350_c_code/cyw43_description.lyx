@@ -1,0 +1,1168 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+cyw43_arch_init () is the primary function used in the Raspberry Pi Pico SDK to initialize the CYW43 wireless driver chip and the lwIP TCP/IP networking stack on the Pico W and Pico 2 W.
+\end_layout
+
+\begin_layout Standard
+Calling cyw43_arch_init () is a prerequisite for using Wi-Fi or Bluetooth.
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following is from:
+ https://vanhunteradams.com/Pico/BLE/BTStack_HCI.html#Initializing-the-CYW43-Driver
+\end_layout
+
+\begin_layout Section
+Initializing the CYW43 Driver
+\end_layout
+
+\begin_layout Standard
+The next line of interest in cyw43_arch_init() is bool ok = cyw43_driver_init(context).
+ 
+\end_layout
+
+\begin_layout Standard
+Let's take a closer look at that:
+\end_layout
+
+\begin_layout LyX-Code
+bool cyw43_driver_init(async_context_t *context)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_init (&cyw43_state);
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_async_context = context;
+\end_layout
+
+\begin_layout LyX-Code
+// The IRQ must be on the same core as the context because we need to be able to enable/disable the IRQ from there later.
+\end_layout
+
+\begin_layout LyX-Code
+async_context_execute_sync (context,
+ cyw43_irq_init,
+ NULL);
+\end_layout
+
+\begin_layout LyX-Code
+async_context_add_when_pending_worker (context,
+ &cyw43_poll_worker);
+\end_layout
+
+\begin_layout LyX-Code
+return true;
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+The first thing that this function does is call cyw43_init(&cyw43_state);:
+\end_layout
+
+\begin_layout LyX-Code
+void cyw43_init(cyw43_t *self)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+#ifdef CYW43_PIN_WL_HOST_WAKE
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_hal_pin_config(CYW43_PIN_WL_HOST_WAKE,
+ CYW43_HAL_PIN_MODE_INPUT,
+ CYW43_HAL_PIN_PULL_NONE,
+ 0);
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_hal_pin_config (CYW43_PIN_WL_REG_ON,
+ CYW43_HAL_PIN_MODE_OUTPUT,
+ CYW43_HAL_PIN_PULL_NONE,
+ 0);
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_hal_pin_low(CYW43_PIN_WL_REG_ON);
+\end_layout
+
+\begin_layout LyX-Code
+#ifdef CYW43_PIN_WL_RFSW_VDD
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_hal_pin_config(CYW43_PIN_WL_RFSW_VDD,
+ CYW43_HAL_PIN_MODE_OUTPUT,
+ CYW43_HAL_PIN_PULL_NONE,
+ 0);
+ // RF-switch power
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_hal_pin_low(CYW43_PIN_WL_RFSW_VDD);
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_init (&self->cyw43_ll,
+ self);
+\end_layout
+
+\begin_layout LyX-Code
+self->itf_state = 0;
+\end_layout
+
+\begin_layout LyX-Code
+self->wifi_scan_state = 0;
+\end_layout
+
+\begin_layout LyX-Code
+self->wifi_join_state = 0;
+\end_layout
+
+\begin_layout LyX-Code
+self->pend_disassoc = false;
+\end_layout
+
+\begin_layout LyX-Code
+self->pend_rejoin = false;
+\end_layout
+
+\begin_layout LyX-Code
+self->pend_rejoin_wpa = false;
+\end_layout
+
+\begin_layout LyX-Code
+self->ap_channel = 3;
+\end_layout
+
+\begin_layout LyX-Code
+self->ap_ssid_len = 0;
+\end_layout
+
+\begin_layout LyX-Code
+self->ap_key_len = 0;
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_poll = NULL;
+\end_layout
+
+\begin_layout LyX-Code
+self->initted = true;
+\end_layout
+
+\begin_layout LyX-Code
+#if CYW43_ENABLE_BLUETOOTH
+\end_layout
+
+\begin_layout LyX-Code
+self->bt_loaded = false;
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+This function sets the fields of the global cyw43_state object of type cyw43_t.
+\end_layout
+
+\begin_layout Standard
+In particular,
+ it's associating a series of RP2040 GPIO pins as inputs/outputs for interfacing with various of the CYW43's inputs/outputs.
+ 
+\end_layout
+
+\begin_layout Standard
+Of particular note is that it sets the cyw43_poll field to NULL and sets the initted field to true.
+ These will be important details later on.
+\end_layout
+
+\begin_layout Standard
+Next,
+ cyw43_driver_init() calls cyw43_async_context = context;.
+ 
+\end_layout
+
+\begin_layout Standard
+This sets the value of another globally declared pointer to an async_context_t to the same address that is pointed to by context.
+\end_layout
+
+\begin_layout Standard
+As discussed previously,
+ context points to the core field of async_context_threadsafe_background_t.
+ 
+\end_layout
+
+\begin_layout Standard
+The consequence is that cyw43_async_context and async_context now both point to the same context object.
+\end_layout
+
+\begin_layout Standard
+Next cyw43_driver_init() calls async_context_execute_sync(context,
+ cyw43_irq_init,
+ NULL);.
+ 
+\end_layout
+
+\begin_layout Standard
+This function is passed a pointer to a function and executes it synchronously with the context thereby passing it the function cyw43_irq_init.
+ 
+\end_layout
+
+\begin_layout Standard
+Let's look at that.
+\end_layout
+
+\begin_layout LyX-Code
+uint32_t cyw43_irq_init(__unused void *param) 
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+#ifndef NDEBUG
+\end_layout
+
+\begin_layout LyX-Code
+assert (get_core_num() == async_context_core_num(cyw43_async_context));
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+gpio_add_raw_irq_handler_with_order_priority (CYW43_PIN_WL_HOST_WAKE,
+ cyw43_gpio_irq_handler,
+ CYW43_GPIO_IRQ_HANDLER_PRIORITY);
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_set_irq_enabled (true);
+\end_layout
+
+\begin_layout LyX-Code
+irq_set_enabled (IO_IRQ_BANK0,
+ true);
+\end_layout
+
+\begin_layout LyX-Code
+return 0;
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+This function associates an interrupt handler with a particular GPIO pin called cyw43_gpio_irq_handler.
+\end_layout
+
+\begin_layout Standard
+Here's what that interrupt handler does:
+\end_layout
+
+\begin_layout LyX-Code
+// GPIO interrupt handler to tell us there's cyw43 has work to do
+\end_layout
+
+\begin_layout LyX-Code
+static void cyw43_gpio_irq_handler (void)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+uint32_t events = gpio_get_irq_event_mask(CYW43_PIN_WL_HOST_WAKE);
+\end_layout
+
+\begin_layout LyX-Code
+if (events & GPIO_IRQ_LEVEL_HIGH)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+// As we use a high level interrupt it will go off forever until it's serviced
+\end_layout
+
+\begin_layout LyX-Code
+// So disable the interrupt until this is done.
+\end_layout
+
+\begin_layout LyX-Code
+// It's re-enabled again by CYW43_POST_POLL_HOOK which is called at the end of cyw43_poll_func
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_set_irq_enabled (false);
+\end_layout
+
+\begin_layout LyX-Code
+async_context_set_work_pending (cyw43_async_context,
+ &cyw43_poll_worker);
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+This function confirms that the CYW43_PIN_WL_HOST_WAKE GPIO pin caused the interrupt.
+\end_layout
+
+\begin_layout Standard
+It then disables the interrupt (it will be re-enabled elsewhere) and sets the cyw43_poll_worker as pending.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that this worker is added to the async_context in cyw43_driver_init right after async_context_execute_sync (context,
+ cyw43_irq_init,
+ NULL);
+ when we call async_context_add_when_pending_worker (context,
+ &cyw43_poll_worker);.
+ 
+\end_layout
+
+\begin_layout Standard
+What does this worker then do?
+\end_layout
+
+\begin_layout LyX-Code
+static async_when_pending_worker_t cyw43_poll_worker = 
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+.do_work = cyw43_do_poll
+\end_layout
+
+\begin_layout LyX-Code
+};
+\end_layout
+
+\begin_layout Standard
+It's do_work field points to the function cyw43_do_poll:
+\end_layout
+
+\begin_layout LyX-Code
+static void cyw43_do_poll(async_context_t *context,
+ __unused async_when_pending_worker_t *worker) {
+\end_layout
+
+\begin_layout LyX-Code
+#ifndef NDEBUG
+\end_layout
+
+\begin_layout LyX-Code
+assert (get_core_num() == async_context_core_num (cyw43_async_context));
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+if (cyw43_poll)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+if (cyw43_sleep > 0)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_sleep--;
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_poll ();
+\end_layout
+
+\begin_layout LyX-Code
+if (cyw43_sleep)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+async_context_add_at_time_worker_in_ms (context,
+ &sleep_timeout_worker,
+ CYW43_SLEEP_CHECK_MS);
+\end_layout
+
+\begin_layout LyX-Code
+} 
+\end_layout
+
+\begin_layout LyX-Code
+else
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+async_context_remove_at_time_worker (context,
+ &sleep_timeout_worker);
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+This function calls the function cyw43_poll ().
+ 
+\end_layout
+
+\begin_layout Standard
+Elsewhere in the code (we'll come to it) cyw43_poll is set to point to cy243_poll_func () copied below:
+\end_layout
+
+\begin_layout LyX-Code
+static void cyw43_poll_func (void) 
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+CYW43_THREAD_LOCK_CHECK;
+\end_layout
+
+\begin_layout LyX-Code
+if (cyw43_poll == NULL) 
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+// Poll scheduled during deinit,
+ just ignore it
+\end_layout
+
+\begin_layout LyX-Code
+return;
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+CYW43_STAT_INC (CYW43_RUN_COUNT);
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_t *self = &cyw43_state;
+\end_layout
+
+\begin_layout LyX-Code
+#if CYW43_ENABLE_BLUETOOTH
+\end_layout
+
+\begin_layout LyX-Code
+if (self->bt_loaded && cyw43_ll_bt_has_work (&self->cyw43_ll)) {
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_bluetooth_hci_process ();
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+if (cyw43_ll_has_work (&self->cyw43_ll))
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_process_packets (&self->cyw43_ll);
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+if (self->pend_disassoc) 
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+self->pend_disassoc = false;
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_ioctl(&self->cyw43_ll,
+ CYW43_IOCTL_SET_DISASSOC,
+ 0,
+ NULL,
+ CYW43_ITF_STA);
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+if (self->pend_rejoin_wpa) 
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+self->pend_rejoin_wpa = false;
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_wifi_set_wpa_auth (&self->cyw43_ll);
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+if (self->pend_rejoin)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+self->pend_rejoin = false;
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_wifi_rejoin (&self->cyw43_ll);
+\end_layout
+
+\begin_layout LyX-Code
+self->wifi_join_state = WIFI_JOIN_STATE_ACTIVE;
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+if (cyw43_sleep == 0)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_bus_sleep (&self->cyw43_ll,
+ true);
+\end_layout
+
+\begin_layout LyX-Code
+#if !USE_SDIOIT && !CYW43_USE_SPI
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_sdio_deinit ();
+ // save power while WLAN bus sleeps
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+#if USE_SDIOIT
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_sdio_set_irq (true);
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+#ifdef CYW43_POST_POLL_HOOK
+\end_layout
+
+\begin_layout LyX-Code
+CYW43_POST_POLL_HOOK
+\end_layout
+
+\begin_layout LyX-Code
+#endif
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+In the case that we're communicating with Bluetooth this checks that bluetooth has been loaded and that there's work to be done then calls cyw43_bluetooth_hci_process ();:
+\end_layout
+
+\begin_layout LyX-Code
+void cyw43_bluetooth_hci_process (void)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+if (hci_transport_ready)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+btstack_run_loop_poll_data_sources_from_irq();
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+This function calls btstack_run_loop_poll_data_sources_from_irq () which does the following:
+\end_layout
+
+\begin_layout LyX-Code
+void btstack_run_loop_poll_data_sources_from_irq (void)
+\end_layout
+
+\begin_layout LyX-Code
+{
+\end_layout
+
+\begin_layout LyX-Code
+btstack_assert (the_run_loop != NULL);
+\end_layout
+
+\begin_layout LyX-Code
+btstack_assert (the_run_loop->poll_data_sources_from_irq != NULL);
+\end_layout
+
+\begin_layout LyX-Code
+the_run_loop->poll_data_sources_from_irq ();
+\end_layout
+
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Standard
+As we'll see this is the trigger to loop through the data sources.
+ 
+\end_layout
+
+\begin_layout Standard
+So,
+ we've built a mechanism by which the CYW43 can make the RP2040 run through its data sources to retrieve data by means of a GPIO interrupt that sets an async_when_pending worker as pending.
+ 
+\end_layout
+
+\begin_layout Standard
+To fill in the details about how this works we need to talk about Bluetooth which is the next line in cyw43_arch_init ().
+\end_layout
+
+\begin_layout Standard
+Note that the final Macro in cyw43_poll_func,
+ CYW43_POST_POLL_HOOK,
+ re-enables the GPIO interrupt.
+\end_layout
+
+\begin_layout Standard
+So at this point,
+ we have a single object of type async_context_threadsafe_background.
+ The core field of this object is an async_context.
+ These async_context objects contain two lists of pointers to functions called when_pending_workers and at_time_workers.
+ Using the functions pointed to by the type field of the core (which is an async_type object),
+ we can add/remove workers from these lists,
+ mark them as pending,
+ etc.
+\end_layout
+
+\begin_layout Standard
+Under the hood,
+ marking a worker as pending for a particular async_context actually means setting a particular low-level interrupt as pending.
+ The interrupt service routine associated with this interrupt calls a function which goes through each worker.
+ In the event that a worker is ready to run,
+ it runs the function pointed to by that worker's do_work field.
+ The highest-level async_context_threadsafe_background object also has an associated alarm pool.
+ The callback function associated with that alarm leads ultimately back to the same low-level interrupt service routine.
+\end_layout
+
+\begin_layout Standard
+Now we have just one when_pending_worker in the async_context.
+ 
+\end_layout
+
+\begin_layout Standard
+This worker is called cyw43_poll_worker and its do_work function points to cyw43_poll_func () listed above.
+\end_layout
+
+\begin_layout Standard
+This function ends up calling btstack_run_loop_poll_data_sources_from_irq () about which we'll learn more shortly.
+ 
+\end_layout
+
+\begin_layout Standard
+This worker gets marked as pending in a GPIO interrupt which provides a mechanism by which the CYW43 can tell the RP2040 to run btstack_run_loop_poll_data_sources_from_irq () which,
+ as we're going to learn,
+ gets data from the device.
+\end_layout
+
+\begin_layout Standard
+The document goes on to describe Bluetooth interaction.
+\end_layout
+
+\begin_layout Section
+Putting the device into station mode
+\end_layout
+
+\begin_layout Standard
+A Pico can act either as a client in station mode (in which case it connects to a network) or as an access point (in which case it generates a network to which other devices connect).
+ 
+\end_layout
+
+\begin_layout Standard
+We will consider each,
+ but let us start with station mode in which the Pico W will connect to a network.
+\end_layout
+
+\begin_layout Standard
+We enable station mode by way of the pico_cyw43_arch library function cy243_arch_enable_sta_mode ().
+\end_layout
+
+\begin_layout Section
+Connecting to the network
+\end_layout
+
+\begin_layout Standard
+After having initialized the hardware and putting it into station mode we can make a connection to an access point.
+ 
+\end_layout
+
+\begin_layout Standard
+There are three types of connection:
+ blocking,
+ timout and async.
+\end_layout
+
+\begin_layout Standard
+As the names suggest,
+ a blocking connection will block until a connection has been made,
+ timeout will block until a specified time has passed and async will attempt an asynchronous connection in a non-blocking fashion.
+ 
+\end_layout
+
+\begin_layout Standard
+Furthermore,
+ each of these three types of connection comes in two versions,
+ one that includes a MAC address and one that does not.
+\end_layout
+
+\begin_layout Standard
+All options are enumerated below.
+\end_layout
+
+\begin_layout Standard
+Note that the auth argument represents the security protocol.
+\end_layout
+
+\begin_layout Standard
+Macros for all options are available in pico-sdk/lib/cyw43-driver/src/cyw43_ll.h.
+\end_layout
+
+\begin_layout LyX-Code
+int cyw43_arch_wifi_connect_blocking (const char *ssid,
+ const char *pw,
+ uint32_t auth)
+\end_layout
+
+\begin_layout LyX-Code
+int cyw43_arch_wifi_connect_bssid_blocking (const char *ssid,
+ const uint8_t *bssid,
+ const char *pw,
+ uint32_t auth)
+\end_layout
+
+\begin_layout LyX-Code
+int cyw43_arch_wifi_connect_timeout_ms (const char *ssid,
+ const char *pw,
+ uint32_t auth,
+ uint32_t timeout_ms)
+\end_layout
+
+\begin_layout LyX-Code
+int cyw43_arch_wifi_connect_bssid_timeout_ms (const char *ssid,
+ const uint8_t *bssid,
+ const char *pw,
+ uint32_t auth,
+ uint32_t timeout_ms)
+\end_layout
+
+\begin_layout LyX-Code
+int cyw43_arch_wifi_connect_async (const char *ssid,
+ const char *pw,
+ uint32_t auth)
+\end_layout
+
+\begin_layout LyX-Code
+int cyw43_arch_wifi_connect_bssid_async (const char *ssid,
+ const uint8_t *bssid,
+ const char *pw,
+ uint32_t auth)
+\end_layout
+
+\begin_layout Section
+Viewing and customizing the network interface
+\end_layout
+
+\begin_layout Standard
+After having made the connection to a network we are out of the lower-level pico_cyw43_arch library and up into the pico_lwip library which contains a number of different modules but the module of relevance for viewing and customizing our network interface is NETIF.
+ 
+\end_layout
+
+\begin_layout Standard
+It is via this module that we learn all the network information that the access point gave us upon connection:
+ our IP,
+ netmask,
+ gateway,
+ etc.
+\end_layout
+
+\begin_layout Standard
+In particular,
+ all this information gets stored in a struct called netif_default.
+ 
+\end_layout
+
+\begin_layout Standard
+This struct has three fields:
+ ip_attr_t ip_addr,
+ ip_addr_t netmask and ip_addr_t gw which represent the assigned IP,
+ netmask and gateway.
+\end_layout
+
+\begin_layout Standard
+The SDK provides some macros for viewing and modifying these network settings.
+ 
+\end_layout
+
+\begin_layout Standard
+To print the fields of the global netif_default struct use the following (taken from Fairhead and James:
+\end_layout
+
+\begin_layout LyX-Code
+printf ("IP:
+ %s
+\backslash
+n",
+ ip4addr_ntoa(netif_ip_addr(netif_default))) ;
+\end_layout
+
+\begin_layout LyX-Code
+printf ("Mask:
+ %s
+\backslash
+n",
+ ip4addr_ntoa(netif_ip_netmask4(netif_default))) ;
+\end_layout
+
+\begin_layout LyX-Code
+printf ("Gateway:
+ %s
+\backslash
+n",
+ ip4addr_ntoa(netif_ip_gw4(netif_default))) ;
+\end_layout
+
+\begin_layout Standard
+But perhaps we want to assign our Pico W a fixed IP address!
+ 
+\end_layout
+
+\begin_layout Standard
+To do this we could do the following (again borrowed from Fairhead and James):
+\end_layout
+
+\begin_layout LyX-Code
+// create an object of type ip_addr_t called ip
+\end_layout
+
+\begin_layout LyX-Code
+ip_addr_t ip ;
+\end_layout
+
+\begin_layout LyX-Code
+// Use an SDK macro to set the value of this ip object to our desired IP address
+\end_layout
+
+\begin_layout LyX-Code
+IP4_ADDR (&ip,
+ 192,
+ 168,
+ 253,
+ 210) ;
+\end_layout
+
+\begin_layout LyX-Code
+// Set the IP field of the netif_default struct to our desired IP address
+\end_layout
+
+\begin_layout LyX-Code
+netif_set_ipaddr (netif_default,
+ &ip) ;
+\end_layout
+
+\begin_layout LyX-Code
+// Use an SDK macro to set the value of the ip object to our desired netmask
+\end_layout
+
+\begin_layout LyX-Code
+IP4_ADDR (&ip,
+ 255,
+ 255,
+ 255,
+ 0) ;
+\end_layout
+
+\begin_layout LyX-Code
+// Set the netmask field of the netif_default struct to our desired netmask
+\end_layout
+
+\begin_layout LyX-Code
+netif_set_netmask (netif_default,
+ &ip) ;
+\end_layout
+
+\begin_layout LyX-Code
+// Use an SDK macro to set the value of this ip object to our desired gateway
+\end_layout
+
+\begin_layout LyX-Code
+IP4_ADDR (&ip,
+ 192,
+ 168,
+ 253,
+ 210) ;
+\end_layout
+
+\begin_layout LyX-Code
+// Set the gateway field of the netif_default struct to our desired gateway
+\end_layout
+
+\begin_layout LyX-Code
+netif_set_gw (netif_default,
+ &ip)
+\end_layout
+
+\begin_layout Section
+A function for connecting to a network
+\end_layout
+
+\begin_layout Standard
+.....
+\end_layout
+
+\end_body
+\end_document
