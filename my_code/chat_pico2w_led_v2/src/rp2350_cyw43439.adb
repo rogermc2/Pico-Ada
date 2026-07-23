@@ -1,12 +1,73 @@
 
 with System;
 
+with Interfaces;
+
 with RP2350; use RP2350;
 with RP2350.IO_BANK0;
 with RP2350.PADS_BANK0;
 with RP2350.SIO;
 
 package body RP2350_CYW43439 is
+   type Function_Block is (Bus_gSPI, Backplane, WLAN_Data) with Size => 2;
+   for Function_Block use (Bus_gSPI => 0, Backplane => 1, WLAN_Data => 2);
+   type SPI_Initialization_Command is record
+   Data_Length     : uint13;          --  Bits 0..12
+      Address      : uint15;          --  Bits 13..27
+      Function_Num : Function_Block;  --  Bits 28..29
+      Auto_Inc     : Boolean;         --  Bit 30
+      Write_Mode   : Boolean;         --  Bit 31 (True = Write, False = Read)
+   end record with Size => 32;
+   for SPI_Initialization_Command use record
+      Data_Length at 0 range 0 .. 12;
+      Address at 0 range 13 .. 27;
+      Function_Num at 0 range 28 .. 29;
+      Auto_Inc at 0 range 30 .. 30;
+      Write_Mode at 0 range 31 .. 31;
+   end record;
+   for SPI_Initialization_Command'Bit_Order use System.Low_Order_First;
+
+   --  Register Address Definitions (Function 0)
+   gSPI_IO_Ctrl_Reg   : constant uint15 := 16#0012#;
+   --  Value to write: Enable 32-bit word mode, high-speed mode, and clock setup
+   --  Bit 0: Reserved
+   --  Bit 1: 1 = 32-bit word length mode
+   --  Bit 2: 1 = High-speed mode
+   gSPI_32Bit_Config   : constant uint32 := 16#0000_0006#;
+   gSPI_Clock_Ctrl_Reg : constant uint15 := 16#001E#;
+   --  Request ALP Clock (Bit 3 = 1)
+   Request_ALP_Clock   : constant uint32 := 16#0000_0008#;
+
+   type SPI_Command is record
+      Write_Mode   : Boolean;  -- True = Write, False = Read
+      Auto_Inc     : Boolean;  -- True = Increment address automatically
+      Function_Num : uint2;    -- 0: Bus/gSPI, 1: Backplane, 2: WLAN Data
+      Address      : uint15;   -- Register address or buffer offset
+      Data_Length  : uint13;   -- Number of bytes to transfer
+   end record;
+   pragma Pack (SPI_Command);
+
+   type SPI_Response is record
+      Data_Not_Ready : Boolean;  -- True if the chip needs more time (retry required)
+      Cmd_Error      : Boolean;  -- True if the previous command was invalid
+      WLAN_Interrupt : Boolean;  -- True if WLAN data is pending
+      Reserved       : uint15;   -- Hardware reserved bits
+      Bus_Status     : uint24;   -- Internal status flags (e.g., credit availability)
+   end record;
+   pragma Pack (SPI_Response);
+
+   type SDPCM_Header is record
+      Framelen_Low  : Interfaces.Unsigned_8;   --  Total frame length (Low Byte)
+      Framelen_High : Interfaces.Unsigned_8;   --  Total frame length (High Byte)
+      Check_Low     : Interfaces.Unsigned_8;   --  Bitwise NOT of Framelen_Low
+      Check_High    : Interfaces.Unsigned_8;   --  Bitwise NOT of Framelen_High
+      Channel       : Interfaces.Unsigned_8;   --  0: Control, 1: Event, 2: Data
+      Sequence      : Interfaces.Unsigned_8;   --  Packet sequence number
+      Pad_Bytes     : Interfaces.Unsigned_8;   --  Number of padding bytes added
+      Reserved      : Interfaces.Unsigned_8;   --  Reserved for internal alignment
+      Don_Care      : Interfaces.Unsigned_32;  --  4 bytes of hardware-specific padding
+   end record;
+   pragma Pack (SDPCM_Header);
 
    -- Bitmasks
    Mask_REG_ON   : constant uint32 := 16#0080_0000#;
@@ -15,30 +76,30 @@ package body RP2350_CYW43439 is
    Mask_CLK      : constant uint32 := 16#2000_0000#;
    All_Pins_Mask : constant uint32 := 16#2380_0000#;
 
-function Check_Chip_Communication return Unsigned_32 is
-   use RP2350.SIO;
-   Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
-   Result      : Unsigned_32 := 0;
-begin
-   SIO_Periph.GPIO_OUT_CLR := Mask_CS;
-   -- Send Read Request Header
-   Write_gSPI_Word32 (Read_Header);
+   function Check_Chip_Communication return Unsigned_32 is  
+      use RP2350.SIO;
+      Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
+      Result      : Unsigned_32 := 0;
+   begin
+      SIO_Periph.GPIO_OUT_CLR := Mask_CS;
+      -- Send Read Request Header
+      Write_gSPI_Word32 (Read_Header);
 
-   -- Enforce turnaround delay for hardware line direction swap
-   Wait (Milliseconds (5));
+      -- Enforce turnaround delay for hardware line direction swap
+      Wait (Milliseconds (5));
 
-   -- Read 4 bytes back from the chip
-   Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
-             Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
-             Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
-             Unsigned_32 (Read_gSPI_Byte);
+      -- Read 4 bytes back from the chip
+      Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
+               Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
+               Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
+               Unsigned_32 (Read_gSPI_Byte);
 
-   SIO_Periph.GPIO_OUT_SET := Mask_CS;
+      SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
-   return Result;
+      return Result;
 
    end Check_Chip_Communication;
-
+   
    procedure Initialize_gSPI is
       use RP2350;
       use RP2350.IO_BANK0;
@@ -52,22 +113,22 @@ begin
       IO_BANK0_Periph.GPIO25_CTRL.FUNCSEL := IO_BANK0.siob_proc_25;
       IO_BANK0_Periph.GPIO29_CTRL.FUNCSEL := IO_BANK0.siob_proc_29;
 
-      -- 2.  Configure the Input Enable (IE) using SVD PADS types
-      -- Bit 6 = IE, Bit 3 = PUE (Pull-Up), Bits 4-5 = Drive Strength (12mA)
+      --  2.  Configure the Input Enable (IE) using SVD PADS types
+      --  Bit 6 = IE, Bit 3 = PUE (Pull-Up), Bits 4-5 = Drive Strength (12mA)
       
       PADS_BANK0.PADS_BANK0_Periph.GPIO24.IE := 1;
       PADS_BANK0.PADS_BANK0_Periph.GPIO24.PUE := 1;
       PADS_BANK0.PADS_BANK0_Periph.GPIO24.DRIVE := PADS_BANK0.Val_12mA;
 
-      PADS_BANK0.PADS_BANK0_Periph.GPIO25 := (0, 0, 0, 0, PADS_BANK0.Val_12mA, 0, 0, 0, 0);
-      PADS_BANK0.PADS_BANK0_Periph.GPIO29 := (0, 0, 0, 0, PADS_BANK0.Val_12mA, 0, 0, 0, 0);
+      PADS_BANK0.PADS_BANK0_Periph.GPIO25.DRIVE := PADS_BANK0.Val_12mA;
+      PADS_BANK0.PADS_BANK0_Periph.GPIO29.DRIVE := PADS_BANK0.Val_12mA;
 
-      -- 3. Configure default output directions and isolate bus with CS high
-      SIO_Periph.GPIO_OE_SET  :=  All_Pins_Mask;    --  0x23800000
+      --  3. Configure default output directions and isolate bus with CS high
+      SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
 
-      -- 4. Set idle state, Cycle physical Power to the CYW43439
+      --  4. Set idle state, Cycle physical Power to the CYW43439
       SIO_Periph.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
-      -- 5. Cycle physical hardware power to CYW43439
+      --  5. Cycle physical hardware power to CYW43439
       SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
       Wait (Milliseconds (50));
 
@@ -75,7 +136,7 @@ begin
       --  Wait for internal wireless boot ROM to execute
       Wait (Milliseconds (250));
 
-      -- 6. Execute clock wake frame over the bus
+      --  6. Execute clock wake frame over the bus
       SIO_Periph.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
       Write_gSPI_Word32 (Wake_Header);
       Write_gSPI_Byte (2);  --  Request active HT internal clock
@@ -163,15 +224,15 @@ begin
                          4;                                -- Length of payload (4 Bytes)
       Payload_Value  : Unsigned_32 := 0;
    begin
-      -- Determine payload state for WL_GPIO0
+      --  Determine payload state for WL_GPIO0
       if Enable then
-         Payload_Value := 1; -- Drive WL_GPIO0 High (LED On)
+         Payload_Value := 1; --  Drive WL_GPIO0 High (LED On)
       else
-         Payload_Value := 0; -- Drive WL_GPIO0 Low (LED Off)
+         Payload_Value := 0; --  Drive WL_GPIO0 Low (LED Off)
       end if;
 
-      -- Execute the gSPI bus cycle transaction
-      -- Assert Chip Select Low to begin transaction
+      --  Execute the gSPI bus cycle transaction
+      --  Assert Chip Select Low to begin transaction
       SIO_Periph.GPIO_OUT_CLR  := Mask_CS;
       Write_gSPI_Word32 (SPI_Header);    -- Stream Header over SPI line
      

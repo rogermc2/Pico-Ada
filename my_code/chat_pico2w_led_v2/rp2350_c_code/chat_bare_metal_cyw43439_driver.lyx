@@ -1,0 +1,839 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes true
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+To build a bare-metal Ada driver for the CYW43439 from scratch,
+ the first step is parsing the gSPI (generic SPI) hardware header and the SDPCM protocol header.
+\end_layout
+
+\begin_layout Standard
+In the Raspberry Pi Pico W the CYW43439 operates over a custom half-duplex SPI protocol (gSPI).
+\end_layout
+
+\begin_layout Standard
+Every transaction requires a 32-bit Command Header sent by the host,
+ followed by response or payload headers.
+\end_layout
+
+\begin_layout Section
+The 32-Bit gSPI Command Header
+\end_layout
+
+\begin_layout Standard
+Before reading any data the Ada driver must send a 32-bit command word to the chip.
+ 
+\end_layout
+
+\begin_layout Standard
+This tells the CYW43439 whether you are reading or writing,
+ which function block you are targeting and the register address.
+\end_layout
+
+\begin_layout LyX-Code
+type SPI_Command is record
+\end_layout
+
+\begin_layout LyX-Code
+Write_Mode :
+ Boolean;
+ -- True = Write,
+ False = Read
+\end_layout
+
+\begin_layout LyX-Code
+Auto_Inc :
+ Boolean;
+ -- True = Increment address automatically
+\end_layout
+
+\begin_layout LyX-Code
+Function_Num :
+ Unsigned_2;
+ -- 0:
+ Bus/gSPI,
+ 1:
+ Backplane,
+ 2:
+ WLAN Data
+\end_layout
+
+\begin_layout LyX-Code
+Address :
+ Unsigned_15;
+ -- Register address or buffer offset
+\end_layout
+
+\begin_layout LyX-Code
+Data_Length :
+ Unsigned_13;
+ -- Number of bytes to transfer
+\end_layout
+
+\begin_layout LyX-Code
+end record;
+\end_layout
+
+\begin_layout LyX-Code
+pragma Pack (SPI_Command);
+\end_layout
+
+\begin_layout Section
+The 32-Bit gSPI Response Header
+\end_layout
+
+\begin_layout Standard
+When performing a Read operation the CYW43439 immediately replies with a 32-bit Status/Response header before delivering the requested payload.
+\end_layout
+
+\begin_layout Standard
+The Ada driver must read and validate this word to ensure the chip is ready.
+\end_layout
+
+\begin_layout LyX-Code
+type SPI_Response is record
+\end_layout
+
+\begin_layout LyX-Code
+Data_Not_Ready :
+ Boolean;
+ -- True if the chip needs more time (retry required)
+\end_layout
+
+\begin_layout LyX-Code
+Cmd_Error :
+ Boolean;
+ -- True if the previous command was invalid
+\end_layout
+
+\begin_layout LyX-Code
+WLAN_Interrupt :
+ Boolean;
+ -- True if WLAN data is pending
+\end_layout
+
+\begin_layout LyX-Code
+Reserved :
+ Unsigned_5;
+ -- Hardware reserved bits
+\end_layout
+
+\begin_layout LyX-Code
+Bus_Status :
+ Unsigned_24;
+ -- Internal status flags (e.g.,
+ credit availability)
+\end_layout
+
+\begin_layout LyX-Code
+end record;
+\end_layout
+
+\begin_layout LyX-Code
+pragma Pack (SPI_Response);
+\end_layout
+
+\begin_layout Section
+The 12-Byte SDPCM Header
+\end_layout
+
+\begin_layout Standard
+Once the hardware-level gSPI transfer is cleared and you are reading actual network data (Function 2),
+ the payload begins with the SDPCM (Serial Data Port Control Message) header.
+ This header tells your network stack what kind of packet has arrived.
+\end_layout
+
+\begin_layout LyX-Code
+type SDPCM_Header is record
+\end_layout
+
+\begin_layout LyX-Code
+Framelen_Low :
+ Interfaces.Unsigned_8;
+ -- Total frame length (Low Byte)
+\end_layout
+
+\begin_layout LyX-Code
+Framelen_High :
+ Interfaces.Unsigned_8;
+ -- Total frame length (High Byte)
+\end_layout
+
+\begin_layout LyX-Code
+Check_Low :
+ Interfaces.Unsigned_8;
+ -- Bitwise NOT of Framelen_Low
+\end_layout
+
+\begin_layout LyX-Code
+Check_High :
+ Interfaces.Unsigned_8;
+ -- Bitwise NOT of Framelen_High
+\end_layout
+
+\begin_layout LyX-Code
+Channel :
+ Interfaces.Unsigned_8;
+ -- 0:
+ Control,
+ 1:
+ Event,
+ 2:
+ Data
+\end_layout
+
+\begin_layout LyX-Code
+Sequence :
+ Interfaces.Unsigned_8;
+ -- Packet sequence number
+\end_layout
+
+\begin_layout LyX-Code
+Pad_Bytes :
+ Interfaces.Unsigned_8;
+ -- Number of padding bytes added
+\end_layout
+
+\begin_layout LyX-Code
+Reserved :
+ Interfaces.Unsigned_8;
+ -- Reserved for internal alignment
+\end_layout
+
+\begin_layout LyX-Code
+Don_Care :
+ Interfaces.Unsigned_32;
+ -- 4 bytes of hardware-specific padding
+\end_layout
+
+\begin_layout LyX-Code
+end record;
+\end_layout
+
+\begin_layout LyX-Code
+pragma Pack (SDPCM_Header);
+\end_layout
+
+\begin_layout Section
+Implementation Steps in Ada
+\end_layout
+
+\begin_layout Standard
+To implement the basic read sequence in your bare-metal loop:
+\end_layout
+
+\begin_layout Enumerate
+Assert CS Low:
+\begin_inset Newline newline
+\end_inset
+
+ Lower the Chip Select line.
+\end_layout
+
+\begin_layout Enumerate
+Send Command:
+\begin_inset Newline newline
+\end_inset
+
+ Transmit the 32-bit SPI_Command (configured for Read,
+ Function 2).
+\end_layout
+
+\begin_layout Enumerate
+Read Status:
+\begin_inset Newline newline
+\end_inset
+
+ Immediately read back the 32-bit SPI_Response.
+\end_layout
+
+\begin_layout Enumerate
+Check Readiness:
+ 
+\begin_inset Newline newline
+\end_inset
+
+Loop or delay if Data_Not_Ready is True.
+\end_layout
+
+\begin_layout Enumerate
+Stream Payload:
+\begin_inset Newline newline
+\end_inset
+
+ Read the 12-byte SDPCM_Header,
+ parse the Framelen and stream the remaining bytes into your network buffer.
+\end_layout
+
+\begin_layout Enumerate
+Assert CS High:
+\begin_inset Newline newline
+\end_inset
+
+ Raise the Chip Select line to conclude the transaction.
+\end_layout
+
+\begin_layout LyX-Code
+with Interfaces;
+ use Interfaces;
+\end_layout
+
+\begin_layout LyX-Code
+package CYW43439_gSPI is
+\end_layout
+
+\begin_layout LyX-Code
+type Function_Block is (Bus_gSPI,
+ Backplane,
+ WLAN_Data) 
+\end_layout
+
+\begin_layout LyX-Code
+with Size => 2;
+\end_layout
+
+\begin_layout LyX-Code
+for Function_Block use (Bus_gSPI => 0,
+ Backplane => 1,
+ WLAN_Data => 2);
+\end_layout
+
+\begin_layout LyX-Code
+type SPI_Command is record
+\end_layout
+
+\begin_layout LyX-Code
+Data_Length :
+ Unsigned_13;
+ -- Bits 0..12
+\end_layout
+
+\begin_layout LyX-Code
+Address :
+ Unsigned_15;
+ -- Bits 13..27
+\end_layout
+
+\begin_layout LyX-Code
+Function_Num :
+ Function_Block;
+ -- Bits 28..29
+\end_layout
+
+\begin_layout LyX-Code
+Auto_Inc :
+ Boolean;
+ -- Bit 30
+\end_layout
+
+\begin_layout LyX-Code
+Write_Mode :
+ Boolean;
+ -- Bit 31 (True = Write,
+ False = Read)
+\end_layout
+
+\begin_layout LyX-Code
+end record 
+\end_layout
+
+\begin_layout LyX-Code
+with Size => 32;
+\end_layout
+
+\begin_layout LyX-Code
+for SPI_Command use record
+\end_layout
+
+\begin_layout LyX-Code
+Data_Length at 0 range 0 ..
+ 12;
+\end_layout
+
+\begin_layout LyX-Code
+Address at 0 range 13 ..
+ 27;
+\end_layout
+
+\begin_layout LyX-Code
+Function_Num at 0 range 28 ..
+ 29;
+\end_layout
+
+\begin_layout LyX-Code
+Auto_Inc at 0 range 30 ..
+ 30;
+\end_layout
+
+\begin_layout LyX-Code
+Write_Mode at 0 range 31 ..
+ 31;
+\end_layout
+
+\begin_layout LyX-Code
+end record;
+\end_layout
+
+\begin_layout LyX-Code
+for SPI_Command'Bit_Order use System.Low_Order_First;
+\end_layout
+
+\begin_layout LyX-Code
+end CYW43439_gSPI;
+\end_layout
+
+\begin_layout Section
+3.
+ Step-by-Step Initialization Sequence
+\end_layout
+
+\begin_layout Standard
+To initialize the gSPI (Generic SPI) interface on the CYW43439 for a bare-metal Ada driver you must configure the host microcontroller's SPI peripheral then send a specific sequence of commands to wake up and configure the CYW43439's internal bus interface.
+\end_layout
+
+\begin_layout Standard
+Here is the step-by-step process and the exact Ada structures required to complete the initialization.
+\end_layout
+
+\begin_layout Subsection
+Host SPI Configuration (RP2040 Side)
+\end_layout
+
+\begin_layout Standard
+The CYW43439 gSPI protocol requires a specific SPI mode and alignment:
+\end_layout
+
+\begin_layout Itemize
+SPI Mode:
+ Mode 0 (CPOL = 0,
+ CPHA = 0).
+\end_layout
+
+\begin_layout Itemize
+Bit Order:
+ Most Significant Bit (MSB) first.
+\end_layout
+
+\begin_layout Itemize
+Data Width:
+ 8 bits (transferred in 32-bit words,
+ little-endian).
+\end_layout
+
+\begin_layout Itemize
+Clock Speed:
+ Start low (around 1 MHz to 12 MHz) during initialization.
+ 
+\begin_inset Newline newline
+\end_inset
+
+This can e safely increased up to 50 MHz once the chip's internal clocks are fully stable.
+\end_layout
+
+\begin_layout Subsection
+2.
+ The gSPI Bit Order and Alignment in Ada
+\end_layout
+
+\begin_layout Standard
+Because ARM Cortex-M0+ and the CYW43439 use little-endian byte ordering you must ensure that your bit-field representation clauses correctly map across the SPI wire.
+\end_layout
+
+\begin_layout Standard
+Here is the exact representation clause for the initialization command:
+\end_layout
+
+\begin_layout LyX-Code
+with Interfaces;
+ use Interfaces;
+\end_layout
+
+\begin_layout LyX-Code
+package CYW43439_gSPI is
+\end_layout
+
+\begin_layout LyX-Code
+type Function_Block is (Bus_gSPI,
+ Backplane,
+ WLAN_Data) 
+\end_layout
+
+\begin_layout LyX-Code
+with Size => 2;
+\end_layout
+
+\begin_layout LyX-Code
+for Function_Block use (Bus_gSPI => 0,
+ Backplane => 1,
+ WLAN_Data => 2);
+\end_layout
+
+\begin_layout LyX-Code
+type SPI_Command is record
+\end_layout
+
+\begin_layout LyX-Code
+Data_Length :
+ Unsigned_13;
+ -- Bits 0..12
+\end_layout
+
+\begin_layout LyX-Code
+Address :
+ Unsigned_15;
+ -- Bits 13..27
+\end_layout
+
+\begin_layout LyX-Code
+Function_Num :
+ Function_Block;
+ -- Bits 28..29
+\end_layout
+
+\begin_layout LyX-Code
+Auto_Inc :
+ Boolean;
+ -- Bit 30
+\end_layout
+
+\begin_layout LyX-Code
+Write_Mode :
+ Boolean;
+ -- Bit 31 (True = Write,
+ False = Read)
+\end_layout
+
+\begin_layout LyX-Code
+end record 
+\end_layout
+
+\begin_layout LyX-Code
+with Size => 32;
+\end_layout
+
+\begin_layout LyX-Code
+for SPI_Command use record
+\end_layout
+
+\begin_layout LyX-Code
+Data_Length at 0 range 0 ..
+ 12;
+\end_layout
+
+\begin_layout LyX-Code
+Address at 0 range 13 ..
+ 27;
+\end_layout
+
+\begin_layout LyX-Code
+Function_Num at 0 range 28 ..
+ 29;
+\end_layout
+
+\begin_layout LyX-Code
+Auto_Inc at 0 range 30 ..
+ 30;
+\end_layout
+
+\begin_layout LyX-Code
+Write_Mode at 0 range 31 ..
+ 31;
+\end_layout
+
+\begin_layout LyX-Code
+end record;
+\end_layout
+
+\begin_layout LyX-Code
+for SPI_Command'Bit_Order use System.Low_Order_First;
+\end_layout
+
+\begin_layout LyX-Code
+end CYW43439_gSPI;
+\end_layout
+
+\begin_layout Subsection
+3.
+ Step-by-Step Initialization Sequence
+\end_layout
+
+\begin_layout Standard
+To wake up the gSPI bus engine the driver must execute the following hardware sequence:
+\end_layout
+
+\begin_layout Subsubsection
+Step 1:
+ Power-up and Reset (WL_REG_ON)
+\end_layout
+
+\begin_layout Standard
+Physically pull the WL_REG_ON GPIO pin on the microcontroller High to enable the CYW43439's internal regulators.
+\end_layout
+
+\begin_layout Itemize
+Assert WL_REG_ON high.
+\end_layout
+
+\begin_layout Itemize
+Wait at least 50 milliseconds for the internal PMU (Power Management Unit) to stabilize.
+\end_layout
+
+\begin_layout Subsubsection
+Step 2:
+ Test the Core gSPI Bus (Read ID)
+\end_layout
+
+\begin_layout Standard
+Before writing configurations confirm that the SPI bus works by reading the gSPI chip ID register located at Function 0 (Bus_gSPI),
+ Address 16#0000#.
+\end_layout
+
+\begin_layout Enumerate
+Construct an SPI_Command with:
+ Write_Mode => False,
+ Function_Num => Bus_gSPI,
+ Address => 0,
+ Data_Length => 4.
+\end_layout
+
+\begin_layout Enumerate
+Assert CS Low.
+\end_layout
+
+\begin_layout Enumerate
+Transmit the 32-bit command.
+\end_layout
+
+\begin_layout Enumerate
+Read back a 32-bit status response.
+\end_layout
+
+\begin_layout Enumerate
+Read back 4 bytes of data.
+\end_layout
+
+\begin_layout Enumerate
+Assert CS High.
+\end_layout
+
+\begin_layout Standard
+* Expected Result:
+ The upper 16 bits of the data returned should match the default gSPI ID (typically 16#A9A6# or 16#4343# depending on the revision mode).
+ 
+\end_layout
+
+\begin_layout Standard
+If the upper 16 bits of the data returned are 16#0000# or 16#FFFF# then the physical SPI configuration or wiring is broken.
+\end_layout
+
+\begin_layout Subsubsection
+Step 3:
+ Configure gSPI Mode (SPI Word Length)
+\end_layout
+
+\begin_layout Standard
+By default,
+ the gSPI engine expects 16-bit packet sizes.
+\end_layout
+
+\begin_layout Standard
+To safely use 32-bit standard streaming operations you must write to the gSPI SBSDIO SPIIO Control Register located at Function 0,
+ Address 16#012#.
+\end_layout
+
+\begin_layout LyX-Code
+-- Register Address Definitions (Function 0)
+\end_layout
+
+\begin_layout LyX-Code
+gSPI_IO_Ctrl_Reg :
+ constant Unsigned_15 := 16#0012#;
+\end_layout
+
+\begin_layout LyX-Code
+-- Value to write:
+ Enable 32-bit word mode,
+ high-speed mode,
+ and clock setup
+\end_layout
+
+\begin_layout LyX-Code
+-- Bit 0:
+ Reserved
+\end_layout
+
+\begin_layout LyX-Code
+-- Bit 1:
+ 1 = 32-bit word length mode
+\end_layout
+
+\begin_layout LyX-Code
+-- Bit 2:
+ 1 = High-speed mode
+\end_layout
+
+\begin_layout LyX-Code
+gSPI_32Bit_Config :
+ constant Unsigned_32 := 16#0000_0006#;
+\end_layout
+
+\begin_layout Enumerate
+Send a Write command (Write_Mode => True,
+ Function_Num => Bus_gSPI,
+ Address => gSPI_IO_Ctrl_Reg,
+ Data_Length => 4).
+\end_layout
+
+\begin_layout Enumerate
+Stream out the gSPI_32Bit_Config data word.
+\end_layout
+
+\begin_layout Subsubsection
+Step 4:
+ Request Backplane Clocks
+\end_layout
+
+\begin_layout Standard
+The CYW43439 has internal low-power clocks (ILP) and high-throughput backplane clocks (ALP/HT).
+\end_layout
+
+\begin_layout Standard
+To access the core Wi-Fi registers request the Active Low Power (ALP) clock via the Clock Control register at Function 0,
+ Address 16#001E#.
+\end_layout
+
+\begin_layout LyX-Code
+gSPI_Clock_Ctrl_Reg :
+ constant Unsigned_15 := 16#001E#;
+\end_layout
+
+\begin_layout LyX-Code
+-- Request ALP Clock (Bit 3 = 1)
+\end_layout
+
+\begin_layout LyX-Code
+Request_ALP_Clock :
+ constant Unsigned_32 := 16#0000_0008#;
+\end_layout
+
+\begin_layout Enumerate
+Write Request_ALP_Clock to gSPI_Clock_Ctrl_Reg.
+\end_layout
+
+\begin_layout Enumerate
+Poll this register by performing a Read operation on gSPI_Clock_Ctrl_Reg until Bit 7 (Clock Ready Status) transitions to 1.
+\end_layout
+
+\begin_layout Standard
+Once Bit 7 reads back as high the chip's internal backplane is alive and fully initialized.
+ 
+\end_layout
+
+\begin_layout Standard
+You can now transition your host microcontroller's SPI clock rate to its maximum speed (up to 50 MHz) and begin accessing Function 1 (Backplane) to load the firmware.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+Do you need help writing the low-level SPI transmit/receive loop for your specific target CPU architecture,
+ or are you ready to jump into loading the firmware blobs into the chip's RAM?
+\end_layout
+
+\end_body
+\end_document
