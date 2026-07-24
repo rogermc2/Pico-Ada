@@ -96,8 +96,7 @@
 \begin_body
 
 \begin_layout Standard
-To build a bare-metal Ada driver for the CYW43439 from scratch,
- the first step is parsing the gSPI (generic SPI) hardware header and the SDPCM protocol header.
+To build a bare-metal Ada driver for the CYW43439 from scratch the first step is parsing the gSPI (generic SPI) hardware header and the SDPCM protocol header.
 \end_layout
 
 \begin_layout Standard
@@ -105,8 +104,7 @@ In the Raspberry Pi Pico W the CYW43439 operates over a custom half-duplex SPI p
 \end_layout
 
 \begin_layout Standard
-Every transaction requires a 32-bit Command Header sent by the host,
- followed by response or payload headers.
+Every transaction requires a 32-bit Command Header sent by the host followed by response or payload headers.
 \end_layout
 
 \begin_layout Section
@@ -137,7 +135,7 @@ Write_Mode :
 \begin_layout LyX-Code
 Auto_Inc :
  Boolean;
- -- True = Increment address automatically
+   -- True = Increment address automatically
 \end_layout
 
 \begin_layout LyX-Code
@@ -154,7 +152,7 @@ Function_Num :
 \begin_layout LyX-Code
 Address :
  Unsigned_15;
- -- Register address or buffer offset
+     -- Register address or buffer offset
 \end_layout
 
 \begin_layout LyX-Code
@@ -196,7 +194,7 @@ Data_Not_Ready :
 \begin_layout LyX-Code
 Cmd_Error :
  Boolean;
- -- True if the previous command was invalid
+      -- True if the previous command was invalid
 \end_layout
 
 \begin_layout LyX-Code
@@ -208,7 +206,7 @@ WLAN_Interrupt :
 \begin_layout LyX-Code
 Reserved :
  Unsigned_5;
- -- Hardware reserved bits
+    -- Hardware reserved bits
 \end_layout
 
 \begin_layout LyX-Code
@@ -330,6 +328,11 @@ Send Command:
 
  Transmit the 32-bit SPI_Command (configured for Read,
  Function 2).
+\begin_inset Newline newline
+\end_inset
+
+Function 2:
+ WLAN function for efficient WLAN packet transfer through DMA.
 \end_layout
 
 \begin_layout Enumerate
@@ -824,10 +827,6 @@ Once Bit 7 reads back as high the chip's internal backplane is alive and fully i
 
 \begin_layout Standard
 You can now transition your host microcontroller's SPI clock rate to its maximum speed (up to 50 MHz) and begin accessing Function 1 (Backplane) to load the firmware.
-\end_layout
-
-\begin_layout Standard
-
 \end_layout
 
 \begin_layout Standard
