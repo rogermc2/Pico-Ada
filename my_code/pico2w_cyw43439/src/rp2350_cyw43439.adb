@@ -143,13 +143,15 @@ package body RP2350_CYW43439 is
    begin
       -- Relinquish host drive control so CYW43439 can transmit
       SIO_Periph.GPIO_OE_CLR := Mask_DATA;
+      --  Read eight bits sequentially from channel's GPIO_IN bit
       for Bit_Num in 1 .. 8 loop
+        --  GPIO_OUT is used to clock data into GPIO_IN
          SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
          Wait (Microseconds (5));
          SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Clock High
          --  Shift tracking register to make room for next incoming bit
          Result := Shift_Left (Result, 1);
-         --  Capture pin level from hardware input
+         --  Capture bit value from GPIO pin selected by Mask_DATA
          if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
             -- Push 1 into LSB of result
             Result := Result or 16#01#;
