@@ -1536,7 +1536,7 @@ gSPI Command Structure
 \end_layout
 
 \begin_layout Standard
-gSPI  Command Structure:
+gSPI Command Structure:
 \end_layout
 
 \begin_layout Standard
@@ -1991,8 +1991,8 @@ For this the host needs to poll with a read command to F0 address 0x14.
 \end_layout
 
 \begin_layout Standard
-Address 0x14 contains a predefined bit pattern.
- 
+Address 0x14 contains a predefined bit pattern:
+ 0xFEEDBEAD.
 \end_layout
 
 \begin_layout Standard

@@ -31,8 +31,8 @@ package body RP2350_CYW43439 is
    type Word32_Register is record
       -- Individual bitfields parsed directly from the RP2350 SVD schema
       Data_Payload : UInt32; 
-   end record with Volatile_Full_Access, Size => 32,
-       Bit_Order => System.Low_Order_First;
+   end record with Volatile_Full_Access, Size => 32;
+      --   Bit_Order => System.Low_Order_First;
 
    -- Bitmasks
    Mask_REG_ON   : constant uint32 := 16#0080_0000#;
@@ -41,24 +41,22 @@ package body RP2350_CYW43439 is
    Mask_CLK      : constant uint32 := 16#2000_0000#;
    All_Pins_Mask : constant uint32 := 16#2380_0000#;
 
-
    function Read_gSPI_Word32 return Unsigned_32;
 
    function Check_Chip_Communication return Unsigned_32 is  
       use RP2350.SIO;
       --  Wake        : constant Unsigned_32 := Shift_Left (7, 1) or 4;
       --  Shift_Left(16#0014#, 11) = 16#A000#
-      Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
-      Result      : Unsigned_32 := 0;
+      Read_FEEDBEAD : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
+      Result        : Unsigned_32 := 0;
    begin
       SIO_Periph.GPIO_OUT_CLR := Mask_CS;
-      -- Send Read Request Header
-      Write_gSPI_Word32 (Read_Header);
+      -- Send Read Request
+      Write_gSPI_Word32 (Read_FEEDBEAD);
 
       -- Enforce turnaround delay for hardware line direction swap
       Wait (Milliseconds (5));
 
-      -- Read 4 bytes back from the chip
       Result := Read_gSPI_Word32;
       SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
