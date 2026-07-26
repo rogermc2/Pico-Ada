@@ -84,7 +84,7 @@ package body RP2350_CYW43439 is
 
    end Configure_Pins;
 
-   procedure Hardware_Reset_CYW is
+   procedure Reset_CYW is
          use RP2350.SIO;
    begin
       SIO_Periph.GPIO_OE_SET := Mask_REG_ON;
@@ -97,36 +97,37 @@ package body RP2350_CYW43439 is
       SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
       Wait (Milliseconds (50));
 
-   end Hardware_Reset_CYW;
+   end Reset_CYW;
 
    procedure Initialize_gSPI is
       use RP2350;
       use RP2350.SIO;
-      Wake_Header   : constant Unsigned_32 :=
-      16#8000_0000# or Shift_Left(16#00A2#, 11) or 1;
+      --  poll with a read command to F0 address 0x14. 
+      --  Read F0: 10000000
+      --  Address 0x14: 00012000
+      --  Address 0x14 contains a predefined bit pattern: 0xFEEDBEAD
+      --  Shift_Left 11 bits shift over the Packet length field
+      --  into the address field
+      --  Shift_Left (16#00A2#, 11) = 16#0005_1000#
+      --  16#00A2# = 10100010 = 162
+      --  shift 11: 101 0001 0000 0000 0000 = 51000
+
+      --  Shift_Left (16#0014#, 11) = 16#A000#
+      --  Wake_Command packet length : 4 bytes
+ 
+      A_Command   : constant Unsigned_32 :=
+         16#8000_0000# or Shift_Left (16#00A2#, 11) or 1;
+      Wake_Command   : constant Unsigned_32 :=
+         Shift_Left(16#0014#, 11) or 4;
    begin
       Configure_Pins;
-      Hardware_Reset_CYW;
-
       --  Configure SIO_Periph default output directions and isolate bus with CS high
       SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
-
-      --  Set idle state, Cycle physical Power to the CYW43439
-      --  Set output value to 1 for CS and REG_ON pins.
-      SIO_Periph.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
-      --  Cycle physical hardware power to CYW43439
-      --  Clear output value to 0 for REG_ON pin.
-      SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
-      Wait (Milliseconds (50));
-
-      --  Set output value back to 1 for REG_ON pin.
-      SIO_Periph.GPIO_OUT_SET :=  Mask_REG_ON;  --  0x800000
-      --  Wait for internal wireless boot ROM to execute
-      Wait (Milliseconds (250));
+      Reset_CYW;
 
       --  Execute clock wake frame over the bus
       SIO_Periph.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
-      Write_gSPI_Word32 (Wake_Header);
+      Write_gSPI_Word32 (Wake_Command);
       Write_gSPI_Byte (2);  --  Request active HT internal clock
       SIO_Periph.GPIO_OUT_SET := Mask_CS;  --  0x2000000
 
