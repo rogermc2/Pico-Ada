@@ -114,12 +114,12 @@ package body RP2350_CYW43439 is
       --  Shift_Left (16#00A2#, 11) = 16#0005_1000#
       --  16#00A2# = 10100010 = 162
       --  shift 11: 101 0001 0000 0000 0000 = 51000
+ 
+      --  A_Command   : constant Unsigned_32 :=
+      --     16#8000_0000# or Shift_Left (16#00A2#, 11) or 1;
 
       --  Shift_Left (16#0014#, 11) = 16#A000#
       --  Wake_Command packet length : 4 bytes
- 
-      A_Command   : constant Unsigned_32 :=
-         16#8000_0000# or Shift_Left (16#00A2#, 11) or 1;
       Wake_Command   : constant Unsigned_32 :=
          Shift_Left(16#0014#, 11) or 4;
    begin
