@@ -146,9 +146,9 @@ package body RP2350_CYW43439 is
       --  Read eight bits sequentially from channel's GPIO_IN bit
       for Bit_Num in 1 .. 8 loop
         --  GPIO_OUT is used to clock data into GPIO_IN
-         SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
-         Wait (Microseconds (5));
-         SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Clock High
+         SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Set Clock Pin Low
+         Wait (Microseconds (5));             -- 5 uSec clock pulse
+         SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Set Clock Pin High
          --  Shift tracking register to make room for next incoming bit
          Result := Shift_Left (Result, 1);
          --  Capture bit value from GPIO pin selected by Mask_DATA
@@ -166,9 +166,10 @@ package body RP2350_CYW43439 is
 
    function Read_gSPI_Word32 return Unsigned_32 is
       use RP2350.SIO;
-      Incoming_Word : constant UInt32  := SIO_Periph.GPIO_IN;
+      Incoming_Word : UInt32 ;
       Result        : Unsigned_32;
    begin
+      Incoming_Word := SIO_Periph.GPIO_IN;
       Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
                Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
                Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
