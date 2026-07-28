@@ -37,7 +37,7 @@ package body RP2350_CYW43439 is
    -- Bitmasks
    Mask_REG_ON   : constant uint32 := 16#0080_0000#;
    Mask_DATA     : constant uint32 := 16#0100_0000#;
-   Mask_CS       : constant uint32 := 16#0200_0000#;
+   Mask_CS       : constant uint32 := 16#0200_0000#;  
    Mask_CLK      : constant uint32 := 16#2000_0000#;
    All_Pins_Mask : constant uint32 := 16#2380_0000#;
 
@@ -50,15 +50,11 @@ package body RP2350_CYW43439 is
       Read_FEEDBEAD : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
       Result        : Unsigned_32 := 0;
    begin
-      SIO_Periph.GPIO_OUT_CLR := Mask_CS;
       -- Send Read Request
       Write_gSPI_Word32 (Read_FEEDBEAD);
-
       -- Enforce turnaround delay for hardware line direction swap
       Wait (Milliseconds (5));
-
       Result := Read_gSPI_Word32;
-      SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
       return Result;
 
@@ -120,8 +116,7 @@ package body RP2350_CYW43439 is
 
       --  Shift_Left (16#0014#, 11) = 16#A000#
       --  Wake_Command packet length : 4 bytes
-      Wake_Command   : constant Unsigned_32 :=
-         Shift_Left(16#0014#, 11) or 4;
+      Wake_Command   : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
    begin
       Configure_Pins;
       --  Configure SIO_Periph default output directions and isolate bus with CS high
@@ -137,19 +132,54 @@ package body RP2350_CYW43439 is
 
    end Initialize_gSPI;
 
-   function Read_gSPI_Byte return Unsigned_8 is
+   --  function Read_gSPI_Byte return Unsigned_8 is
+   --     use RP2350.SIO;
+   --     Result : Unsigned_8 := 0;
+   --  begin
+   --     -- Relinquish host drive control so CYW43439 can transmit
+   --     SIO_Periph.GPIO_OE_CLR := Mask_DATA;
+   --     --  Read eight bits sequentially from channel's GPIO_IN bit
+   --     for Bit_Num in 1 .. 8 loop
+   --       --  GPIO_OUT is used to clock data into GPIO_IN
+   --        SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Set Clock Pin Low
+   --        Wait (Microseconds (5));             -- 5 uSec clock pulse
+   --        SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Set Clock Pin High
+   --        --  Shift tracking register to make room for next incoming bit
+   --        Result := Shift_Left (Result, 1);
+   --        --  Capture bit value from GPIO pin selected by Mask_DATA
+   --        if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
+   --           -- Push 1 into LSB of result
+   --           Result := Result or 16#01#;
+   --        end if;
+
+   --        Wait (Microseconds (5));
+   --      SIO_Periph.GPIO_OE_Set := Mask_DATA;
+
+   --     end loop;
+
+   --     return Result;
+
+   --  end Read_gSPI_Byte;
+
+   function Read_gSPI_Word32 return Unsigned_32 is
       use RP2350.SIO;
-      Result : Unsigned_8 := 0;
+      Result : Unsigned_32 := 0;
    begin
-      -- Relinquish host drive control so CYW43439 can transmit
+      --  Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
+      --           Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
+      --           Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
+      --           Unsigned_32 (Read_gSPI_Byte);
+
+-- Relinquish host drive control so CYW43439 can transmit
       SIO_Periph.GPIO_OE_CLR := Mask_DATA;
       --  Read eight bits sequentially from channel's GPIO_IN bit
-      for Bit_Num in 1 .. 8 loop
+      for Bit_Num in 1 .. 32 loop
         --  GPIO_OUT is used to clock data into GPIO_IN
          SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Set Clock Pin Low
          Wait (Microseconds (5));             -- 5 uSec clock pulse
          SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Set Clock Pin High
-         --  Shift tracking register to make room for next incoming bit
+
+         --  Shift Result left to make room for next incoming bit
          Result := Shift_Left (Result, 1);
          --  Capture bit value from GPIO pin selected by Mask_DATA
          if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
@@ -158,34 +188,55 @@ package body RP2350_CYW43439 is
          end if;
 
          Wait (Microseconds (5));
+       SIO_Periph.GPIO_OE_Set := Mask_DATA;
+
       end loop;
 
       return Result;
 
-   end Read_gSPI_Byte;
-
-   function Read_gSPI_Word32 return Unsigned_32 is
-      use RP2350.SIO;
-      Incoming_Word : UInt32 ;
-      Result        : Unsigned_32;
-   begin
-      Incoming_Word := SIO_Periph.GPIO_IN;
-      Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
-               Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
-               Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
-               Unsigned_32 (Read_gSPI_Byte);
-      return Result;
-
    end Read_gSPI_Word32;
 
-   procedure Write_gSPI_Byte (Data : Unsigned_8) is
+   --  procedure Write_gSPI_Byte (Data : Unsigned_8) is
+   --     use RP2350.SIO;
+   --     Temp  : Unsigned_8 := Data;
+   --  begin
+   --     SIO_Periph.GPIO_OUT_CLR := Mask_CS;
+   --     -- Send MSB First
+   --     for Bit in 1 .. 8 loop
+   --        SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
+   --        if (Temp and 16#80#) /= 0 then
+   --           SIO_Periph.GPIO_OUT_SET := Mask_DATA;
+   --        else
+   --           SIO_Periph.GPIO_OUT_CLR := Mask_DATA;
+   --        end if;
+
+   --        -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
+   --        Wait (Microseconds (5));
+   --        -- Clock High (CYW43439 samples on rising edge)
+   --        SIO_Periph.GPIO_OUT_SET := Mask_CLK;
+   --        Temp := Shift_Left (Temp, 1);
+   --        Wait (Microseconds (5));
+   --     end loop;
+   --     SIO_Periph.GPIO_OUT_SET := Mask_CS;
+
+   --  end Write_gSPI_Byte;
+
+    procedure Write_gSPI_Word32 (Value : Unsigned_32) is
       use RP2350.SIO;
-      Temp  : Unsigned_8 := Data;
+      Temp  : UInt32 := UInt32 (Value);
    begin
+      -- Split the 32-bit word into 4 bytes (MSB first) and stream them
+      --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 16) and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
+
+      SIO_Periph.GPIO_OUT_CLR := Mask_CS;
       -- Send MSB First
-      for Bit in 1 .. 8 loop
+      for Bit in 1 .. 32 loop
          SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
-         if (Temp and 16#80#) /= 0 then
+         if (Temp and 1) /= 0 then
+         --  if (Temp and 16#80#) /= 0 then
             SIO_Periph.GPIO_OUT_SET := Mask_DATA;
          else
             SIO_Periph.GPIO_OUT_CLR := Mask_DATA;
@@ -199,15 +250,7 @@ package body RP2350_CYW43439 is
          Wait (Microseconds (5));
       end loop;
 
-   end Write_gSPI_Byte;
-
-    procedure Write_gSPI_Word32 (Value : Unsigned_32) is
-   begin
-      -- Split the 32-bit word into 4 bytes (MSB first) and stream them
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 16) and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
+      SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
    end Write_gSPI_Word32;
 
