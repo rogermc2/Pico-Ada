@@ -1946,6 +1946,10 @@ gSPI Status Field
 
 \end_layout
 
+\begin_layout Section
+Boot Sequence
+\end_layout
+
 \begin_layout Subsection
 gSPI Host-Device Handshake
 \end_layout
@@ -3843,6 +3847,62 @@ For both the WL_REG_ON and BT_REG_ON pins there should be at least a 10 ms time 
 
 \begin_layout Standard
 If this delay is not followed there may be a VDDIO in-rush current on the order of 36 mA during the next PMU cold start.
+\end_layout
+
+\begin_layout Section
+Another Version
+\end_layout
+
+\begin_layout Subsection
+WLAN Initialization and Reset
+\end_layout
+
+\begin_layout Standard
+Once power is stable,
+ take the Wi-Fi core out of its reset state:
+\end_layout
+
+\begin_layout Standard
+Assert WL_REG_ON:
+ Drive the WL_REG_ON pin high.
+ 
+\end_layout
+
+\begin_layout Standard
+Asserting WL_REG_ON powers up the internal regulators dedicated to the WLAN section and releases the Wi-Fi core from reset.
+ 
+\end_layout
+
+\begin_layout Standard
+(Note:
+ De-asserting this pin will hold the WLAN section in reset;
+ it features an internal 200 kΩ pull-down resistor by default.)
+\end_layout
+
+\begin_layout Subsection
+ Configure the SDIO Communication Interface
+\end_layout
+
+\begin_layout Standard
+Unlike Bluetooth (which uses UART),
+ the Wi-Fi core requires a high-speed Secure Digital Input Output (SDIO) interface.
+ 
+\end_layout
+
+\begin_layout Standard
+Configure the Host Controller to communicate via the following pins:
+\end_layout
+
+\begin_layout Standard
+SDIO Clock (SDIO_CLK).
+\end_layout
+
+\begin_layout Standard
+SDIO Command (SDIO_CMD).
+\end_layout
+
+\begin_layout Standard
+SDIO Data Lines (SDIO_DATA).
 \end_layout
 
 \end_body
