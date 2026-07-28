@@ -45,7 +45,6 @@ package body RP2350_CYW43439 is
 
    function Check_Chip_Communication return Unsigned_32 is  
       use RP2350.SIO;
-      --  Wake        : constant Unsigned_32 := Shift_Left (7, 1) or 4;
       --  Shift_Left(16#0014#, 11) = 16#A000#
       Read_FEEDBEAD : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
       Result        : Unsigned_32 := 0;
@@ -86,12 +85,12 @@ package body RP2350_CYW43439 is
    procedure Reset_CYW is
          use RP2350.SIO;
    begin
-      SIO_Periph.GPIO_OE_SET := Mask_REG_ON;
+      --  Configure SIO_Periph default output directions and isolate bus with CS high
+      SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
 
       -- Assert Hard Reset: Drive WL_REG_ON Low via SIO Core Registers
       SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;
       Wait (Milliseconds (20));
-
       --  Release Reset: Drive WL_REG_ON High
       SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
       Wait (Milliseconds (50));
@@ -119,16 +118,11 @@ package body RP2350_CYW43439 is
       Wake_Command   : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
    begin
       Configure_Pins;
-      --  Configure SIO_Periph default output directions and isolate bus with CS high
-      SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
       Reset_CYW;
 
       --  Execute clock wake frame over the bus
-      SIO_Periph.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
       Write_gSPI_Word32 (Wake_Command);
-      --  Read_gSPI_wo
       --  Write_gSPI_Byte (2);  --  Request active HT internal clock
-      SIO_Periph.GPIO_OUT_SET := Mask_CS;  --  0x2000000
 
    end Initialize_gSPI;
 
@@ -231,7 +225,7 @@ package body RP2350_CYW43439 is
       --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
       --  Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
 
-      SIO_Periph.GPIO_OUT_CLR := Mask_CS;
+      SIO_Periph.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
       -- Send MSB First
       for Bit in 1 .. 32 loop
          SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
@@ -250,7 +244,7 @@ package body RP2350_CYW43439 is
          Wait (Microseconds (5));
       end loop;
 
-      SIO_Periph.GPIO_OUT_SET := Mask_CS;
+      SIO_Periph.GPIO_OUT_SET := Mask_CS;  --  0x2000000
 
    end Write_gSPI_Word32;
 
