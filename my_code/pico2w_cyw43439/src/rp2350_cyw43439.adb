@@ -94,7 +94,7 @@ package body RP2350_CYW43439 is
       --  Release Reset: Drive WL_REG_ON High
       SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;  --  16#0080_0000#;
       Wait (Milliseconds (50));
-      SIO_Periph.GPIO_OUT_SET := All_Pins_Mask;
+      SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
    end Reset_CYW;
 
