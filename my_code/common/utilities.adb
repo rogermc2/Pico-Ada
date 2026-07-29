@@ -1,28 +1,34 @@
 
-
 with RP2350.Clocks; use RP2350.Clocks;
 with RP2350.XOSC;
 with RP2350.Ticks; use RP2350.Ticks;
 
 package body Utilities is
 
-procedure Initialize_Hardware_Clocks is
-    use RP2350.XOSC;
-    use RP2350;
-    begin
-       --  Step 1: Initialize the External Crystal Oscillator (XOSC)
-       --  Set startup delay to give the crystal time to physically stabilize
-       --  A value of 47 handles the 12MHz crystal on standard Pico boards safely.
-       XOSC_Periph.STARTUP.DELAY_k := 47;
+   procedure Wait (Duration : Time_Span) is
+      Wait_Time : constant Time := Clock + Duration;
+   begin
+      delay until Wait_Time;
+
+   end Wait;
+
+   procedure Initialize_Hardware_Clocks is
+      use RP2350.XOSC;
+      use RP2350;
+   begin
+      --  Step 1: Initialize the External Crystal Oscillator (XOSC)
+      --  Set startup delay to give the crystal time to physically stabilize
+      --  A value of 47 handles the 12MHz crystal on standard Pico boards safely.
+      XOSC_Periph.STARTUP.DELAY_k := 47;
        
-       -- Enable the XOSC module
-       --  XOSC_Periph.CTRL.ENABLE :=  16#FAB#; -- Magic hardware keyword for ENABLE
-       XOSC_Periph.CTRL.ENABLE := ENABLE;
+      -- Enable the XOSC module
+      --  XOSC_Periph.CTRL.ENABLE :=  16#FAB#; -- Magic hardware keyword for ENABLE
+      XOSC_Periph.CTRL.ENABLE := ENABLE;
        
-       -- Poll the status register until the hardware confirms the clock is stable
-       while XOSC_Periph.STATUS.STABLE = 0 loop
-          null;
-       end loop;
+      -- Poll the status register until the hardware confirms the clock is stable
+      while XOSC_Periph.STATUS.STABLE = 0 loop
+         null;
+      end loop;
 
        --  Step 2: Route Reference Clock (clk_ref) to XOSC
        --  Set the source mux of clk_ref to use XOSC (usually value 2 in SVD map)
@@ -96,5 +102,5 @@ procedure Initialize_Hardware_Clocks is
       end Set_LED_State;
 
    end Wireless_Bus;
-
+   
 end Utilities;
