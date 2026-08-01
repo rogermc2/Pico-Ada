@@ -131,8 +131,8 @@ package body RP2350_CYW43439 is
       Configure_Pins;
       Reset_CYW;
       Write_gSPI_Word32 (Wake_Command);
-      Write_gSPI_Byte (1); -- 0x02 requests HT (High-Throughput) Clock active
-      Write_gSPI_Byte (2); -- 0x02 requests HT (High-Throughput) Clock active
+      Write_gSPI_Byte (1); -- 0x02 requests wake up
+      --  Write_gSPI_Byte (2); -- 0x02 requests HT (High-Throughput) Clock active
       Wait (Milliseconds (50));
       Response := Read_gSPI_Word32;
       Reset_CYW;
