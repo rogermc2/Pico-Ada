@@ -41,34 +41,34 @@ begin
 end Read_gSPI_Byte;
 
 function Read_gSPI_Word32 return Unsigned_32 is
-      use RP2350.SIO;
-      Result : Unsigned_32 := 0;
-   begin
+   use RP2350.SIO;
+   Result : Unsigned_32 := 0;
+begin
 -- Relinquish host drive control so CYW43439 can transmit
-      SIO_Periph.GPIO_OE_CLR := Mask_DATA;
-      --  Read eight bits sequentially from channel's GPIO_IN bit
-      for Bit_Num in 1 .. 32 loop
-        --  GPIO_OUT is used to clock data into GPIO_IN
-         SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Set Clock Pin Low
-         Wait (Microseconds (5));             -- 5 uSec clock pulse
-         SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Set Clock Pin High
+   SIO_Periph.GPIO_OE_CLR := Mask_DATA;
+   --  Read eight bits sequentially from channel's GPIO_IN bit
+   for Bit_Num in 1 .. 32 loop
+      --  GPIO_OUT is used to clock data into GPIO_IN
+      SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Set Clock Pin Low
+      Wait (Microseconds (5));             -- 5 uSec clock pulse
+      SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Set Clock Pin High
 
-         --  Shift Result left to make room for next incoming bit
-         Result := Shift_Left (Result, 1);
-         --  Capture bit value from GPIO pin selected by Mask_DATA
-         if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
-            -- Push 1 into LSB of result
-            Result := Result or 16#01#;
-         end if;
+      --  Shift Result left to make room for next incoming bit
+      Result := Shift_Left (Result, 1);
+      --  Capture bit value from GPIO pin selected by Mask_DATA
+      if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
+         -- Push 1 into LSB of result
+         Result := Result or 16#01#;
+      end if;
 
-         Wait (Microseconds (5));
-       SIO_Periph.GPIO_OE_Set := Mask_DATA;
+      Wait (Microseconds (5));
+      SIO_Periph.GPIO_OE_Set := Mask_DATA;
 
-      end loop;
+   end loop;
 
-      return Result;
+   return Result;
 
-   end Read_gSPI_Word32;
+end Read_gSPI_Word32;
 
 procedure Write_gSPI_Byte (Data : Unsigned_8) is
    Periph : SIO_Peripheral;
@@ -93,11 +93,14 @@ begin
 end Write_gSPI_Byte;
 
 procedure Write_gSPI_Word32 (Value : Interfaces.Unsigned_32) is
+   Buffer : Unsigned_8 := Unsigned_8 (Shift_Right (Value, 24) and 16#FF#);
    begin
       -- Split the 32-bit word into 4 bytes (MSB first) and stream them
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 16) and 16#FF#));
+      Write_gSPI_Byte (Buffer);
+      Buffer := Unsigned_8 (Shift_Right (Value, 16) and 16#FF#);
+      Write_gSPI_Byte (Buffer);
       Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
+      Write_gSPI_Byte (Buffer);
       Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
       
    end Write_gSPI_Word32;
