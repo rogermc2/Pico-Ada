@@ -13,36 +13,12 @@ with Utilities; use Utilities;
 
 package body RP2350_CYW43439 is
 
-   type Bus_Function is (Function_0_Bus, Function_1_Backplane, Function_2_WLAN);
-   for Bus_Function use (Function_0_Bus => 0, Function_1_Backplane => 1,
-                        Function_2_WLAN => 2);
-   type Buffer_8 is array (Positive range <>) of Unsigned_8;
-
-   Raw_Buffer_4 : Buffer_8 (1 .. 4); 
-   type SPI_Command is record
-      Write_Mode   : Boolean;  -- True = Write, False = Read
-      Auto_Inc     : Boolean;  -- True = Increment address automatically
-      Function_Num : uint2;    -- 0: Bus/gSPI, 1: Backplane, 2: WLAN Data
-      Address      : uint15;   -- Register address or buffer offset
-      Data_Length  : uint13;   -- Number of bytes to transfer
-   end record;
-   pragma Pack (SPI_Command);
-
-   type SPI_Response is record
-      Data_Not_Ready : Boolean;  -- True if the chip needs more time (retry required)
-      Cmd_Error      : Boolean;  -- True if the previous command was invalid
-      WLAN_Interrupt : Boolean;  -- True if WLAN data is pending
-      Reserved       : uint15;   -- Hardware reserved bits
-      Bus_Status     : uint24;   -- Internal status flags (e.g., credit availability)
-   end record;
-   pragma Pack (SPI_Response);
-
-   type Word32_Register is record
-      -- Individual bitfields parsed directly from the RP2350 SVD schema
-      Data_Payload : UInt32; 
-   end record with Volatile_Full_Access, Size => 32;
-      -- Bit_Order => System.Low_Order_First;
-
+   --  The CYW43439 WL_REG_ON signal is used by the PMU to power-up the WLAN section.
+   --  It is OR-gated with the BT_REG_ON input to control the internal CYW43439 regulators.
+   --  When WL_REG_ON is high the regulators are enabled and the WLAN section is out of reset.
+   --  When WL_REG_ON is low the WLAN section is in reset.
+   --  WL_REG_ON has an internal 200 k pull-down resistor that is enabled by default.
+   --  It can be disabled through programming.
    -- Bitmasks
    Mask_REG_ON   : constant uint32 := 16#0080_0000#;
    Mask_DATA     : constant uint32 := 16#0100_0000#;
@@ -52,6 +28,7 @@ package body RP2350_CYW43439 is
 
    function Check_Chip_Communication return Unsigned_32 is  
       use RP2350.SIO;
+      --  gSPI Test-Read only register: Bits 16#0014# .. 16#0017# (4 bits)
       --  Shift_Left(16#0014#, 11) = 16#A000#
       Read_FEEDBEAD : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
       Result        : Unsigned_32 := 0;
@@ -92,6 +69,12 @@ package body RP2350_CYW43439 is
    procedure Reset_CYW is
          use RP2350.SIO;
    begin
+      --  To initiate communication through the  CYW43439 gSPI after power-up, 
+      --  the host must bring up the WLAN chip by writing to the
+      --  wake-up WLAN register bit. 
+      --  Writing a 1 to this bit will start up the necessary crystals and PLLs
+      --  so that the CYW43439 is ready for data transfer.
+      
       --  Configure SIO_Periph default output directions and isolate bus with CS high
       SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
 
@@ -131,7 +114,7 @@ package body RP2350_CYW43439 is
       Configure_Pins;
       Reset_CYW;
       Write_gSPI_Word32 (Wake_Command);
-      Write_gSPI_Byte (1); -- 0x02 requests wake up
+      Write_gSPI_Byte (1); -- 0x01 requests wake up
       --  Write_gSPI_Byte (2); -- 0x02 requests HT (High-Throughput) Clock active
       Wait (Milliseconds (50));
       Response := Read_gSPI_Word32;
