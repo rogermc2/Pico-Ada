@@ -54,7 +54,7 @@ package body RP2350_CYW43439 is
       IO_BANK0_Periph.GPIO25_CTRL.FUNCSEL := IO_BANK0.siob_proc_25;
       IO_BANK0_Periph.GPIO29_CTRL.FUNCSEL := IO_BANK0.siob_proc_29;
 
-      --  Configure the Input Enable (IE) using SVD PADS types
+      --  Configure GPIO24 for Input Enable (IE) using SVD PADS types
       --  Bit 6 = IE, Bit 3 = PUE (Pull-Up), Bits 4-5 = Drive Strength (12mA)
    
       PADS_BANK0.PADS_BANK0_Periph.GPIO24.IE := 1;    --  Input enable
@@ -90,7 +90,6 @@ package body RP2350_CYW43439 is
    procedure Initialize_gSPI is
       use RP2350;
       use RP2350.SIO;
-
       --  Configure_Pins;
       --  Power up by setting REG_ON
       --  Wait 50 Milliseconds

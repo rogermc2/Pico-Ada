@@ -93,13 +93,13 @@ begin
 end Write_gSPI_Byte;
 
 procedure Write_gSPI_Word32 (Value : Interfaces.Unsigned_32) is
+   -- Stream the 32-bit word as 4 bytes (MSB first)
    Buffer : Unsigned_8 := Unsigned_8 (Shift_Right (Value, 24) and 16#FF#);
    begin
-      -- Split the 32-bit word into 4 bytes (MSB first) and stream them
       Write_gSPI_Byte (Buffer);
       Buffer := Unsigned_8 (Shift_Right (Value, 16) and 16#FF#);
       Write_gSPI_Byte (Buffer);
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
+      Buffer := Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#);
       Write_gSPI_Byte (Buffer);
       Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
       
