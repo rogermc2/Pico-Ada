@@ -114,6 +114,7 @@ package body RP2350_CYW43439 is
       --  Power up by setting REG_ON
       SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
       Wait (Milliseconds (50));
+      SIO_Periph.GPIO_OUT_SET := ALL_Pins_Mask;
       Write_gSPI_Word32 (Wake_Command);
       Write_gSPI_Byte (1); -- 0x01 requests wake up
       Wait (Milliseconds (50));
