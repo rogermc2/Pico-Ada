@@ -92,6 +92,7 @@ package body RP2350_CYW43439 is
       use RP2350.SIO;
       --  Configure_Pins;
       --  Power up by setting REG_ON
+      --  Power_Up_Command : SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
       --  Wait 50 Milliseconds
       --  Reset_CYW:
       --  Wake with a read command to F0 address 0x14. 
@@ -110,67 +111,15 @@ package body RP2350_CYW43439 is
       Response     : Unsigned_32;
    begin
       Configure_Pins;
+      --  Power up by setting REG_ON
+      SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
+      Wait (Milliseconds (50));
       Write_gSPI_Word32 (Wake_Command);
       Write_gSPI_Byte (1); -- 0x01 requests wake up
       Wait (Milliseconds (50));
       Response := Read_gSPI_Word32;
-      Reset_CYW;
+      --  Reset_CYW;
 
    end Initialize_gSPI;
-
-   --  subtype Buffer_4x8 is Buffer_8 (1 .. 4);
-
-   --  procedure Pack_Command_To_Buffer (Command : SPI_Command;
-   --     Buffer : out Buffer_4x8) is
-   --     Raw_32 : Unsigned_32 := 0; 
-   --     Func_Val : constant Unsigned_32 := Unsigned_32 (Command.Function_Num);
-   --     --    (case Command.Function_Num is
-   --     --       when Function_0_Bus => 0, 
-   --     --       when Function_1_Backplane => 1, 
-   --     --       when Function_2_WLAN => 2);
-   --  begin
-   --     -- Explicitly build up the 32-bit big-endian expected frame layout
-   --     if Command.Write_Mode then
-   --        Raw_32 := Raw_32 or Shift_Left (1, 31);
-   --     end if;
-
-   --     if Command.Auto_Inc then
-   --        Raw_32 := Raw_32 or Shift_Left (1, 30);
-   --     end if;
-
-   --     Raw_32 := Raw_32 or Shift_Left (Func_Val and 16#03#, 28);
-   --     Raw_32 := Raw_32 or Shift_Left (Unsigned_32 (Command.Address) and 16#7FFF#, 13);
-   --     Raw_32 := Raw_32 or (Unsigned_32 (Command.Data_Length) and 16#07FF#);
-
-   --     -- Slice out into individual sequential bytes (Big-Endian Wire Layout)
-   --     Buffer (1) := Unsigned_8 (Shift_Right (Raw_32, 24) and 16#FF#); -- Transmitted 1st
-   --     Buffer (2) := Unsigned_8 (Shift_Right (Raw_32, 16) and 16#FF#); -- Transmitted 2nd
-   --     Buffer (3) := Unsigned_8 (Shift_Right (Raw_32, 8)  and 16#FF#); -- Transmitted 3rd
-   --     Buffer (4) := Unsigned_8 (Raw_32 and 16#FF#);                  -- Transmitted 4th
-   --  end Pack_Command_To_Buffer;
-
---  The CHIPCLKCSR register resides at Backplane Address 0x1000E.
---  To request an active system clock and wake the system,
---  bit 0 (SBSDIO_FORCE_WL_CLK / SBSDIO_ALP_AVAIL_REQ) must be written as 1
---  procedure Wakeup_WLAN is
---     Command      : SPI_Command;
---     Wake_Payload : Unsigned_8 := 1; -- Force Clock Active (Bit 0)
---     Raw_Buffer : Buffer_8 (1 .. 5); 
---     --  SBSDIO_FUNC1_CHIPCLKCSR address = 0x1000E
---     CHIPCLKCSR   : constant UInt15 := 16#1000E#;
---  begin
---     -- Construct the gSPI raw packet configuration
---     Command := (Write_Mode => True, Auto_Inc => True, function_Num => 1,
---                Address => CHIPCLKCSR, Data_Length  => 1);  -- 1 Byte payload
-
---     -- Pack the strongly typed record into a serializable byte stream 
---     -- (Assuming Big-Endian serialization required by the device architecture)
---     Pack_Command_To_Buffer (Command, Raw_Buffer (1 .. 4));
---     Raw_Buffer (5) := Wake_Payload;
-
---     -- Transmit over the baremetal configuration SPI block
---     --  RP.SPI.Transmit(Peripheral => RP.SPI.SPI_0, Data => Raw_Buffer);
-   
---  end Wakeup_WLAN;
 
 end RP2350_CYW43439;
