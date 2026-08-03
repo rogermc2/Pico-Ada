@@ -74,9 +74,9 @@ procedure Write_gSPI_Byte (Data : Unsigned_8) is
    Periph : SIO_Peripheral;
    Temp   : Unsigned_8 := Data;
 begin
+   --  Send MSB first
    for Bit in 1 .. 8 loop
       Periph.GPIO_OUT_CLR := Mask_CLK;
-
       if (Temp and 16#80#) /= 0 then
          Periph.GPIO_OUT_SET := Mask_DATA;
       else
@@ -84,7 +84,6 @@ begin
       end if;
 
       Wait (Microseconds (2)); -- Stable bit hold period
-
       Periph.GPIO_OUT_SET := Mask_CLK; 
       Temp := Shift_Left (Temp, 1);
       Wait (Microseconds (2));
