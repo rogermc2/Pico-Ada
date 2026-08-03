@@ -74,11 +74,10 @@ package body RP2350_CYW43439 is
       --  wake-up WLAN register bit. 
       --  Writing a 1 to this bit will start up the necessary crystals and PLLs
       --  so that the CYW43439 is ready for data transfer.
-      
       --  Configure SIO_Periph default output directions and isolate bus with CS high
       SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
 
-      -- Assert Hard Reset: Drive WL_REG_ON Low via SIO Core Registers
+      --  Assert Hard Reset: Drive WL_REG_ON Low via SIO Core Registers
       SIO_Periph.GPIO_OUT_CLR := All_Pins_Mask;
       Wait (Milliseconds (20));
       --  Release Reset: Drive WL_REG_ON High
@@ -91,8 +90,11 @@ package body RP2350_CYW43439 is
    procedure Initialize_gSPI is
       use RP2350;
       use RP2350.SIO;
+
+      --  Configure_Pins;
       --  Power up by setting REG_ON
       --  Wait 50 Milliseconds
+      --  Reset_CYW:
       --  Wake with a read command to F0 address 0x14. 
       --  Read F0: 10000000
       --  Address 0x14: 00012000
@@ -106,16 +108,11 @@ package body RP2350_CYW43439 is
       --  Wake_Command packet length : 1 byte ?
       Wake_Command : constant Unsigned_32 :=
        16#8000_0000# or Shift_Left (16#00A2#, 11) or 1;
-      --  Wake_Command  : constant SPI_Command :=
-      --  (Write_Mode => True, Auto_Inc  => True, Func => Function_1_Backplane,
-      --          Address      => CHIPCLKCSR, Length       => 1); -- 1 Byte payload
       Response     : Unsigned_32;
    begin
       Configure_Pins;
-      Reset_CYW;
       Write_gSPI_Word32 (Wake_Command);
       Write_gSPI_Byte (1); -- 0x01 requests wake up
-      --  Write_gSPI_Byte (2); -- 0x02 requests HT (High-Throughput) Clock active
       Wait (Milliseconds (50));
       Response := Read_gSPI_Word32;
       Reset_CYW;
