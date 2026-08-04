@@ -64,28 +64,31 @@ package body RP2350_CYW43439 is
       PADS_BANK0.PADS_BANK0_Periph.GPIO25.DRIVE := PADS_BANK0.Val_12mA;
       PADS_BANK0.PADS_BANK0_Periph.GPIO29.DRIVE := PADS_BANK0.Val_12mA;
 
-   end Configure_Pins;
-
-   procedure Reset_CYW is
-         use RP2350.SIO;
-   begin
-      --  To initiate communication through the  CYW43439 gSPI after power-up, 
-      --  the host must bring up the WLAN chip by writing to the
-      --  wake-up WLAN register bit. 
-      --  Writing a 1 to this bit will start up the necessary crystals and PLLs
-      --  so that the CYW43439 is ready for data transfer.
-      --  Configure SIO_Periph default output directions and isolate bus with CS high
+      SIO_Periph.GPIO_OUT_CLR := All_Pins_Mask;    --  0x23800000
       SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
 
-      --  Assert Hard Reset: Drive WL_REG_ON Low via SIO Core Registers
-      SIO_Periph.GPIO_OUT_CLR := All_Pins_Mask;
-      Wait (Milliseconds (20));
-      --  Release Reset: Drive WL_REG_ON High
-      SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;  --  16#0080_0000#;
-      Wait (Milliseconds (50));  --  Give the internal PLL time to lock
-      SIO_Periph.GPIO_OUT_SET := Mask_CS;
+   end Configure_Pins;
 
-   end Reset_CYW;
+   --  procedure Reset_CYW is
+   --        use RP2350.SIO;
+   --  begin
+   --     --  To initiate communication through the  CYW43439 gSPI after power-up, 
+   --     --  the host must bring up the WLAN chip by writing to the
+   --     --  wake-up WLAN register bit. 
+   --     --  Writing a 1 to this bit will start up the necessary crystals and PLLs
+   --     --  so that the CYW43439 is ready for data transfer.
+   --     --  Configure SIO_Periph default output directions and isolate bus with CS high
+   --     SIO_Periph.GPIO_OE_SET :=  All_Pins_Mask;    --  0x23800000
+
+   --     --  Assert Hard Reset: Drive WL_REG_ON Low via SIO Core Registers
+   --     SIO_Periph.GPIO_OUT_CLR := All_Pins_Mask;
+   --     Wait (Milliseconds (20));
+   --     --  Release Reset: Drive WL_REG_ON High
+   --     SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;  --  16#0080_0000#;
+   --     Wait (Milliseconds (50));  --  Give the internal PLL time to lock
+   --     SIO_Periph.GPIO_OUT_SET := Mask_CS;
+
+   --  end Reset_CYW;
 
    procedure Initialize_gSPI is
       use RP2350;
@@ -114,12 +117,11 @@ package body RP2350_CYW43439 is
       --  Power up by setting REG_ON
       SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
       Wait (Milliseconds (50));
-      SIO_Periph.GPIO_OUT_SET := ALL_Pins_Mask;
+      SIO_Periph.GPIO_OUT_SET := Mask_CS;
       Write_gSPI_Word32 (Wake_Command);
       Write_gSPI_Byte (1); -- 0x01 requests wake up
       Wait (Milliseconds (50));
       Response := Read_gSPI_Word32;
-      --  Reset_CYW;
 
    end Initialize_gSPI;
 

@@ -20,21 +20,21 @@ function Read_gSPI_Byte return Unsigned_8 is
    Result : Unsigned_8 := 0;
 begin
    -- Relinquish host drive so the CYW43439 can modulate the line
-     SIO_Periph.GPIO_OE_CLR := Mask_DATA;
-
+   SIO_Periph.GPIO_OUT_CLR := Mask_CS;
    for Bit in 1 .. 8 loop
       SIO_Periph.GPIO_OUT_CLR := Mask_CLK;
       Wait (Microseconds (2));
-
-      SIO_Periph.GPIO_OUT_SET := Mask_CLK;
       Result := Shift_Left (Result, 1);
-
-      -- Read the pin status out of the SIO peheral's live hardware state register
+      --  Read the pin status out of the SIO peheral's live hardware state register
+      --  GPIO_IN has the input value for GPIO0...31.
       if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
          Result := Result or 16#01#;
       end if;
       Wait (Microseconds (2));
+      SIO_Periph.GPIO_OUT_SET := Mask_CLK;
    end loop;
+
+   SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
    return Result;
 
@@ -44,50 +44,34 @@ function Read_gSPI_Word32 return Unsigned_32 is
    use RP2350.SIO;
    Result : Unsigned_32 := 0;
 begin
--- Relinquish host drive control so CYW43439 can transmit
-   SIO_Periph.GPIO_OE_CLR := Mask_DATA;
-   --  Read eight bits sequentially from channel's GPIO_IN bit
-   for Bit_Num in 1 .. 32 loop
-      --  GPIO_OUT is used to clock data into GPIO_IN
-      SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Set Clock Pin Low
-      Wait (Microseconds (5));             -- 5 uSec clock pulse
-      SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Set Clock Pin High
-
-      --  Shift Result left to make room for next incoming bit
-      Result := Shift_Left (Result, 1);
-      --  Capture bit value from GPIO pin selected by Mask_DATA
-      if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
-         -- Push 1 into LSB of result
-         Result := Result or 16#01#;
-      end if;
-
-      Wait (Microseconds (5));
-      SIO_Periph.GPIO_OE_Set := Mask_DATA;
-
-   end loop;
+Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
+            Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
+            Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
+            Unsigned_32 (Read_gSPI_Byte);
 
    return Result;
 
 end Read_gSPI_Word32;
 
 procedure Write_gSPI_Byte (Data : Unsigned_8) is
-   Periph : SIO_Peripheral;
    Temp   : Unsigned_8 := Data;
 begin
+      SIO_Periph.GPIO_OUT_CLR := Mask_CS; -- Assert CS Low to select CYW43439
    --  Send MSB first
    for Bit in 1 .. 8 loop
-      Periph.GPIO_OUT_CLR := Mask_CLK;
       if (Temp and 16#80#) /= 0 then
-         Periph.GPIO_OUT_SET := Mask_DATA;
+         SIO_Periph.GPIO_OUT_SET := Mask_DATA;
       else
-         Periph.GPIO_OUT_CLR := Mask_DATA;
+         SIO_Periph.GPIO_OUT_CLR := Mask_DATA;
       end if;
 
+      SIO_Periph.GPIO_OUT_SET := Mask_CLK;
       Wait (Microseconds (2)); -- Stable bit hold period
-      Periph.GPIO_OUT_SET := Mask_CLK; 
+      SIO_Periph.GPIO_OUT_CLR := Mask_CLK; 
       Temp := Shift_Left (Temp, 1);
       Wait (Microseconds (2));
    end loop;
+         SIO_Periph.GPIO_OUT_SET := Mask_CS; -- Deassert CS High to deselect CYW43439
 
 end Write_gSPI_Byte;
 
