@@ -25,8 +25,10 @@ begin
       SIO_Periph.GPIO_OUT_CLR := Mask_CLK;
       Wait (Microseconds (2));
       Result := Shift_Left (Result, 1);
-      --  Read the pin status out of the SIO peheral's live hardware state register
+      --  Read the pin status out of the SIO periheral's live hardware state register
       --  GPIO_IN has the input value for GPIO0...31.
+      --  Mask_DATA selects the bit for GPIO24 (the DATA line) and
+      --  shifts it into the LSB of Result.
       if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
          Result := Result or 16#01#;
       end if;
@@ -44,10 +46,13 @@ function Read_gSPI_Word32 return Unsigned_32 is
    use RP2350.SIO;
    Result : Unsigned_32 := 0;
 begin
+--  Relinquish host drive so the CYW43439 can modulate the line
+SIO_Periph.GPIO_OE_CLR := Mask_DATA; 
 Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
             Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
             Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
             Unsigned_32 (Read_gSPI_Byte);
+SIO_Periph.GPIO_OE_SET := Mask_DATA; 
 
    return Result;
 

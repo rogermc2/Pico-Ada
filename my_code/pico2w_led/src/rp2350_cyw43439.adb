@@ -29,43 +29,46 @@ package body RP2350_CYW43439 is
    pragma Pack (SPI_Response);
 
    -- Bitmasks
-   Mask_REG_ON   : constant uint32 := 16#0080_0000#;
-   Mask_DATA     : constant uint32 := 16#0100_0000#;
-   Mask_CS       : constant uint32 := 16#0200_0000#;
-   Mask_CLK      : constant uint32 := 16#2000_0000#;
-   All_Pins_Mask : constant uint32 := 16#2380_0000#;
+   Mask_REG_ON     : constant uint32 := 16#0080_0000#;
+   Mask_DATA       : constant uint32 := 16#0100_0000#;
+   Mask_CS         : constant uint32 := 16#0200_0000#;
+   Mask_CLK        : constant uint32 := 16#2000_0000#;
+   All_Pins_Mask   : constant uint32 := 16#2380_0000#;
 
-   function Check_Chip_Communication return Unsigned_32 is  
-      use RP2350.SIO;
-      Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
-      Result      : Unsigned_32 := 0;
-   begin
-      SIO_Periph.GPIO_OUT_CLR := Mask_CS;
-      -- Send Read Request Header
-      Write_gSPI_Word32 (Read_Header);
+   WL_GPIO_LED_PIN : constant uint32 := 0;
 
-      -- Enforce turnaround delay for hardware line direction swap
-      Wait (Milliseconds (5));
+   --  function Check_Chip_Communication return Unsigned_32 is  
+   --     use RP2350.SIO;
+   --     Read_Header : constant Unsigned_32 := Shift_Left(16#0014#, 11) or 4;
+   --     Result      : Unsigned_32 := 0;
+   --  begin
+   --     SIO_Periph.GPIO_OUT_CLR := Mask_CS;
+   --     -- Send Read Request Header
+   --     Write_gSPI_Word32 (Read_Header);
 
-      -- Read 4 bytes back from the chip
-      Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
-               Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
-               Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
-               Unsigned_32 (Read_gSPI_Byte);
+   --     -- Enforce turnaround delay for hardware line direction swap
+   --     Wait (Milliseconds (5));
 
-      SIO_Periph.GPIO_OUT_SET := Mask_CS;
+   --     -- Read 4 bytes back from the chip
+   --     Result := Shift_Left (Unsigned_32 (Read_gSPI_Byte), 24) or
+   --              Shift_Left (Unsigned_32 (Read_gSPI_Byte), 16) or
+   --              Shift_Left (Unsigned_32 (Read_gSPI_Byte), 8)  or
+   --              Unsigned_32 (Read_gSPI_Byte);
 
-      return Result;
+   --     SIO_Periph.GPIO_OUT_SET := Mask_CS;
 
-   end Check_Chip_Communication;
+   --     return Result;
+
+   --  end Check_Chip_Communication;
    
    procedure Initialize_gSPI is
       use RP2350;
       use RP2350.IO_BANK0;
       use RP2350.SIO;
-      Wake_Header   : constant Unsigned_32 :=
-      16#8000_0000# or Shift_Left(16#00A2#, 11) or 1;
+      --  Wake_Header   : constant Unsigned_32 :=
+      --  16#8000_0000# or Shift_Left(16#00A2#, 11) or 1;
    begin
+      SIO_Periph.GPIO_OUT_CLR:= 16#FFFF#;
       -- 1. Route pins to SIO function (Function 5 on RP2350)
       IO_BANK0_Periph.GPIO23_CTRL.FUNCSEL := IO_BANK0.siob_proc_23;
       IO_BANK0_Periph.GPIO24_CTRL.FUNCSEL := IO_BANK0.siob_proc_24;
@@ -90,19 +93,19 @@ package body RP2350_CYW43439 is
       SIO_Periph.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
       --  5. Cycle physical hardware power to CYW43439
       --  Clear output value to 0 for REG_ON pin.
-      SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
-      Wait (Milliseconds (50));
+      --  SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
+      --  Wait (Milliseconds (50));
 
       --  Set output value back to 1 for REG_ON pin.
-      SIO_Periph.GPIO_OUT_SET :=  Mask_REG_ON;  --  0x800000
+      --  SIO_Periph.GPIO_OUT_SET :=  Mask_REG_ON;  --  0x800000
       --  Wait for internal wireless boot ROM to execute
       Wait (Milliseconds (250));
 
       --  6. Execute clock wake frame over the bus
-      SIO_Periph.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
-      Write_gSPI_Word32 (Wake_Header);
-      Write_gSPI_Byte (2);  --  Request active HT internal clock
-      SIO_Periph.GPIO_OUT_SET := Mask_CS;  --  0x2000000
+      --  SIO_Periph.GPIO_OUT_CLR := Mask_CS;  --  0x2000000
+      --  Write_gSPI_Word32 (Wake_Header);
+      --  Write_gSPI_Byte (2);  --  Request active HT internal clock
+      --  SIO_Periph.GPIO_OUT_SET := Mask_CS;  --  0x2000000
 
    end Initialize_gSPI;
 
@@ -154,7 +157,7 @@ package body RP2350_CYW43439 is
 
    end Read_gSPI_Byte;
 
-    procedure Write_gSPI_Word32 (Value : Unsigned_32) is
+   procedure Write_gSPI_Word32 (Value : Unsigned_32) is
    begin
       -- Split the 32-bit word into 4 bytes (MSB first) and stream them
       Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
@@ -186,6 +189,16 @@ package body RP2350_CYW43439 is
                          4;                                -- Length of payload (4 Bytes)
       Payload_Value  : Unsigned_32 := 0;
    begin
+      -- Cycle CYW43439 power
+      --  Clear output value to 0 for REG_ON pin.
+      SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000
+      Wait (Milliseconds (50));
+
+      --  Set output value back to 1 for REG_ON pin.
+      SIO_Periph.GPIO_OUT_SET :=  Mask_REG_ON;  --  0x800000
+      --  Wait for internal wireless boot ROM to execute
+      Wait (Milliseconds (250));
+      
       --  Determine payload state for WL_GPIO0
       if Enable then
          Payload_Value := 1; --  Drive WL_GPIO0 High (LED On)
