@@ -1,4 +1,4 @@
-name = "cyw43439"
+name = "cyw43439_wakeup"
 description = ""
 version = "0.1.0-dev"
 
@@ -8,7 +8,7 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
-executables = ["cyw43439_setup"]
+executables = ["wakeup"]
 
 [[depends-on]]
 light_tasking_rp2350 = "*"

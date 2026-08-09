@@ -23,7 +23,7 @@ begin
    Build_SPI_Frame(Wake_Command, Payload => 16#01#, Buffer => TX_Buffer);
 
    -- TX_Buffer now contains: [16#D2#, 16#00#, 16#1C#, 16#01#, 16#01#]
-   -- Send TX_Buffer over your SPI peripheral here!
+   -- Send TX_Buffer over youther SPI peripheral here!
 
    loop
       Set_Onboard_LED (True);  -- Turn LED On

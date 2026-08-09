@@ -2,7 +2,6 @@ package body CYW43439_Driver is
 
    procedure Build_SPI_Frame (Header : GSPI_Header;  Payload : Unsigned_8;
                               Buffer  : out U8_Array)  is
-      -- We will construct a mathematical 32-bit register template
       Command_Word : Unsigned_32 := 0;
       
       Func_Val : constant Unsigned_32 := 
@@ -11,7 +10,7 @@ package body CYW43439_Driver is
            when Function_1_Backplane => 1, 
            when Function_2_WLAN      => 2);
    begin
-      -- 1. Mathematically position the bits exactly where the CYW43439 wants them
+      -- 1. Position the bits exactly where the CYW43439 wants them
       if Header.Write_Access then
          Command_Word := Command_Word or Shift_Left (1, 31);
       end if;

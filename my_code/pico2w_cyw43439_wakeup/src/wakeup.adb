@@ -1,0 +1,26 @@
+
+with Interfaces; use Interfaces;
+
+with Ada.Real_Time; use Ada.Real_Time;
+
+with RP2350_CYW43439; use RP2350_CYW43439;
+with CYW43439_driver; use CYW43439_driver;
+
+procedure Wakeup is
+   Chip_Click_CSR : constant Unsigned_32 := 16#1000E#;
+   Wake_Command   : constant GSPI_Header :=
+    (Write_Access => True, Auto_Inc  => True, Func  => Function_1_Backplane,
+      Address      => Chip_Click_CSR, Length => 1);
+   TX_Buffer    : U8_Array (1 .. 5);
+   Test_Val     : Unsigned_32;
+begin
+   Initialize_gSPI;
+   Build_SPI_Frame (Wake_Command, Payload => 1, Buffer => TX_Buffer);
+
+   --  Test_Val := Check_Chip_Communication; 
+
+   loop
+      null;
+   end loop;
+   
+end Wakeup;
