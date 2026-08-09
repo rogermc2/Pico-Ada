@@ -1,7 +1,6 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 
-with RP2350; use RP2350;
 with RP2350.PADS_BANK0;
 with RP2350.IO_BANK0;
 with RP2350.SIO; use RP2350.SIO;
@@ -9,13 +8,6 @@ with RP2350.SPI0;
 with Utilities;
 
 package body CYW43439_Driver is
-
-   -- Bitmasks
-   Mask_REG_ON   : constant UInt32 := 16#0080_0000#;
-   Mask_DATA     : constant UInt32 := 16#0100_0000#;
-   Mask_CS       : constant UInt32 := 16#0200_0000#;
-   Mask_CLK      : constant UInt32 := 16#2000_0000#;
-   All_Pins_Mask : constant UInt32 := 16#2380_0000#;
 
    procedure Build_SPI_Frame (Header : GSPI_Header;  Payload : Unsigned_8;
                               Buffer  : out U8_Array)  is
@@ -104,11 +96,13 @@ package body CYW43439_Driver is
    end Initialize_WLAN_Power;
 
    procedure Perform_WLAN_Wakeup is
+      --  SBSDIO_FUNC1_CHIPCLKCSR address = 0x1000E
+      CHIPCLKCSR   : constant Unsigned_32 := 16#1000E#;
       Wake_Command : constant CYW43439_Driver.GSPI_Header := 
       (Write_Access => True,
          Auto_Inc     => True,
          Func         => CYW43439_Driver.Function_1_Backplane,
-         Address      => 16#1000E#, -- SBSDIO_FUNC1_CHIPCLKCSR register
+         Address      => CHIPCLKCSR,
          Length       => 1);
       TX_Frame     : U8_Array (1 .. 5);    
    begin

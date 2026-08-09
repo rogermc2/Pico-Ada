@@ -16,6 +16,7 @@ procedure Wakeup is
 begin
    Initialize_gSPI;
    Build_SPI_Frame (Wake_Command, Payload => 1, Buffer => TX_Buffer);
+   SPI0_Transmit_Buffer (TX_Buffer);
 
    --  Test_Val := Check_Chip_Communication; 
 
