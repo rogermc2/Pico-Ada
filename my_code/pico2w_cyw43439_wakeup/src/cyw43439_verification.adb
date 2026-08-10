@@ -18,31 +18,6 @@ package body CYW43439_Verification is
    Mask_CS       : constant UInt32 := 16#0200_0000#;
    Mask_CLK      : constant UInt32 := 16#2000_0000#;
    All_Pins_Mask : constant UInt32 := 16#2380_0000#;
-   
-procedure Boot_And_Verify_WLAN is
-   Is_Alive : Boolean := False;
-   Attempts : Natural := 0;
-begin
-   -- Trigger power line and send the wake bit (0x1000E => 0x01)
-   Perform_WLAN_Wakeup;
-
-   -- Poll the test register until it responds with the correct signature
-   while not Is_Alive and Attempts < 100 loop
-      Is_Alive := Verify_Chip_Communication;
-      if not Is_Alive then
-         Wait (Ada.Real_Time.Milliseconds (2));
-         Attempts := Attempts + 1;
-      end if;
-   end loop;
-
-   --  if Is_Alive then
-   --     -- SPI Bus is synced and big/little endian translations are working perfectly!
-   --     Print_Line ("CYW43439 Wakeup Verification: SUCCESS.");
-   --  else
-   --     Print_Line ("CYW43439 Wakeup Verification: FAILED. Check wiring or SPI clock phase.");
-   --  end if;
-
-end Boot_And_Verify_WLAN;
 
    --  Low-level SPI transceiver helper that sends a byte and reads the response
    function SPI0_Transfer_Byte (Value : Unsigned_8) return Unsigned_8 is
@@ -64,7 +39,6 @@ end Boot_And_Verify_WLAN;
       return Unsigned_8 (SPI0_Periph.SSPDR.DATA);
 
    end SPI0_Transfer_Byte;
-
 
    function Verify_Chip_Communication return Boolean is
       Header             : GSPI_Header;
