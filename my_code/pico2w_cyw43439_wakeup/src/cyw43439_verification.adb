@@ -21,7 +21,6 @@ begin
    -- Poll the test register until it responds with the correct signature
    while not Is_Alive and Attempts < 100 loop
       Is_Alive := Verify_Chip_Communication;
-      
       if not Is_Alive then
          Wait (Ada.Real_Time.Milliseconds (2));
          Attempts := Attempts + 1;

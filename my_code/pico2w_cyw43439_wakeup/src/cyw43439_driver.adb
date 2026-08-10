@@ -76,6 +76,7 @@ package body CYW43439_Driver is
       -- Match the specific WL_REG_ON pin assigned on the Pico 2 W schematic
       WL_REG_ON_Pin : constant Natural := 24; 
    begin
+      SIO_Periph.GPIO_OUT_CLR := All_Pins_Mask;
       -- 1. Enable output drive capability on the Pad
       PADS_BANK0_Periph.GPIO24.IE := 1;
       PADS_BANK0_Periph.GPIO24.PDE := 0;
