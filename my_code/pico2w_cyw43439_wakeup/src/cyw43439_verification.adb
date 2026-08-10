@@ -7,10 +7,18 @@ with RP2350.SIO; use RP2350.SIO;
 with RP2350.SPI0; use RP2350.SPI0;
 
 with cyw43439_driver; use cyw43439_driver;
-with RP2350_CYW43439; use RP2350_CYW43439;
+
+with Utilities; use Utilities;
 
 package body CYW43439_Verification is
 
+   -- Bitmasks
+   Mask_REG_ON   : constant UInt32 := 16#0080_0000#;
+   Mask_DATA     : constant UInt32 := 16#0100_0000#;
+   Mask_CS       : constant UInt32 := 16#0200_0000#;
+   Mask_CLK      : constant UInt32 := 16#2000_0000#;
+   All_Pins_Mask : constant UInt32 := 16#2380_0000#;
+   
 procedure Boot_And_Verify_WLAN is
    Is_Alive : Boolean := False;
    Attempts : Natural := 0;

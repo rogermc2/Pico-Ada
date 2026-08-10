@@ -7,7 +7,9 @@ with RP2350.PADS_BANK0;
 with RP2350.IO_BANK0;
 with RP2350.SIO; use RP2350.SIO;
 with RP2350.SPI0;
-with Utilities;
+
+with CYW43_Bitbang; use CYW43_Bitbang;
+with Utilities; use Utilities;
 
 package body CYW43439_Driver is
 
@@ -44,6 +46,38 @@ package body CYW43439_Driver is
       -- 3. Append the data payload byte
       Buffer (5) := Payload;                                                -- Sent 5th
    end Build_SPI_Frame;
+
+   procedure Execute_W_Wakeup is
+      CHIPCLKCSR   : constant Unsigned_32 := 16#1000E#;
+      Wake_Command : constant GSPI_Header :=
+       (Write_Access => True,  Auto_Inc => True,  Func  => Function_1_Backplane,
+        Address      => CHIPCLKCSR, Length => 1);
+      TX_Frame : U8_Array (1 .. 5);
+   begin
+      -- 1. Set data pins initial directions and force clock/CS to idle state
+      SIO_Periph.GPIO_OE_SET  := Mask_REG_ON or Mask_CS or Mask_CLK;
+      SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock idles Low (Mode 0)
+      SIO_Periph.GPIO_OUT_SET := Mask_CS;  -- CS idles High (Active Low)
+
+      -- 2. Hardware Power-Up sequence 
+      SIO_Periph.GPIO_OUT_SET := Mask_REG_ON;
+      Wait (Milliseconds (50)); -- Wait for chip PMU
+
+      -- 3. Standardize your big-endian packet fields
+      Build_SPI_Frame (Wake_Command, Payload => 16#01#, Buffer => TX_Frame);
+
+      -- 4. Execute Transaction Frame
+      SIO_Periph.GPIO_OUT_CLR := Mask_CS; -- Select Chip
+      Wait (Milliseconds (1)); -- Ensure CS is stable before clocking data
+
+      for I in 1 .. 5 loop
+         CYW43_Bitbang.Send_Byte (TX_Frame (I));
+      end loop;
+      Wait (Milliseconds (1));
+   
+      SIO_Periph.GPIO_OUT_SET := Mask_CS; -- Deselect Chip
+
+   end Execute_W_Wakeup;
 
    procedure Initialize_SPI0_Master (Baudrate_Clock_Div : Interfaces.Unsigned_32) is
       use RP2350.CLOCKS;
@@ -152,24 +186,24 @@ package body CYW43439_Driver is
 
          -- 3. Wait for the transaction to clear and fill the RX FIFO 
          -- (RNE = Receive FIFO Not Empty)
-         --  while SPI0_Periph.SSPSR.RNE = 0 loop
-         --     null; -- Polling busy wait loop
+         while SPI0_Periph.SSPSR.RNE = 0 loop
+            null; -- Polling busy wait loop
             -- Add a diagnostic breakdown inside your loop
-            declare
-               Timeout : Natural := 0;
-            begin
-               while SPI0_Periph.SSPSR.RNE = 0 loop
-                  Timeout := Timeout + 1;
-                  if Timeout > 100_000 then
-                     -- Capture the raw status flags of the peripheral
-                     -- Check if TNF (FIFO Not Full) or BSY (Busy) are locked
-                     --  Print_Diagnostic(Unsigned_32(SPI0_Periph.SSPSR));
-                     raise Program_Error with "SPI Hardware Stalled";
-                  end if;
-               end loop;
-            end;
+            --  declare
+            --     Timeout : Natural := 0;
+            --  begin
+            --     while SPI0_Periph.SSPSR.RNE = 0 loop
+            --        Timeout := Timeout + 1;
+            --        if Timeout > 100_000 then
+            --           -- Capture the raw status flags of the peripheral
+            --           -- Check if TNF (FIFO Not Full) or BSY (Busy) are locked
+            --           --  Print_Diagnostic(Unsigned_32(SPI0_Periph.SSPSR));
+            --           raise Program_Error with "SPI Hardware Stalled";
+            --        end if;
+            --     end loop;
+            --  end;
 
-         --  end loop;
+         end loop;
 
          -- 4. Flush the receiving byte register to prevent FIFO lock up
          Dummy_Read := Unsigned_32 (SPI0_Periph.SSPDR.DATA);
