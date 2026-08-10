@@ -8,6 +8,8 @@ with RP2350.IO_BANK0;
 with RP2350.PADS_BANK0;
 with RP2350.SIO;
 
+with cyw43_bitbang; use cyw43_bitbang;
+
 package body RP2350_CYW43439 is
 
    type SPI_Command is record
@@ -109,62 +111,67 @@ package body RP2350_CYW43439 is
 
    end Initialize_gSPI;
 
-   procedure Write_gSPI_Byte (Data : Unsigned_8) is
-      use RP2350.SIO;
-      Temp  : Unsigned_8 := Data;
-   begin
-      -- Send MSB First
-      for Bit in 1 .. 8 loop
-         SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
-         if (Temp and 16#80#) /= 0 then
-            SIO_Periph.GPIO_OUT_SET := Mask_DATA;
-         else
-            SIO_Periph.GPIO_OUT_CLR := Mask_DATA;
-         end if;
+   --  procedure Write_gSPI_Byte (Data : Unsigned_8) is
+   --     use RP2350.SIO;
+   --     Temp  : Unsigned_8 := Data;
+   --  begin
+   --     -- Send MSB First
+   --     for Bit in 1 .. 8 loop
+   --        SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
+   --        if (Temp and 16#80#) /= 0 then
+   --           SIO_Periph.GPIO_OUT_SET := Mask_DATA;
+   --        else
+   --           SIO_Periph.GPIO_OUT_CLR := Mask_DATA;
+   --        end if;
 
-         -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
-         Wait (Microseconds (5));
-         -- Clock High (CYW43439 samples on rising edge)
-         SIO_Periph.GPIO_OUT_SET := Mask_CLK;
-         Temp := Shift_Left (Temp, 1);
-         Wait (Microseconds (5));
-      end loop;
+   --        -- Brief delay matching CYW43439 timing constraints (up to 33MHz limit)
+   --        Wait (Microseconds (5));
+   --        -- Clock High (CYW43439 samples on rising edge)
+   --        SIO_Periph.GPIO_OUT_SET := Mask_CLK;
+   --        Temp := Shift_Left (Temp, 1);
+   --        Wait (Microseconds (5));
+   --     end loop;
 
-   end Write_gSPI_Byte;
+   --  end Write_gSPI_Byte;
 
-   function Read_gSPI_Byte return Unsigned_8 is
-      use RP2350.SIO;
-      Result : Unsigned_8 := 0;
-   begin
-      -- Relinquish host drive control so CYW43439 can transmit
-      SIO_Periph.GPIO_OE_CLR := Mask_DATA;
-      for Bit_Num in 1 .. 8 loop
-         SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
-         Wait (Microseconds (5));
-         SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Clock High
-         --  Shift tracking register to make room for next incoming bit
-         Result := Shift_Left (Result, 1);
-         --  Capture pin level from hardware input
-         if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
-            -- Push 1 into LSB of result
-            Result := Result or 16#01#;
-         end if;
+   --  function Read_gSPI_Byte return Unsigned_8 is
+   --     use RP2350.SIO;
+   --     Result : Unsigned_8 := 0;
+   --  begin
+   --     -- Relinquish host drive control so CYW43439 can transmit
+   --     SIO_Periph.GPIO_OE_CLR := Mask_DATA;
+   --     for Bit_Num in 1 .. 8 loop
+   --        SIO_Periph.GPIO_OUT_CLR := Mask_CLK; -- Clock Low
+   --        Wait (Microseconds (5));
+   --        SIO_Periph.GPIO_OUT_SET := Mask_CLK; -- Clock High
+   --        --  Shift tracking register to make room for next incoming bit
+   --        Result := Shift_Left (Result, 1);
+   --        --  Capture pin level from hardware input
+   --        if (SIO_Periph.GPIO_IN and Mask_DATA) /= 0 then
+   --           -- Push 1 into LSB of result
+   --           Result := Result or 16#01#;
+   --        end if;
 
-         Wait (Microseconds (5));
-      end loop;
+   --        Wait (Microseconds (5));
+   --     end loop;
 
-      return Result;
+   --     return Result;
 
-   end Read_gSPI_Byte;
+   --  end Read_gSPI_Byte;
 
    procedure Write_gSPI_Word32 (Value : Unsigned_32) is
    begin
       -- Split the 32-bit word into 4 bytes (MSB first) and stream them
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 16) and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
-      Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 16) and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
+      --  Write_gSPI_Byte (Unsigned_8 (Value and 16#FF#));
 
+      Send_Byte (Unsigned_8 (Shift_Right (Value, 24) and 16#FF#));
+      Send_Byte (Unsigned_8 (Shift_Right (Value, 16) and 16#FF#));
+      Send_Byte (Unsigned_8 (Shift_Right (Value, 8)  and 16#FF#));
+      Send_Byte (Unsigned_8 (Value and 16#FF#));
+      
    end Write_gSPI_Word32;
 
    procedure Set_Onboard_LED (Enable : Boolean) is

@@ -1,6 +1,8 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 
+with RP2350.CLOCKS;
+with RP2350.RESETS;
 with RP2350.PADS_BANK0;
 with RP2350.IO_BANK0;
 with RP2350.SIO; use RP2350.SIO;
@@ -44,10 +46,16 @@ package body CYW43439_Driver is
    end Build_SPI_Frame;
 
    procedure Initialize_SPI0_Master (Baudrate_Clock_Div : Interfaces.Unsigned_32) is
-   use RP2350.SPI0;
+      use RP2350.CLOCKS;
+      use RP2350.RESETS;
+      use RP2350.SPI0;
    begin
       -- 1. Disable the SPI block to safely change configuration parameters
       SPI0_Periph.SSPCR1.SSE := 0;
+      -- Pseudo-SVD check: Ensure CLK_PERI is attached to system clock (e.g., clk_sys)
+      CLOCKS_Periph.CLK_PERI_CTRL.ENABLE := 1;
+      RESETS_Periph.RESET.SPI.Val := 0; -- Ensure SPI0 is released from reset state
+      --  RESETS_Periph.RESET.SPI0 := 0; -- Ensure SPI0 is released from reset state
 
       -- 2. Configure Control Register 0 (SSPCR0)
       -- DSS = 16#7# -> 8-bit data size
@@ -77,6 +85,7 @@ package body CYW43439_Driver is
       WL_REG_ON_Pin : constant Natural := 24; 
    begin
       SIO_Periph.GPIO_OUT_CLR := All_Pins_Mask;
+      SIO_Periph.GPIO_OE_CLR := All_Pins_Mask;
       -- 1. Enable output drive capability on the Pad
       PADS_BANK0_Periph.GPIO24.IE := 1;
       PADS_BANK0_Periph.GPIO24.PDE := 0;
@@ -127,6 +136,11 @@ package body CYW43439_Driver is
       use RP2350.SPI0;
       Dummy_Read : Unsigned_32;
    begin
+      --  Flush any phantom leftover data in the RX FIFO before starting
+      while SPI0_Periph.SSPSR.RNE = 1 loop
+         Dummy_Read := Unsigned_32 (SPI0_Periph.SSPDR.DATA);
+      end loop;
+
       for I in Buffer'Range loop       
          -- 1. Wait until Transmit FIFO has space (TNF = Transmit FIFO Not Full)
          while SPI0_Periph.SSPSR.TNF = 0 loop
@@ -138,9 +152,24 @@ package body CYW43439_Driver is
 
          -- 3. Wait for the transaction to clear and fill the RX FIFO 
          -- (RNE = Receive FIFO Not Empty)
-         while SPI0_Periph.SSPSR.RNE = 0 loop
-            null; -- Polling busy wait loop
-         end loop;
+         --  while SPI0_Periph.SSPSR.RNE = 0 loop
+         --     null; -- Polling busy wait loop
+            -- Add a diagnostic breakdown inside your loop
+            declare
+               Timeout : Natural := 0;
+            begin
+               while SPI0_Periph.SSPSR.RNE = 0 loop
+                  Timeout := Timeout + 1;
+                  if Timeout > 100_000 then
+                     -- Capture the raw status flags of the peripheral
+                     -- Check if TNF (FIFO Not Full) or BSY (Busy) are locked
+                     --  Print_Diagnostic(Unsigned_32(SPI0_Periph.SSPSR));
+                     raise Program_Error with "SPI Hardware Stalled";
+                  end if;
+               end loop;
+            end;
+
+         --  end loop;
 
          -- 4. Flush the receiving byte register to prevent FIFO lock up
          Dummy_Read := Unsigned_32 (SPI0_Periph.SSPDR.DATA);
