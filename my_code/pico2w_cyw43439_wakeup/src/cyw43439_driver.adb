@@ -72,6 +72,7 @@ package body CYW43439_Driver is
    use RP2350.PADS_BANK0;
    use RP2350.IO_BANK0;
    use RP2350.SPI0;
+   
       -- Match the specific WL_REG_ON pin assigned on the Pico 2 W schematic
       WL_REG_ON_Pin : constant Natural := 24; 
    begin
@@ -98,12 +99,9 @@ package body CYW43439_Driver is
    procedure Perform_WLAN_Wakeup is
       --  SBSDIO_FUNC1_CHIPCLKCSR address = 0x1000E
       CHIPCLKCSR   : constant Unsigned_32 := 16#1000E#;
-      Wake_Command : constant CYW43439_Driver.GSPI_Header := 
-      (Write_Access => True,
-         Auto_Inc     => True,
-         Func         => CYW43439_Driver.Function_1_Backplane,
-         Address      => CHIPCLKCSR,
-         Length       => 1);
+      Wake_Command : constant GSPI_Header := 
+       (Write_Access => True, Auto_Inc => True, Func  => Function_1_Backplane, 
+         Address => CHIPCLKCSR, Length => 1);
       TX_Frame     : U8_Array (1 .. 5);    
    begin
       -- 1. Energize the CYW43439 using your SIO pin initialization code
@@ -116,7 +114,7 @@ package body CYW43439_Driver is
       Initialize_SPI0_Master (Baudrate_Clock_Div => 12); -- Choose divider for your core clock
 
       -- 4. Calculate your Endian-Safe Wire Frame Buffer
-      CYW43439_Driver.Build_SPI_Frame (Wake_Command, Payload => 1, Buffer => TX_Frame);
+      Build_SPI_Frame (Wake_Command, Payload => 1, Buffer => TX_Frame);
 
       -- 5. Push data packets straight down the physical wire
       SPI0_Transmit_Buffer (TX_Frame);

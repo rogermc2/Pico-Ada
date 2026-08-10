@@ -1,24 +1,61 @@
 
+with Ada.Real_Time;
 with Interfaces; use Interfaces;
 
+with RP2350; use RP2350;
 with RP2350.SIO; use RP2350.SIO;
 with RP2350.SPI0; use RP2350.SPI0;
 
+with cyw43439_driver; use cyw43439_driver;
+with RP2350_CYW43439; use RP2350_CYW43439;
+
 package body CYW43439_Verification is
+
+procedure Boot_And_Verify_WLAN is
+   Is_Alive : Boolean := False;
+   Attempts : Natural := 0;
+begin
+   -- Trigger power line and send the wake bit (0x1000E => 0x01)
+   Perform_WLAN_Wakeup;
+
+   -- Poll the test register until it responds with the correct signature
+   while not Is_Alive and Attempts < 100 loop
+      Is_Alive := Verify_Chip_Communication;
+      
+      if not Is_Alive then
+         Wait (Ada.Real_Time.Milliseconds (2));
+         Attempts := Attempts + 1;
+      end if;
+   end loop;
+
+   --  if Is_Alive then
+   --     -- SPI Bus is synced and big/little endian translations are working perfectly!
+   --     Print_Line ("CYW43439 Wakeup Verification: SUCCESS.");
+   --  else
+   --     Print_Line ("CYW43439 Wakeup Verification: FAILED. Check wiring or SPI clock phase.");
+   --  end if;
+
+end Boot_And_Verify_WLAN;
+
    --  Low-level SPI transceiver helper that sends a byte and reads the response
    function SPI0_Transfer_Byte (Value : Unsigned_8) return Unsigned_8 is
    begin
       -- Wait for room in TX FIFO
-      while SPI0_Periph.SSPSR.TNF = 0 loop null; end loop;
-      
+      while SPI0_Periph.SSPSR.TNF = 0 loop
+         null;
+      end loop;
+    
       -- Send byte
       SPI0_Periph.SSPDR.DATA := SSPDR_DATA_Field (Value);
-      
+   
       -- Wait for response in RX FIFO
-      while SPI0_Periph.SSPSR.RNE = 0 loop null; end loop;
+      while SPI0_Periph.SSPSR.RNE = 0 loop
+       null;
+      end loop;
       
       -- Return captured byte
       return Unsigned_8 (SPI0_Periph.SSPDR.DATA);
+
    end SPI0_Transfer_Byte;
 
 

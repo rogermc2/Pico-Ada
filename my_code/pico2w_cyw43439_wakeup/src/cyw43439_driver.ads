@@ -27,6 +27,7 @@ package CYW43439_Driver is
 
    procedure Build_SPI_Frame (Header : GSPI_Header;  Payload : Unsigned_8;
                               Buffer  : out U8_Array);
+   procedure Perform_WLAN_Wakeup;
    procedure SPI0_Transmit_Buffer (Buffer : U8_Array);
 
 end CYW43439_Driver;
