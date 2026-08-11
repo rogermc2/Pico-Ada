@@ -91,6 +91,7 @@ package body RP2350_CYW43439 is
       --  4. Set idle state, Cycle physical Power to the CYW43439
       --  Set output value to 1 for CS and REG_ON pins.
       SIO_Periph.GPIO_OUT_SET := Mask_CS or Mask_REG_ON;  --   0x2800000
+      
       --  5. Cycle physical hardware power to CYW43439
       --  Clear output value to 0 for REG_ON pin.
       --  SIO_Periph.GPIO_OUT_CLR := Mask_REG_ON;  --  0x800000

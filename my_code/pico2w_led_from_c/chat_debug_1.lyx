@@ -1,0 +1,296 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children no
+\language english
+\language_package none
+\inputencoding auto-legacy
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 10mm
+\topmargin 10mm
+\rightmargin 10mm
+\bottommargin 15mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Harnessing the VS Code SVD View
+\end_layout
+
+\begin_layout Standard
+To verify that the compiler isn't dropping write operations or operating on temporary local copies:
+\end_layout
+
+\begin_layout Standard
+1.
+ Look at the VS Code Debug pane on the left-hand sidebar during an active breakpoint.
+\end_layout
+
+\begin_layout Standard
+2.
+ If a standard cortex-debug extension is installed look for the Cortex Peripherals or X域 (SVD) Variables view.
+\end_layout
+
+\begin_layout Standard
+3.
+ Expand SIO → GPIO_OE and GPIO_OUT.
+\end_layout
+
+\begin_layout Standard
+4.
+ Step over Initialize_gSPI.
+ 
+\begin_inset Newline newline
+\end_inset
+
+If those fields do not visually light up with the target masks it confirms that the SVD variable initialization statement is modifying local stack memory instead of absolute register memory.
+ [1,
+ 2] 
+\end_layout
+
+\begin_layout Section
+Ensuring Volatile Assignment
+\end_layout
+
+\begin_layout Standard
+If you step code in the VS Code debugger and watch fields inside RP.SIO.Periph fail to update,
+ it means you need to avoid "Read-Modify-Write" record structures that confuse the compiler's optimizer.
+\end_layout
+
+\begin_layout Standard
+Instead of passing record structures by value,
+ modify fields by forcing direct absolute whole-word writes to the .all memory location,
+ or use the atomic register fields exposed by the SVD.
+\end_layout
+
+\begin_layout Standard
+For example,
+ update your Write_gSPI_Byte loop inside your body file to write directly to the SVD's raw addresses:
+\end_layout
+
+\begin_layout Standard
+procedure Write_gSPI_Byte (Data :
+ Unsigned_8) is
+\end_layout
+
+\begin_layout Standard
+Temp :
+ Unsigned_8 := Data;
+\end_layout
+
+\begin_layout Standard
+begin
+\end_layout
+
+\begin_layout Standard
+for Bit in 1 ..
+ 8 loop
+\end_layout
+
+\begin_layout Standard
+-- Clear SCLK line
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR.all := Mask_CLK;
+\end_layout
+
+\begin_layout Standard
+-- Set or Clear DATA line
+\end_layout
+
+\begin_layout Standard
+if (Temp and 16#80#) /= 0 then
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET.all := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+else
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_CLR.all := Mask_DATA;
+\end_layout
+
+\begin_layout Standard
+end if;
+\end_layout
+
+\begin_layout Standard
+-- Use your working hardware timer counter for stable timing tracking
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (2);
+\end_layout
+
+\begin_layout Standard
+-- Raise SCLK line
+\end_layout
+
+\begin_layout Standard
+RP.SIO.Periph.GPIO_OUT_SET.all := Mask_CLK;
+ 
+\end_layout
+
+\begin_layout Standard
+Temp := Shift_Left (Temp,
+ 1);
+\end_layout
+
+\begin_layout Standard
+Delay_Microseconds (2);
+\end_layout
+
+\begin_layout Standard
+end loop;
+\end_layout
+
+\begin_layout Standard
+end Write_gSPI_Byte;
+\end_layout
+
+\begin_layout Section
+Your Diagnostic Next Step
+\end_layout
+
+\begin_layout Standard
+With the debugger working,
+ place a breakpoint immediately on the line inside Read_gSPI_Byte:
+\end_layout
+
+\begin_layout Standard
+if (RP.SIO.Periph.GPIO_IN.all and Mask_DATA) /= 0 then
+\end_layout
+
+\begin_layout Standard
+1.
+ Look at the Variables watch pane in VS Code.
+\end_layout
+
+\begin_layout Standard
+2.
+ Hover over RP.SIO.Periph.GPIO_IN.all.
+\end_layout
+
+\begin_layout Standard
+3.
+ Does it show an active 32-bit hex integer now,
+ or is it completely 0?
+\end_layout
+
+\begin_layout Standard
+4.
+ Look at RP.PADS_BANK0.Periph.GPIO(24).
+ Ensure that the IE (Input Enable) bit field reads as 1 in the visual tree window.
+ [3] 
+\end_layout
+
+\begin_layout Standard
+Now that you can see what the code is doing,
+ what raw value does VS Code show inside the GPIO_IN register when you step into the read loop?
+\end_layout
+
+\begin_layout Standard
+[1] [https://www.syncfusion.com](https://www.syncfusion.com/blogs/post/javascript-debugging-vs-code-chrome)
+\end_layout
+
+\begin_layout Standard
+[2] [https://www.designnews.com](https://www.designnews.com/embedded-systems/3-visual-studio-code-extensions-embedded-developers-can-t-live-without)
+\end_layout
+
+\begin_layout Standard
+[3] [https://blog.sentry.io](https://blog.sentry.io/debugging-python-with-vs-code-and-sentry/)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document

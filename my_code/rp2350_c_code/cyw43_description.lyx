@@ -113,7 +113,11 @@ Calling cyw43_arch_init () is a prerequisite for using Wi-Fi or Bluetooth.
 
 \begin_layout Standard
 The following is from:
- https://vanhunteradams.com/Pico/BLE/BTStack_HCI.html#Initializing-the-CYW43-Driver
+ 
+\end_layout
+
+\begin_layout Standard
+https://vanhunteradams.com/Pico/BLE/BTStack_HCI.html#Initializing-the-CYW43-Driver
 \end_layout
 
 \begin_layout Section
