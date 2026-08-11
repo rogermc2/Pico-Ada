@@ -7,7 +7,7 @@ with RP2350_CYW43439; use RP2350_CYW43439;
 
 procedure Pico2w_LED is
 begin
-  
+   if CYW43_Arch_Init then
    loop
       --  Set_Onboard_LED (True);  -- Turn LED On
       Wait (Seconds (5));
@@ -15,5 +15,6 @@ begin
       --  Set_Onboard_LED (False); -- Turn LED Off
       Wait (Seconds (5));
    end loop;
+   end if;
    
 end Pico2w_LED;

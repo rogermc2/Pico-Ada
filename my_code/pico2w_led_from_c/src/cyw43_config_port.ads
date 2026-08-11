@@ -10,5 +10,7 @@ package CYW43_Config_Port is
 
    procedure CYW43_HAL_Pin_Config (Pin : UInt32; Mode : CYW43_HAL_Pin_Mode;
                                    Pull : CYW43_HAL_Pin_Pull; Alt : UInt32);
+   procedure CYW43_HAL_Pin_Low (Pin : UInt32);
+   procedure CYW43_HAL_Pin_High (Pin : UInt32);
 
 end CYW43_Config_Port;

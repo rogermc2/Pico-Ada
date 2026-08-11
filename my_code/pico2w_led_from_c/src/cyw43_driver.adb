@@ -13,10 +13,10 @@ package body CYW43_Driver is
    function CYW43_Driver_Init return Boolean is
       --  Initialize the CYW43 driver
       --  This function should be called before using any other functions in the CYW43 driver
-      Result : Boolean := false;
+      --  Result : Boolean := false;
    begin
       CYW43_Init;
-      return Result;
+      return True;
       
    end CYW43_Driver_Init;
 
@@ -24,6 +24,7 @@ package body CYW43_Driver is
    begin
       
     CYW43_HAL_Pin_Config (CYW43_PIN_WL_REG_ON, HAL_PIN_MODE_OUTPUT, HAL_PIN_PULL_NONE, 0);
+    CYW43_HAL_Pin_Low (CYW43_PIN_WL_REG_ON);
 
    end CYW43_Init;
 

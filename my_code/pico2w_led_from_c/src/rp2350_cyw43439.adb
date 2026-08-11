@@ -57,6 +57,7 @@ package body RP2350_CYW43439 is
          --  return PICO_ERROR_GENERIC;
       end if;
       return Result;
+      
    end CYW43_Arch_Init;
 
   function Pico_Led_Init return Boolean is
