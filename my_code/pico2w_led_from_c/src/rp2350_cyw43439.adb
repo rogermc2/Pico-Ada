@@ -37,6 +37,7 @@ package body RP2350_CYW43439 is
    Mask_CLK        : constant uint32 := 16#2000_0000#;  --  pin 29
    All_Pins_Mask   : constant uint32 := 16#2380_0000#;
    
+   --  ASYNC_CONTEXT is THREADSAFE_BACKGROUND
   function CYW43_Arch_Init return Boolean is
       Result : Boolean := false;
   begin
@@ -46,7 +47,7 @@ package body RP2350_CYW43439 is
    --       if (!context) return PICO_ERROR_GENERIC;
    --       cyw43_arch_set_async_context(context);
    --   }
-      Result := cyw43_driver_init;  --   (context);
+      Result := CYW43_Driver_Init;  --   (context);
       --  #if CYW43_LWIP
       --     ok &= lwip_nosys_init(context);
       --  #endif
