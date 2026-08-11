@@ -101,8 +101,7 @@ Using the SVD (System View Description) Peripheral Access Crate rules out incorr
 \end_layout
 
 \begin_layout Standard
-When your gdbgui readouts show GPIO_OE = 1 and GPIO_OUT = 0 despite compiling,
- it indicates that the code is modifying local temporary stack values instead of the real registers.
+When gdbgui readouts show GPIO_OE = 1 and GPIO_OUT = 0 despite compiling it indicates that the code is modifying local temporary stack values instead of  real registers.
  
 \end_layout
 

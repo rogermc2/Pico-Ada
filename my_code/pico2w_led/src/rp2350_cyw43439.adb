@@ -29,10 +29,10 @@ package body RP2350_CYW43439 is
    pragma Pack (SPI_Response);
 
    -- Bitmasks
-   Mask_REG_ON     : constant uint32 := 16#0080_0000#;
-   Mask_DATA       : constant uint32 := 16#0100_0000#;
-   Mask_CS         : constant uint32 := 16#0200_0000#;
-   Mask_CLK        : constant uint32 := 16#2000_0000#;
+   Mask_REG_ON     : constant uint32 := 16#0080_0000#;  --  pin 23
+   Mask_DATA       : constant uint32 := 16#0100_0000#;  --  pin 24
+   Mask_CS         : constant uint32 := 16#0200_0000#;  --  pin 25
+   Mask_CLK        : constant uint32 := 16#2000_0000#;  --  pin 29
    All_Pins_Mask   : constant uint32 := 16#2380_0000#;
 
    WL_GPIO_LED_PIN : constant uint32 := 0;
@@ -78,8 +78,8 @@ package body RP2350_CYW43439 is
       --  2.  Configure the Input Enable (IE) using SVD PADS types
       --  Bit 6 = IE, Bit 3 = PUE (Pull-Up), Bits 4-5 = Drive Strength (12mA)
      
-      PADS_BANK0.PADS_BANK0_Periph.GPIO24.IE := 1;    --  Input enable
-      PADS_BANK0.PADS_BANK0_Periph.GPIO24.PUE := 1;   --  Pull up enable
+      --  PADS_BANK0.PADS_BANK0_Periph.GPIO24.IE := 1;    --  Input enable
+      --  PADS_BANK0.PADS_BANK0_Periph.GPIO24.PUE := 1;   --  Pull up enable
       PADS_BANK0.PADS_BANK0_Periph.GPIO24.DRIVE := PADS_BANK0.Val_12mA;
 
       PADS_BANK0.PADS_BANK0_Periph.GPIO25.DRIVE := PADS_BANK0.Val_12mA;
