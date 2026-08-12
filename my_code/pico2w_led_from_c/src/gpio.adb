@@ -6,31 +6,31 @@ with RP2350.SIO; use RP2350.SIO;
 
 package body GPIO is
 
-   PADS_BANK0_BASE : constant Unsigned_32 := 16#40038000#;
+   --  PADS_BANK0_BASE : constant Unsigned_32 := 16#40038000#;
 
-   IO_BANK0_GPIO0_CTRL_FUNCSEL_RESET : constant Byte := 16#1f#;
-   IO_BANK0_GPIO0_CTRL_FUNCSEL_BITS  : constant Unsigned_32 := 16#1f#;
-   IO_BANK0_GPIO0_CTRL_FUNCSEL_MSB   : constant Byte := 4;
-   IO_BANK0_GPIO0_CTRL_FUNCSEL_LSB   : constant Byte := 0;
+   --  IO_BANK0_GPIO0_CTRL_FUNCSEL_RESET : constant Byte := 16#1f#;
+   --  IO_BANK0_GPIO0_CTRL_FUNCSEL_BITS  : constant Unsigned_32 := 16#1f#;
+   --  IO_BANK0_GPIO0_CTRL_FUNCSEL_MSB   : constant Byte := 4;
+   --  IO_BANK0_GPIO0_CTRL_FUNCSEL_LSB   : constant Byte := 0;
 
-   IO_BANK0_GPIO0_CTRL_OFFSET : constant Unsigned_32 := 4;
-   IO_BANK0_GPIO0_CTRL_BITS   : constant Unsigned_32 := 16#3003f01f#;
-   IO_BANK0_GPIO0_CTRL_RESET  : constant Unsigned_32 := 16#1f#;
+   --  IO_BANK0_GPIO0_CTRL_OFFSET : constant Unsigned_32 := 4;
+   --  IO_BANK0_GPIO0_CTRL_BITS   : constant Unsigned_32 := 16#3003f01f#;
+   --  IO_BANK0_GPIO0_CTRL_RESET  : constant Unsigned_32 := 16#1f#;
 
    --  Register    : PADS_BANK0_GPIO0
    --  Description : Pad control register
-   PADS_BANK0_GPIO0_OFFSET : constant Unsigned_32 := 4;
-   PADS_BANK0_GPIO0_BITS   : constant Unsigned_32 := 16#ff#;
-   PADS_BANK0_GPIO0_RESET  : constant Unsigned_32 := 16#56#;
+   --  PADS_BANK0_GPIO0_OFFSET : constant Unsigned_32 := 4;
+   --  PADS_BANK0_GPIO0_BITS   : constant Unsigned_32 := 16#ff#;
+   --  PADS_BANK0_GPIO0_RESET  : constant Unsigned_32 := 16#56#;
 
    --  Field       : PADS_BANK0_GPIO0_OD
    --  Description : Output disable.
    --  Has priority over output enable from peripherals.
-   PADS_BANK0_GPIO0_OD_RESET  : constant Byte := 0;
-   PADS_BANK0_GPIO0_OD_BITS   : constant Unsigned_32 := 16#80#;
-   PADS_BANK0_GPIO0_OD_MSB    : constant Byte := 7;
-   PADS_BANK0_GPIO0_OD_LSB    : constant Byte := 7;
-   PADS_BANK0_GPIO0_OD_ACCESS : constant String := "RW";
+   --  PADS_BANK0_GPIO0_OD_RESET  : constant Byte := 0;
+   --  PADS_BANK0_GPIO0_OD_BITS   : constant Unsigned_32 := 16#80#;
+   --  PADS_BANK0_GPIO0_OD_MSB    : constant Byte := 7;
+   --  PADS_BANK0_GPIO0_OD_LSB    : constant Byte := 7;
+   --  PADS_BANK0_GPIO0_OD_ACCESS : constant String := "RW";
 
    procedure Check_GPIO_Params (Pin : UInt32) is
    begin
@@ -143,30 +143,39 @@ package body GPIO is
    end GPIO_Set_Input_Enabled;
 
    procedure GPIO_Set_Slew_Rate (Pin : UInt32; Slew : GPIO_Slew_Rate) is
+      Slew_Rate : GPIO_SLEWFAST_Field :=
+         (if Slew = GPIO_Slew_Slow then 0 else 1);
    begin
       null;
-      --  case Pin is
-      --     when 23 => PADS_BANK0_Periph.GPIO23.SLEWFAST := GPIO_SLEWFAST_Field (Slew);
-      --     when 24 => PADS_BANK0_Periph.GPIO24.SLEWFAST := GPIO_SLEWFAST_Field (Slew);
-      --     when 25 => PADS_BANK0_Periph.GPIO25.SLEWFAST := GPIO_SLEWFAST_Field (Slew);
-      --     when 29 => PADS_BANK0_Periph.GPIO29.SLEWFAST := GPIO_SLEWFAST_Field (Slew);
-      --     when others =>
-      --        raise Constraint_Error with "Invalid GPIO pin number for pull-down";
-      --  end case;
+      case Pin is
+         when 23 => PADS_BANK0_Periph.GPIO23.SLEWFAST := Slew_Rate;
+         when 24 => PADS_BANK0_Periph.GPIO24.SLEWFAST := Slew_Rate;
+         when 25 => PADS_BANK0_Periph.GPIO25.SLEWFAST := Slew_Rate;
+         when 29 => PADS_BANK0_Periph.GPIO29.SLEWFAST := Slew_Rate;
+         when others =>
+            raise Constraint_Error with "Invalid GPIO pin number for pull-down";
+      end case;
       
    end GPIO_Set_Slew_Rate;
 
    procedure GPIO_Set_Drive_Strength (Pin : UInt32; Strength : GPIO_Drive_Strength) is
+      Drive_Strength : GPIO0_Drive_Field;
    begin
-      null;
-      --  case Pin is
-      --     when 23 => PADS_BANK0_Periph.GPIO23.DRIVE := GPIO0_Drive_Field (Strength);
-      --     when 24 => PADS_BANK0_Periph.GPIO24.DRIVE := GPIO0_Drive_Field (Strength);
-      --     when 25 => PADS_BANK0_Periph.GPIO25.DRIVE := GPIO0_Drive_Field (Strength);
-      --     when 29 => PADS_BANK0_Periph.GPIO29.DRIVE := GPIO0_Drive_Field (Strength);
-      --     when others =>
-      --        raise Constraint_Error with "Invalid GPIO pin number for pull-down";
-      --  end case;
+      case Strength is
+         when DRIVE_STRENGTH_2MA => Drive_Strength := Val_2mA;
+         when DRIVE_STRENGTH_4MA => Drive_Strength := Val_4mA;
+         when DRIVE_STRENGTH_8MA => Drive_Strength := Val_8mA;
+         when DRIVE_STRENGTH_12MA => Drive_Strength := Val_12mA;
+      end case;
+
+      case Pin is
+         when 23 => PADS_BANK0_Periph.GPIO23.DRIVE :=  Drive_Strength;
+         when 24 => PADS_BANK0_Periph.GPIO24.DRIVE := Drive_Strength;
+         when 25 => PADS_BANK0_Periph.GPIO25.DRIVE := Drive_Strength;
+         when 29 => PADS_BANK0_Periph.GPIO29.DRIVE := Drive_Strength;
+         when others =>
+            raise Constraint_Error with "Invalid GPIO pin number for pull-down";
+      end case;
 
    end GPIO_Set_Drive_Strength;
 
