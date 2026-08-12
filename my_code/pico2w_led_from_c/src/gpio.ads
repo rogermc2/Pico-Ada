@@ -24,7 +24,7 @@ package GPIO is
    CYW43_PIN_WL_All     : constant UInt32 := 16#2380_0000#;
 
    procedure Check_GPIO_Params (Pin : UInt32);
-   procedure GPIO_Get_Function (Pin : UInt32);
+   function GPIO_Get_Function (Pin : UInt32) return UInt32;
    procedure GPIO_Set_Function (Pin : UInt32; Function_Num : UInt32);
    procedure GPIO_Set_Function_Masked_64 (Pin : UInt32; Function_Num : UInt32);
    procedure GPIO_Set_Pulls (Pin : UInt32; up, down : Boolean);
@@ -32,7 +32,6 @@ package GPIO is
    procedure GPIO_Pull_Down (Pin : UInt32);
    procedure GPIO_Set_Input_Enabled (Pin : UInt32; Enabled : Boolean);
    procedure GPIO_Set_Slew_Rate (Pin : UInt32; Slew : GPIO_Slew_Rate);
-   procedure GPIO_Set_Drive_Strength (Pin : UInt32; Drive : GPIO_Drive_Strength);
-
+   procedure GPIO_Set_Drive_Strength (Pin : UInt32; Strength : GPIO_Drive_Strength);
    
 end GPIO;
