@@ -55,9 +55,9 @@ package body CYW43_LL is
       Buffer (Offset + 2) := Byte (Shift_Right(Val, 16) and 16#FF#);
       Buffer (Offset + 3) := Byte (Shift_Right(Val, 24) and 16#FF#);
 
-   end Cyw43_Put_Le32;
+end Cyw43_Put_Le32;
 
-   function Cyw43_Do_Ioctl
+function Cyw43_Do_Ioctl
     (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : UInt32) return Boolean is
       Start_Time : constant Time := Clock;
@@ -106,6 +106,7 @@ function Cyw43_Send_Ioctl
       Cyw43_Put_Le32 (Buffer, Var_Len + 2, Val0);
       Cyw43_Put_Le32 (Buffer, Var_Len + 6, Val1);
 
+      Cyw43.SPI_Buffer := Buffer;
       -- cyw43_do_ioctl(self, SDPCM_SET, WLC_SET_VAR, len + 8, buf, iface);
       -- Note: We pass the slice of the buffer starting at Start_Index
       Result := Cyw43_Do_Ioctl (Cyw43, SDPCM_SET, WLC_SET_VAR, Var_Len_P10, 
