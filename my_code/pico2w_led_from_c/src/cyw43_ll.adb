@@ -1,6 +1,7 @@
 
 with Interfaces; use Interfaces;
 
+with Ada.Containers.Vectors;
 with Ada.Real_Time; use Ada.Real_Time;
 
 with RP2350; use RP2350;
@@ -16,17 +17,22 @@ package body CYW43_LL is
    WLC_SET_VAR       : constant := 263;
    SPID_BUF_SIZE     : constant := 2048;
 
+   package Cyw43_Vector_Package is new Ada.Containers.Vectors (Positive, Byte);
+   subtype Cyw43_Vector is Cyw43_Vector_Package.Vector;
+
    CYW43_IOCTL_TIMEOUT_US : constant Duration := Duration (Milliseconds (500));
 
    type U8_Array is array (Positive range <>) of Byte;
    type U32_Array is array (Positive range <>) of UInt32;
 
    -- Type definitions to match the C structure in Cyw43_Intternal.h
-   type Cyw43_Int (BL_Bytes : Positive) is record
+   --  type Cyw43_Int (BL_Bytes : Positive) is record
+   type Cyw43_Int is record
       Startup_T0       : uint32;
       Last_Header      : U32_Array (1 .. 2);
       Bus_Is_Up        : Boolean := False;
-      SPI_Buffer       : U8_Array (1 .. BL_Bytes);
+      SPI_Buffer       : Cyw43_Vector;
+      --  SPI_Buffer       : U8_Array (1 .. BL_Bytes);
    end record;
 
    function Cyw43_Send_Ioctl
@@ -93,24 +99,26 @@ function Cyw43_Send_Ioctl
       Buffer       : U8_Array (1 .. Buff_Last);
       Result       : Boolean := False;
    begin
-      for index in 1 .. Start_Index - 1 loop
-         Buffer (index) := Cyw43.SPI_Buffer (index);
-      end loop;
+      --  for index in 1 .. Start_Index - 1 loop
+      --     Buffer (index) := Cyw43.SPI_Buffer (index);
+      --  end loop;
       
       for index in Start_Index .. Start_Index + Var_Len loop
-         Buffer (index) := Byte (Var (index));
+         Cyw43.SPI_Buffer.Append (Byte (Var (index)));
+         --  Buffer (index) := Byte (Var (index));
       end loop;
-      Buffer (Start_Index + Var_Len + 1) := 0;  -- add terminator
+      Cyw43.SPI_Buffer.Append (0);   -- add terminator
+      --  Buffer (Start_Index + Var_Len + 1) := 0;  -- add terminator
 
       --  Put Little Endian 32-bit values into a buffer
-      Cyw43_Put_Le32 (Buffer, Var_Len + 2, Val0);
-      Cyw43_Put_Le32 (Buffer, Var_Len + 6, Val1);
+      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Var_Len + 2, Val0);
+      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Var_Len + 6, Val1);
 
-      Cyw43.SPI_Buffer := Buffer;
+      --  Cyw43.SPI_Buffer := Buffer;
       -- cyw43_do_ioctl(self, SDPCM_SET, WLC_SET_VAR, len + 8, buf, iface);
       -- Note: We pass the slice of the buffer starting at Start_Index
       Result := Cyw43_Do_Ioctl (Cyw43, SDPCM_SET, WLC_SET_VAR, Var_Len_P10, 
-            Buffer, Iface);
+            Cyw43.SPI_Buffer, Iface);
 
    end Cyw43_Write_Iovar_U32_U32;
 
