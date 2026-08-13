@@ -101,21 +101,21 @@ function Cyw43_Send_Ioctl
       Start_Index  : constant Integer := SDPCM_HEADER_LEN + 16;
       --  Buff_Last    : constant Integer := Start_Index + Var_Len + 7;
       --  Buffer       : U8_Array (1 .. Buff_Last);
+      --  size_t len = strlen(var) + 1;
       
       -- Unsigned_8 use a slice or manual copy to represent the buffer pointer logic
       -- In Ada, we work with the indices of the Spid_Buf directly.
    begin
-      -- memcpy(buf, var, len);
-      --  for I in Cyw43.SPI_Buffer'First .. Cyw43.SPI_Buffer'Last - 1 loop
-      --     Cyw43.SPI_Buffer (Start_Index + I) :=  Character'Pos (Var (Integer (Var'First) + I));
-      --  end loop;
-      --  SPI_D_Buffer'Last := 0; -- Null terminator
-
+      --  memcpy(buf, var, len);
+      for index in 1 .. Var_Len loop
+         Buf (index) := Var (index);
+      end loop;
       -- cyw43_put_le32(buf + len, val0);
-      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Start_Index + Var_Len, Val0);
+      --  Put Little Endian 32-bit values into a buffer
+      Cyw43_Put_Le32 (Buf, Var_Len, Val0);
 
       -- cyw43_put_le32(buf + len + 4, val1);
-      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Start_Index + Var_Len + 4, Val1);
+      Cyw43_Put_Le32 (Buf, Var_Len + 4, Val1);
 
       -- cyw43_do_ioctl(self, SDPCM_SET, WLC_SET_VAR, len + 8, buf, iface);
       -- Note: We pass the slice of the buffer starting at Start_Index
