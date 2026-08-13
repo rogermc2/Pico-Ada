@@ -20,11 +20,13 @@ package body CYW43_LL is
 
    type U8_Array is array (Positive range <>) of Byte;
    type U32_Array is array (Positive range <>) of UInt32;
+
    -- Type definitions to match the C structure in Cyw43_Intternal.h
    type Cyw43_Int (BL : Positive) is record
-      startup_t0 : uint32;
-      Bus_Is_Up  : Boolean := False;
-      SPI_Buffer : U32_Array (1 .. BL);
+      Startup_T0       : uint32;
+      Last_Header      : U32_Array (1 .. 2);
+      Bus_Is_Up        : Boolean := False;
+      SPI_Buffer       : U32_Array (1 .. BL);
    end record;
 
    function Cyw43_Send_Ioctl
@@ -56,7 +58,6 @@ package body CYW43_LL is
 
    end Cyw43_Put_Le32;
 
-   -- Mock implementation of cyw43_do_ioctl
    function Cyw43_Do_Ioctl
     (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : Unsigned_32) return Boolean is
@@ -80,33 +81,46 @@ function Cyw43_Send_Ioctl
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
    procedure Cyw43_Write_Iovar_U32_U32
-    (Buffer : in out Cyw43_Int; Var : String; Val0, Val1, Iface : uint32) is
+    (Cyw43 : in out Cyw43_Int; Var : String; Val0, Val1, Iface : uint32) is
+      --  uint8_t *buf = &self->spid_buf[SDPCM_HEADER_LEN + 16];
+      --  skips protocol headers to find the start of the payload data
+      --  spid_buf[...] targets a specific index in the spid_buf byte array.
+      --  SDPCM_HEADER_LEN + 16 is the target index.
+      --  It skips the length of the SDPCM header plus an additional 16 bytes.
+      -- Creates a view of the buffer starting after the header and metadata
+
+      --  Use array slices to retain bounds checking and prevent buffer overflows
+      subtype Payload_Slice is Storage_Array
+         (Cyw43.SPI_Buffer'First + SDPCM_HEADER_LEN + 16 .. Cyw43.SPI_Buffer'Last);
+      -- You can overlay or rename this slice safely
+      Buf : Payload_Slice renames Cyw43.SPI_Buffer
+         (Cyw43.SPI_Buffer'First + SDPCM_HEADER_LEN + 16 .. Cyw43.SPI_Buffer'Last);
+
       Var_Len      : constant Integer := Var'Length;
+      Var_Len_P8   : constant Integer := Var_Len + 8;
       Start_Index  : constant Integer := SDPCM_HEADER_LEN + 16;
-      Buff_Last    : constant Integer := Start_Index + Var_Len + 7;
-      Buffer       : U8_Array (1 .. Buff_Last);
-      SPI_D_Buffer : U8_Array (1 .. Var_Len);
-      -- size_t len = strlen(var) + 1;
+      --  Buff_Last    : constant Integer := Start_Index + Var_Len + 7;
+      --  Buffer       : U8_Array (1 .. Buff_Last);
       
       -- Unsigned_8 use a slice or manual copy to represent the buffer pointer logic
       -- In Ada, we work with the indices of the Spid_Buf directly.
    begin
       -- memcpy(buf, var, len);
-      for I in SPI_D_Buffer'First .. SPI_D_Buffer'Last - 1 loop
-         SPI_D_Buffer (Start_Index + I) := Byte (Character'Pos (Var (Var'First + I)));
-      end loop;
-      SPI_D_Buffer'Last := 0; -- Null terminator
+      --  for I in Cyw43.SPI_Buffer'First .. Cyw43.SPI_Buffer'Last - 1 loop
+      --     Cyw43.SPI_Buffer (Start_Index + I) :=  Character'Pos (Var (Integer (Var'First) + I));
+      --  end loop;
+      --  SPI_D_Buffer'Last := 0; -- Null terminator
 
       -- cyw43_put_le32(buf + len, val0);
-      Cyw43_Put_Le32 (SPI_D_Buffer, Start_Index + Var_Len, Val0);
+      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Start_Index + Var_Len, Val0);
 
       -- cyw43_put_le32(buf + len + 4, val1);
-      Cyw43_Put_Le32 (SPI_D_Buffer, Start_Index + Var_Len + 4, Val1);
+      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Start_Index + Var_Len + 4, Val1);
 
       -- cyw43_do_ioctl(self, SDPCM_SET, WLC_SET_VAR, len + 8, buf, iface);
       -- Note: We pass the slice of the buffer starting at Start_Index
-      Cyw43_Do_Ioctl (SPI_D_Buffer, SDPCM_SET, WLC_SET_VAR, Var_Len + 8, 
-            SPI_D_Buffer (Start_Index .. Buff_Last), Iface);
+      Cyw43_Do_Ioctl (Cyw43, SDPCM_SET, WLC_SET_VAR, Var_Len_P8, 
+            Buf, Iface);
 
    end Cyw43_Write_Iovar_U32_U32;
 
