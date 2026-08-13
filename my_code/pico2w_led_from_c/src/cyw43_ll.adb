@@ -1,7 +1,7 @@
 
 with Interfaces; use Interfaces;
 
-with Ada.Real_Time;
+with Ada.Real_Time; use Ada.Real_Time;
 
 with RP2350; use RP2350;
 with System.Atomic_Primitives;
@@ -16,7 +16,7 @@ package body CYW43_LL is
    WLC_SET_VAR       : constant := 263;
    SPID_BUF_SIZE     : constant := 2048;
 
-   CYW43_IOCTL_TIMEOUT_US : constant Duration := Milliseconds (500);
+   CYW43_IOCTL_TIMEOUT_US : constant Duration := Duration (Milliseconds (500));
 
    type U8_Array is array (Positive range <>) of Byte;
    type U32_Array is array (Positive range <>) of UInt32;
@@ -27,6 +27,10 @@ package body CYW43_LL is
       SPI_Buffer : U32_Array (1 .. BL);
    end record;
 
+   function Cyw43_Send_Ioctl
+      (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
+      Buf   : U8_Array;  Iface : Unsigned_32) return Boolean;
+      
    procedure Cyw43_Write_Iovar_U32_U32 (Var : String; Val0, Val1, Iface : uint32);
 
    function CYW43_LL_GPIO_Get (GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
@@ -58,16 +62,16 @@ package body CYW43_LL is
      Buf   : U8_Array;  Iface : Unsigned_32) return Boolean is
       Start_Time : constant Time := Clock;
       Result : Boolean := 
-         Cyw43_Send_Ioctl (Buffer, Kind, Cmd, Len);
+         Cyw43_Send_Ioctl (Buffer, Kind, Cmd, Len, Buf, Iface);
 begin
-   while Clock - Start_Index < CYW43_IOCTL_TIMEOUT_US loop
+   while Duration (Clock - Start_Time) < CYW43_IOCTL_TIMEOUT_US loop
       null;
    end loop;
    return Result;
       
 end Cyw43_Do_Ioctl;
 
-   function Cyw43_Send_Ioctl
+function Cyw43_Send_Ioctl
     (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : Unsigned_32) return Boolean is
    begin
