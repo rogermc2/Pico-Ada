@@ -16,10 +16,15 @@ package body CYW43_LL is
    WLC_SET_VAR       : constant := 263;
    SPID_BUF_SIZE     : constant := 2048;
 
+   CYW43_IOCTL_TIMEOUT_US : constant Duration := Milliseconds (500);
+
    type U8_Array is array (Positive range <>) of Byte;
-   -- Type definitions to match the C structure
-   type Cyw43_Int_T is record
-      Spid_Buf : U8_Array (0 .. SPID_BUF_SIZE - 1);
+   type U32_Array is array (Positive range <>) of UInt32;
+   -- Type definitions to match the C structure in Cyw43_Intternal.h
+   type Cyw43_Int (BL : Positive) is record
+      startup_t0 : uint32;
+      Bus_Is_Up  : Boolean := False;
+      SPI_Buffer : U32_Array (1 .. BL);
    end record;
 
    procedure Cyw43_Write_Iovar_U32_U32 (Var : String; Val0, Val1, Iface : uint32);
@@ -48,17 +53,30 @@ package body CYW43_LL is
    end Cyw43_Put_Le32;
 
    -- Mock implementation of cyw43_do_ioctl
-   procedure Cyw43_Do_Ioctl
-    (Buffer : in out Cyw43_Int_T; Kind, Cmd, Len : Integer;
-     Buf   : U8_Array;  Iface : Unsigned_32) is
+   function Cyw43_Do_Ioctl
+    (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
+     Buf   : U8_Array;  Iface : Unsigned_32) return Boolean is
+      Start_Time : constant Time := Clock;
+      Result : Boolean := 
+         Cyw43_Send_Ioctl (Buffer, Kind, Cmd, Len);
+begin
+   while Clock - Start_Index < CYW43_IOCTL_TIMEOUT_US loop
+      null;
+   end loop;
+   return Result;
+      
+end Cyw43_Do_Ioctl;
+
+   function Cyw43_Send_Ioctl
+    (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
+     Buf   : U8_Array;  Iface : Unsigned_32) return Boolean is
    begin
-   null;
-      -- In a real implementation, this would send the command to the hardware
-      --  Ada.Text_IO.Put_Line ("IOCTL Called: Kind=" & Kind'Image & ", Cmd=" & Cmd'Image & ", Len=" & Len'Image);
-   end Cyw43_Do_Ioctl;
+    return False;
+   end Cyw43_Send_Ioctl;
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
-   procedure Cyw43_Write_Iovar_U32_U32 (Var : String; Val0, Val1, Iface : uint32) is
+   procedure Cyw43_Write_Iovar_U32_U32
+    (Buffer : in out Cyw43_Int; Var : String; Val0, Val1, Iface : uint32) is
       Var_Len      : constant Integer := Var'Length;
       Start_Index  : constant Integer := SDPCM_HEADER_LEN + 16;
       Buff_Last    : constant Integer := Start_Index + Var_Len + 7;
