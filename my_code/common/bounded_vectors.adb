@@ -1,11 +1,11 @@
 package body Bounded_Vectors is
 
-   procedure Clear (V : out Vector) is
+   procedure Clear (V : out U8_Vector) is
    begin
       V.Count := 0;
    end Clear;
 
-   procedure Append (V : in out Vector; Item : Byte) is
+   procedure Append (V : in out U8_Vector; Item : Byte) is
    begin
       if V.Count < Max_Capacity then
          V.Count := V.Count + 1;
@@ -16,12 +16,12 @@ package body Bounded_Vectors is
       end if;
    end Append;
 
-   function Length (V : Vector) return Natural is
+   function Length (V : U8_Vector) return Natural is
    begin
       return V.Count;
    end Length;
 
-   function Element (V : Vector; Index : Positive) return Byte is
+   function Element (V : U8_Vector; Index : Positive) return Byte is
    begin
       if Index <= V.Count then
          return V.Data (Index);
