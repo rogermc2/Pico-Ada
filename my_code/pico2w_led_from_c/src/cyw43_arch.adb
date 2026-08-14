@@ -9,7 +9,6 @@ with RP2350.PADS_BANK0;
 with RP2350.SIO;
 
 with CYW43_Driver; use CYW43_Driver;
-with Bounded_Vectors; use Bounded_Vectors;
 with Utilities; use Utilities;
 
 package body CYW43_Arch is
