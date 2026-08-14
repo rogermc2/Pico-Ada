@@ -9,8 +9,9 @@ with RP2350.PADS_BANK0;
 with RP2350.SIO;
 
 with CYW43_Driver; use CYW43_Driver;
+with Utilities; use Utilities;
 
-package body RP2350_CYW43439 is
+package body CYW43_Arch is
 
    type SPI_Command is record
       Write_Mode   : Boolean;  -- True = Write, False = Read
@@ -62,15 +63,8 @@ package body RP2350_CYW43439 is
 
   function Pico_Led_Init return Boolean is
    begin
-   return CYW43_Arch_Init;
-      --  return CYW43439_Init;
+   return False;
+
    end Pico_Led_Init;
 
-   procedure Wait (Duration : Time_Span) is
-      Wait_Time : constant Time := Clock + Duration;
-   begin
-      delay until Wait_Time;
-
-   end Wait;
-
-end RP2350_CYW43439;
+end CYW43_Arch;

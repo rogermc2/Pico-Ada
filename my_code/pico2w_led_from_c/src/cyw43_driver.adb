@@ -2,6 +2,7 @@
 with Interfaces; use Interfaces;
 
 with CYW43_Config_Port; use CYW43_Config_Port;
+with CYW43_Init; use CYW43_Init;
 with RP2350; use RP2350;
 
 package body CYW43_Driver is
@@ -10,13 +11,12 @@ package body CYW43_Driver is
 
    procedure CYW43_Init;
 
-   function CYW43_Driver_Init return Boolean is
+   function CYW43_Driver_Init return CYW43_Record is
       --  Initialize the CYW43 driver
       --  This function should be called before using any other functions in the CYW43 driver
       --  Result : Boolean := false;
    begin
-      CYW43_Init;
-      return True;
+      return CYW43_Init;
       
    end CYW43_Driver_Init;
 

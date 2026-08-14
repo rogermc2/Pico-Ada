@@ -5,7 +5,6 @@ with Ada.Containers.Vectors;
 with Ada.Real_Time; use Ada.Real_Time;
 
 with RP2350; use RP2350;
-with System.Atomic_Primitives;
 
 package body CYW43_LL is
 
@@ -17,23 +16,10 @@ package body CYW43_LL is
    WLC_SET_VAR       : constant := 263;
    SPID_BUF_SIZE     : constant := 2048;
 
-   package Cyw43_Vector_Package is new Ada.Containers.Vectors (Positive, Byte);
-   subtype Cyw43_Vector is Cyw43_Vector_Package.Vector;
-
    CYW43_IOCTL_TIMEOUT_US : constant Duration := Duration (Milliseconds (500));
 
    type U8_Array is array (Positive range <>) of Byte;
    type U32_Array is array (Positive range <>) of UInt32;
-
-   -- Type definitions to match the C structure in Cyw43_Intternal.h
-   --  type Cyw43_Int (BL_Bytes : Positive) is record
-   type Cyw43_Int is record
-      Startup_T0       : uint32;
-      Last_Header      : U32_Array (1 .. 2);
-      Bus_Is_Up        : Boolean := False;
-      SPI_Buffer       : Cyw43_Vector;
-      --  SPI_Buffer       : U8_Array (1 .. BL_Bytes);
-   end record;
 
    function Cyw43_Send_Ioctl
       (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
