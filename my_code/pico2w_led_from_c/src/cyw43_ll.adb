@@ -20,18 +20,32 @@ package body CYW43_LL is
 
    CYW43_IOCTL_TIMEOUT_US : constant Time_Span := Milliseconds (500);
 
-   function CYW43_Int_From_LL (LL : CYW43_LL_Ptr) return CYW43_Internal_Ptr is
-      -- Instantiate unchecked conversion from the generic address of LL
-      function Cast is new Ada.Unchecked_Conversion (System.Address, CYW43_Internal_Ptr);
-   begin
-      return Cast (LL.all'Address);
-   end CYW43_Int_From_LL;
-
    function Cyw43_Send_Ioctl
       (Buffer : in out CYW43_Internal; Kind, Cmd, Len : Integer;
       Buf   : U8_Array;  Iface : UInt32) return Boolean;
    procedure Cyw43_Write_Iovar_U32_U32
     (Cyw43 : in out CYW43_Internal; Var : String; Val0, Val1, Iface : UInt32);
+
+   function CYW_Int_From_LL
+      (CYW43_LL : CYW43_LL_Record) return CYW43_Internal is
+      CYW43_Int : CYW43_Internal (CYW43_LL.BL);
+   begin
+      CYW43_Int.CB_Data := CYW43_LL.CB_Data;
+      CYW43_Int.Startup_T0 := CYW43_LL.Startup_T0;
+      CYW43_Int.Cur_Backplane_Window := CYW43_LL.Cur_Backplane_Window;
+      CYW43_Int.Wwd_SDPCM_Packet_Transmit_Sequence_Number :=
+             CYW43_LL.Wwd_SDPCM_Packet_Transmit_Sequence_Number;
+      CYW43_Int.Wwd_SDPCM_Last_Bus_Data_Credit :=
+       CYW43_LL.Wwd_SDPCM_Last_Bus_Data_Credit;
+      CYW43_Int.Wlan_Flow_Control := CYW43_LL.Wlan_Flow_Control;
+      CYW43_Int.Wwd_SDPCM_Requested_Ioctl_ID := CYW43_LL.Wwd_SDPCM_Requested_Ioctl_id;
+      CYW43_Int.Bus_Is_Up := CYW43_LL.Bus_Is_Up;
+      CYW43_Int.Had_Successful_Packet := CYW43_LL.Had_Successful_Packet;
+      CYW43_Int.Bus_Data := CYW43_LL.Bus_Data;
+
+      return CYW43_Int;
+
+   end  CYW_Int_From_LL;
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean is
@@ -39,16 +53,12 @@ package body CYW43_LL is
       return False;
    end CYW43_LL_GPIO_Get;
 
-   --  function CYW43_LL_Init (CYW : LL_State_Type) return Boolean is
    procedure CYW43_LL_Init
       (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Internal) is
-      type Local_LL_Ptr is access all CYW43_LL_Record;
-      type Local_CYW43_Ptr is access all CYW43_Internal;
-      LL       : aliased CYW43_LL_Record (Data.BL);   -- 'aliased' allows taking its address
-      LL_Ptr   : Local_LL_Ptr := LL'Access;
-      Self_Ptr : CYW43_Internal_Ptr := CYW43_Int_From_LL (LL'Access);     -- Must be a pointer type
+      Self : CYW43_Internal := CYW_Int_From_LL (CYW43_LL);
    begin
-      CYW43_LL.CB_Data := Data.SPI_Buffer;
+   
+      CYW43_LL.CB_Data := Data.SPID_Buffer;
       
    end CYW43_LL_Init;
 
@@ -117,14 +127,14 @@ function Cyw43_Send_Ioctl
       Buffer (Start_Index + Var_Len + 1) := 0;  -- add terminator
 
       --  Put Little Endian 32-bit values into a buffer
-      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Var_Len + 2, Val0);
-      Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Var_Len + 6, Val1);
+      Cyw43_Put_Le32 (Cyw43.SPID_Buffer, Var_Len + 2, Val0);
+      Cyw43_Put_Le32 (Cyw43.SPID_Buffer, Var_Len + 6, Val1);
 
       --  Cyw43.SPI_Buffer := Buffer;
       -- cyw43_do_ioctl(self, SDPCM_SET, WLC_SET_VAR, len + 8, buf, iface);
       -- Note: We pass the slice of the buffer starting at Start_Index
       Result := Cyw43_Do_Ioctl (Cyw43, SDPCM_SET, WLC_SET_VAR, Var_Len_P10, 
-            Cyw43.SPI_Buffer, Iface);
+            Cyw43.SPID_Buffer, Iface);
 
    end Cyw43_Write_Iovar_U32_U32;
 

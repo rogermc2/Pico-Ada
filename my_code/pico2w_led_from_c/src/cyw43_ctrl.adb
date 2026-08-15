@@ -17,9 +17,9 @@ package body CYW43_Ctrl is
     CYW43_HAL_Pin_Config (CYW43_PIN_WL_REG_ON, HAL_PIN_MODE_OUTPUT, HAL_PIN_PULL_NONE, 0);
     CYW43_HAL_Pin_Low (CYW43_PIN_WL_REG_ON);
 
-   CYW43_LL_Init (Data.CYW43_LL, Data);
-   Data.AP_Channel := 3;
-   Data.Initted := True;
+   --  CYW43_LL_Init (Data.CYW43_LL, Data);
+   --  Data.AP_Channel := 3;
+   --  Data.Initted := True;
 
    end CYW43_Init;
 
