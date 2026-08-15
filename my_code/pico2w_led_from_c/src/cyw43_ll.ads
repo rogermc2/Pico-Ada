@@ -21,7 +21,7 @@ package CYW43_LL is
 --  #endif
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean;
-   function CYW43_LL_Init  (Data : in out CYW43_Record; CB_Data : U32_Array) return Boolean;
+   procedure CYW43_LL_Init  (CYW43_LL : CYW43_LL_Record; Data : in out CYW43_Record);
    function CYW43_LL_GPIO_Set (Data : in out CYW43_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean;
 private
    --  type Internal_State_Record is record

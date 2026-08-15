@@ -22,10 +22,13 @@ package CYW43_Types is
 
    type CYW43_Record (BL : Positive) is record
       CYW43_LL    : CYW43_LL_Record (BL);
+      ITF_State   : Byte := 0;
       Startup_T0  : UInt32;
       Last_Header : U32_Array (1 .. 2);
       Bus_Is_Up   : Boolean := False;
       SPI_Buffer  : U8_Array (1 .. BL);
+      AP_Channel  : Integer := 0;
+      Initted     : Boolean := False;
    end record;
 
    CYW43_PIN_WL_REG_ON  : constant UInt32 := 16#0080_0000#;  --  pin 23;

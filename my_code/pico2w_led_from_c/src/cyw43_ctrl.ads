@@ -4,6 +4,6 @@ with CYW43_Types; use CYW43_Types;
 
 package  CYW43_Ctrl is
 
-   function  CYW43_Init return Boolean;
+   procedure  CYW43_Init (Data : in out CYW43_Record);
 
 end CYW43_Ctrl;
