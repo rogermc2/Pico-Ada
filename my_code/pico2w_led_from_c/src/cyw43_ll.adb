@@ -31,7 +31,7 @@ package body CYW43_LL is
    end CYW43_LL_GPIO_Get;
 
    --  function CYW43_LL_Init (CYW : LL_State_Type) return Boolean is
-   function CYW43_LL_Init  (Data : in out CYW43_Record) return Boolean is
+   function CYW43_LL_Init  (Data : in out CYW43_Record; CB_Data : U32_Array) return Boolean is
    begin
       return False;
    end CYW43_LL_Init;
