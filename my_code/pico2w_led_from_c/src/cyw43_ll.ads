@@ -20,9 +20,12 @@ package CYW43_LL is
 --  #define CYW43_LL_STATE_SIZE_WORDS (526 + 1)
 --  #endif
 
-   function CYW43_LL_GPIO_Get (Data : in out CYW43_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean;
-   procedure CYW43_LL_Init  (CYW43_LL : CYW43_LL_Record; Data : in out CYW43_Record);
-   function CYW43_LL_GPIO_Set (Data : in out CYW43_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean;
+   function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal; GPIO_N : Integer;
+             GPIO_EN : Boolean) return Boolean;
+   procedure CYW43_LL_Init  (CYW43_LL : in out CYW43_LL_Record;
+                             Data : in out CYW43_Internal);
+   function CYW43_LL_GPIO_Set (Data : in out CYW43_Internal; GPIO_N : Integer;
+                               GPIO_EN : Boolean) return Boolean;
 private
    --  type Internal_State_Record is record
    --     Driver_Status  : UInt32 := 0;

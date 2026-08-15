@@ -9,8 +9,8 @@ package CYW43_Types is
    type CYW43_LL_Record (BL : Positive) is record
       Driver_Status  : UInt32 := 0;
       --  Buffer_Pointer : System.Address := System.Null_Address;
-      B_data : U32_Array (1 ..BL);
-      --  Cur_backplane_window = 0;
+      CB_Data               : U8_Array (1 ..BL);
+      Cur_Backplane_Window  : Integer := 0;
       --  Wwd_sdpcm_packet_transmit_sequence_number = 0;
       --  Wwd_sdpcm_last_bus_data_credit = 1; // we get an immediate stall if this isn't done?
       --  Wlan_flow_control = 0;
@@ -20,7 +20,7 @@ package CYW43_Types is
       Bus_data              : UInt32 := 0;
    end record;
 
-   type CYW43_Record (BL : Positive) is record
+   type CYW43_Internal (BL : Positive) is record
       CYW43_LL    : CYW43_LL_Record (BL);
       ITF_State   : Byte := 0;
       Startup_T0  : UInt32;
