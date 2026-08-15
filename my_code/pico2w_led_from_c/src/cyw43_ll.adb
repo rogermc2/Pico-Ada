@@ -2,6 +2,7 @@
 with Interfaces; use Interfaces;
 
 with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Unchecked_Conversion;
 
 with CYW43_Ctrl; use CYW43_Ctrl;
 with RP2350; use RP2350;
@@ -19,6 +20,13 @@ package body CYW43_LL is
 
    CYW43_IOCTL_TIMEOUT_US : constant Time_Span := Milliseconds (500);
 
+   function CYW43_Int_From_LL (LL : CYW43_LL_Ptr) return CYW43_Internal_Ptr is
+      -- Instantiate unchecked conversion from the generic address of LL
+      function Cast is new Ada.Unchecked_Conversion (System.Address, CYW43_Internal_Ptr);
+   begin
+      return Cast (LL.all'Address);
+   end CYW43_Int_From_LL;
+
    function Cyw43_Send_Ioctl
       (Buffer : in out CYW43_Internal; Kind, Cmd, Len : Integer;
       Buf   : U8_Array;  Iface : UInt32) return Boolean;
@@ -32,8 +40,13 @@ package body CYW43_LL is
    end CYW43_LL_GPIO_Get;
 
    --  function CYW43_LL_Init (CYW : LL_State_Type) return Boolean is
-   procedure CYW43_LL_Init (CYW43_LL : in out CYW43_LL_Record;
-                            Data : in out CYW43_Internal) is
+   procedure CYW43_LL_Init
+      (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Internal) is
+      type Local_LL_Ptr is access all CYW43_LL_Record;
+      type Local_CYW43_Ptr is access all CYW43_Internal;
+      LL       : aliased CYW43_LL_Record (Data.BL);   -- 'aliased' allows taking its address
+      LL_Ptr   : Local_LL_Ptr := LL'Access;
+      Self_Ptr : CYW43_Internal_Ptr := CYW43_Int_From_LL (LL'Access);     -- Must be a pointer type
    begin
       CYW43_LL.CB_Data := Data.SPI_Buffer;
       

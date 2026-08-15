@@ -22,8 +22,8 @@ package CYW43_LL is
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean;
-   procedure CYW43_LL_Init  (CYW43_LL : in out CYW43_LL_Record;
-                             Data : in out CYW43_Internal);
+   procedure CYW43_LL_Init
+      (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Internal);
    function CYW43_LL_GPIO_Set (Data : in out CYW43_Internal; GPIO_N : Integer;
                                GPIO_EN : Boolean) return Boolean;
 private
