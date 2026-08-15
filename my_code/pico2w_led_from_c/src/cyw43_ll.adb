@@ -1,10 +1,11 @@
 
 with Interfaces; use Interfaces;
 
-with Ada.Containers.Vectors;
 with Ada.Real_Time; use Ada.Real_Time;
 
+with CYW43_Ctrl; use CYW43_Ctrl;
 with RP2350; use RP2350;
+with CYW43_Types; use CYW43_Types;
 
 package body CYW43_LL is
 
@@ -16,25 +17,30 @@ package body CYW43_LL is
    WLC_SET_VAR       : constant := 263;
    SPID_BUF_SIZE     : constant := 2048;
 
-   CYW43_IOCTL_TIMEOUT_US : constant Duration := Duration (Milliseconds (500));
-
-   type U8_Array is array (Positive range <>) of Byte;
-   type U32_Array is array (Positive range <>) of UInt32;
+   CYW43_IOCTL_TIMEOUT_US : constant Time_Span := Milliseconds (500);
 
    function Cyw43_Send_Ioctl
-      (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
-      Buf   : U8_Array;  Iface : UInt32) return Boolean;   
-   procedure Cyw43_Write_Iovar_U32_U32 (Var : String; Val0, Val1, Iface : UInt32);
+      (Buffer : in out CYW43_Record; Kind, Cmd, Len : Integer;
+      Buf   : U8_Array;  Iface : UInt32) return Boolean;
+   procedure Cyw43_Write_Iovar_U32_U32
+    (Cyw43 : in out CYW43_Record; Var : String; Val0, Val1, Iface : UInt32);
 
-   function CYW43_LL_GPIO_Get (GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
+   function CYW43_LL_GPIO_Get (Data : in out CYW43_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
    begin
       return False;
    end CYW43_LL_GPIO_Get;
 
-   function CYW43_LL_GPIO_Set (GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
-      Enable_Pin : constant UInt32 := if GPIO_EN then Shift_Left (1, GPIO_N) else 0;
+   --  function CYW43_LL_Init (CYW : LL_State_Type) return Boolean is
+   function CYW43_LL_Init  (Data : in out CYW43_Record) return Boolean is
    begin
-      CYW43_write_iovar_u32_u32 ("gpioout", Shift_Left (1, GPIO_N), Enable_Pin, WWD_STA_INTERFACE);
+      return False;
+   end CYW43_LL_Init;
+
+   function CYW43_LL_GPIO_Set 
+   (Data : in out CYW43_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
+      Enable_Pin : constant UInt32 := (if GPIO_EN then Shift_Left (1, GPIO_N) else 0);
+   begin
+      CYW43_write_iovar_u32_u32 (Data, "gpioout", Shift_Left (1, GPIO_N), Enable_Pin, WWD_STA_INTERFACE);
       return True;
 
    end CYW43_LL_GPIO_Set;
@@ -50,13 +56,13 @@ package body CYW43_LL is
 end Cyw43_Put_Le32;
 
 function Cyw43_Do_Ioctl
-    (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
+    (Buffer : in out CYW43_Record; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : UInt32) return Boolean is
       Start_Time : constant Time := Clock;
       Result : Boolean := 
          Cyw43_Send_Ioctl (Buffer, Kind, Cmd, Len, Buf, Iface);
 begin
-   while Duration (Clock - Start_Time) < CYW43_IOCTL_TIMEOUT_US loop
+   while Time_Span (Clock - Start_Time) < CYW43_IOCTL_TIMEOUT_US loop
       null;
    end loop;
    return Result;
@@ -64,7 +70,7 @@ begin
 end Cyw43_Do_Ioctl;
 
 function Cyw43_Send_Ioctl
-    (Buffer : in out Cyw43_Int; Kind, Cmd, Len : Integer;
+    (Buffer : in out CYW43_Record; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : UInt32) return Boolean is
    begin
     return False;
@@ -72,7 +78,7 @@ function Cyw43_Send_Ioctl
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
    procedure Cyw43_Write_Iovar_U32_U32
-    (Cyw43 : in out Cyw43_Int; Var : String; Val0, Val1, Iface : UInt32) is
+    (Cyw43 : in out CYW43_Record; Var : String; Val0, Val1, Iface : UInt32) is
       --  uint8_t *buf = &self->spid_buf[SDPCM_HEADER_LEN + 16];
       --  spid_buf[...] targets a specific index in the spid_buf byte array.
       --  SDPCM_HEADER_LEN + 16 is the target index.
@@ -90,11 +96,9 @@ function Cyw43_Send_Ioctl
       --  end loop;
       
       for index in Start_Index .. Start_Index + Var_Len loop
-         Cyw43.SPI_Buffer.Append (Byte (Var (index)));
-         --  Buffer (index) := Byte (Var (index));
+         Buffer (index) := Character'Pos (Var (index));
       end loop;
-      Cyw43.SPI_Buffer.Append (0);   -- add terminator
-      --  Buffer (Start_Index + Var_Len + 1) := 0;  -- add terminator
+      Buffer (Start_Index + Var_Len + 1) := 0;  -- add terminator
 
       --  Put Little Endian 32-bit values into a buffer
       Cyw43_Put_Le32 (Cyw43.SPI_Buffer, Var_Len + 2, Val0);
