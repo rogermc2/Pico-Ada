@@ -1,26 +1,21 @@
 
 with Interfaces; use Interfaces;
 
-with CYW43_Config_Port; use CYW43_Config_Port;
-with CYW43; use CYW43;
+with CYW43;
 with CYW43_Ctrl;
-With CYW43_Internal; use CYW43_Internal;
 with CYW43_Types; use CYW43_Types;
-with RP2350; use RP2350;
 
 package body CYW43_Driver is
 
-   --  Initialize the CYW43 driver
-   --  This function should be called before using any other functions in the CYW43 driver
-   function CYW43_Driver_Init return Boolean is
-      Data : CYW43_Record;
-      --  Data : CYW43_Internal_Record (2048);
-   begin
-      
-      CYW43_HAL_Pin_Config (CYW43_PIN_WL_REG_ON, HAL_PIN_MODE_OUTPUT, HAL_PIN_PULL_NONE, 0);
-      CYW43_HAL_Pin_Low (CYW43_PIN_WL_REG_ON);
+   CWY43_Async_Context : Async_Context_Kind := ASYNC_CONTEXT_Null;
 
-      CYW43_Ctrl.CYW43_Init (Data);
+   --  CYW43_Driver_Init should be called before using any other
+   --  CYW43 driver functions 
+   function CYW43_Driver_Init
+       (Context : Async_Context_Kind := ASYNC_CONTEXT_Null) return Boolean is
+   begin
+      CYW43_Ctrl.CYW43_Init (CYW43.CYW43_State);
+      CWY43_Async_Context := Context;
 
       return True;
 

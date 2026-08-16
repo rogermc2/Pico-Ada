@@ -53,11 +53,11 @@ package body CYW43_LL is
    end CYW43_LL_GPIO_Get;
 
    procedure CYW43_LL_Init
-      (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Internal_Record) is
+      (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Record) is
       Self : CYW43_Internal_Record := CYW_Int_From_LL (CYW43_LL);
    begin
-   
-      CYW43_LL.CB_Data := Data.SPID_Buffer;
+      --  CYW43_LL.CB_Data := Data.SPID_Buffer;
+      Self.Wwd_SDPCM_Last_Bus_Data_Credit := 1;
       
    end CYW43_LL_Init;
 
