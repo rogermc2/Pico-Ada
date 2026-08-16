@@ -1,12 +1,13 @@
 
 with RP2350; use RP2350;
+with CYW43;
 with CYW43_Types; use CYW43_Types;
 
 package CYW43_Internal is
 
 -- cyw43_int_t
    type CYW43_Internal_Record (BL : Positive) is record
-      CB_Data                        : U8_Array (1 .. BL);
+      CB_Data                        : CYW43.CYW43_Record;
       Startup_T0                     : UInt32 := 0;
       Cur_Backplane_Window           : UInt32 := 0;
       Wwd_SDPCM_Packet_Transmit_Sequence_Number : Byte := 0;
