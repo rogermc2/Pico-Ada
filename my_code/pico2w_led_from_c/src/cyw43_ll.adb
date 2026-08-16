@@ -52,9 +52,8 @@ package body CYW43_LL is
       return False;
    end CYW43_LL_GPIO_Get;
 
-   function CYW43_LL_Init
-      (CYW43_LL : CYW43_LL_Record; Data : CYW43_Record)
-       return CYW43_Internal_Record is
+   function CYW43_LL_Init (CYW43_LL : CYW43_LL_Record; Data : CYW43_Record)
+                           return CYW43_Internal_Record is
       Self : CYW43_Internal_Record := CYW_Int_From_LL (CYW43_LL);
    begin
       Self.CB_Data := Data;
