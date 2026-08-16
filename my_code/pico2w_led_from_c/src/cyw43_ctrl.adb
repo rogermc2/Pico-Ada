@@ -11,12 +11,9 @@ package body CYW43_Ctrl is
    CYW43_Int : CYW43_Internal.CYW43_Internal_Record (2048);
 
    procedure  CYW43_Init (LL : in out CYW43_LL.CYW43_LL_Record; Data : in out CYW43_Record) is
-      CYW43_PIN_WL_HOST_WAKE : constant UInt32 :=
-         CYW43_Get_Pin_WL (PIN_INDEX_WL_HOST_WAKE);
+      WL_HOST_WAKE : constant UInt32 := CYW43_Get_Pin_WL (PIN_INDEX_WL_HOST_WAKE);
    begin
-      --  #define CYW43_PIN_WL_HOST_WAKE cyw43_get_pin_wl(CYW43_PIN_INDEX_WL_HOST_WAKE)
-      CYW43_HAL_Pin_Config (CYW43_PIN_WL_HOST_WAKE, HAL_PIN_MODE_INPUT,
-      HAL_PIN_PULL_NONE, 0);
+      CYW43_HAL_Pin_Config (WL_HOST_WAKE, HAL_PIN_MODE_INPUT, HAL_PIN_PULL_NONE, 0);
       CYW43_HAL_Pin_Config 
          (CYW43_PIN_WL_REG_ON, HAL_PIN_MODE_OUTPUT, HAL_PIN_PULL_NONE, 0);
       CYW43_HAL_Pin_Low (CYW43_PIN_WL_REG_ON);
