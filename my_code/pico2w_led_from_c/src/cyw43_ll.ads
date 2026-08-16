@@ -1,6 +1,7 @@
 
 with System;
 
+with CYW43; use CYW43;
 with CYW43_Internal; use CYW43_Internal;
 with CYW43_Types; use CYW43_Types;
 with RP2350; use RP2350;

@@ -1,11 +1,12 @@
 
 with RP2350; use RP2350;
 with CYW43_Types; use CYW43_Types;
+--  with CYW43_LL; use CYW43_LL;
 
 package CYW43 is
 
    type CYW43_Record is record
-      CYW43_LL            : CYW43_LL_Record;
+      --  LL                  : CYW43_LL_Record;
       ITF_State           : Byte := 0;
       Trace_Flags         : UInt32 := 0;
       -- State for async events
@@ -27,5 +28,8 @@ package CYW43 is
       AP_ssid         : U8_Array (1 .. 32);
       AP_key          : U8_Array (1 .. 64);
    end record;
+
+   CYW43_State       : CYW43_Record;
+   CYW43_State_Sleep : UInt32 := 0;
 
 end CYW43;

@@ -1,9 +1,8 @@
 
-with RP2350; use RP2350;
-with CYW43_Internal; use CYW43_Internal;
+with CYW43; use CYW43;
 
-package  CYW43_Ctrl is
+package CYW43_Ctrl is
 
-   procedure  CYW43_Init (Data : in out CYW43_Internal_Record);
+   procedure  CYW43_Init (Data : in out CYW43_Record);
 
 end CYW43_Ctrl;
