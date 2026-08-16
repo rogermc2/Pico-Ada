@@ -2,11 +2,11 @@
 with Interfaces; use Interfaces;
 
 with Ada.Real_Time; use Ada.Real_Time;
-with Ada.Unchecked_Conversion;
 
 with CYW43_Ctrl; use CYW43_Ctrl;
 with RP2350; use RP2350;
-with CYW43_Types; use CYW43_Types;
+with CYW43_Internal; use CYW43_Internal;
+--  with CYW43_Types; use CYW43_Types;
 
 package body CYW43_LL is
 
@@ -26,27 +26,27 @@ package body CYW43_LL is
    procedure Cyw43_Write_Iovar_U32_U32
     (Cyw43 : in out CYW43_Internal_Record; Var : String; Val0, Val1, Iface : UInt32);
 
-   --  function CYW_Int_From_LL
-   --     (CYW43_LL : CYW43_LL_Record) return CYW43_Internal_Record is
-   --     CYW43_Int : CYW43_Internal_Record (CYW43_LL.BL);
-   --  begin
-   --     CYW43_Int.CB_Data := CYW43_LL.CB_Data;
-   --     CYW43_Int.Cur_Backplane_Window := CYW43_LL.Cur_Backplane_Window;
-   --     CYW43_Int.Wwd_SDPCM_Packet_Transmit_Sequence_Number :=
-   --            CYW43_LL.Wwd_SDPCM_Packet_Transmit_Sequence_Number;
-   --     CYW43_Int.Wwd_SDPCM_Last_Bus_Data_Credit :=
-   --      CYW43_LL.Wwd_SDPCM_Last_Bus_Data_Credit;
-   --     CYW43_Int.Wlan_Flow_Control := CYW43_LL.Wlan_Flow_Control;
-   --     CYW43_Int.Wwd_SDPCM_Requested_Ioctl_ID := CYW43_LL.Wwd_SDPCM_Requested_Ioctl_id;
-   --     CYW43_Int.Bus_Is_Up := CYW43_LL.Bus_Is_Up;
-   --     CYW43_Int.Had_Successful_Packet := CYW43_LL.Had_Successful_Packet;
-   --     CYW43_Int.Bus_Data := CYW43_LL.Bus_Data;
+   function CYW_Int_From_LL
+      (CYW43_LL : CYW43_LL_Record) return CYW43_Internal_Record is
+      CYW43_Int : CYW43_Internal_Record (CYW43_LL.BL);
+   begin
+      CYW43_Int.CB_Data := CYW43_LL.CB_Data;
+      CYW43_Int.Cur_Backplane_Window := CYW43_LL.Cur_Backplane_Window;
+      CYW43_Int.Wwd_SDPCM_Packet_Transmit_Sequence_Number :=
+             CYW43_LL.Wwd_SDPCM_Packet_Transmit_Sequence_Number;
+      CYW43_Int.Wwd_SDPCM_Last_Bus_Data_Credit :=
+       CYW43_LL.Wwd_SDPCM_Last_Bus_Data_Credit;
+      CYW43_Int.Wlan_Flow_Control := CYW43_LL.Wlan_Flow_Control;
+      CYW43_Int.Wwd_SDPCM_Requested_Ioctl_ID := CYW43_LL.Wwd_SDPCM_Requested_Ioctl_id;
+      CYW43_Int.Bus_Is_Up := CYW43_LL.Bus_Is_Up;
+      CYW43_Int.Had_Successful_Packet := CYW43_LL.Had_Successful_Packet;
+      CYW43_Int.Bus_Data := CYW43_LL.Bus_Data;
 
-   --     return CYW43_Int;
+      return CYW43_Int;
 
-   --  end  CYW_Int_From_LL;
+   end  CYW_Int_From_LL;
 
-   function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal; GPIO_N : Integer;
+   function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean is
    begin
       return False;
@@ -54,7 +54,7 @@ package body CYW43_LL is
 
    procedure CYW43_LL_Init
       (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Internal_Record) is
-      Self : CYW43_Internal_Record := CYW43_LL;  --  CYW_Int_From_LL (CYW43_LL);
+      Self : CYW43_Internal_Record := CYW_Int_From_LL (CYW43_LL);
    begin
    
       CYW43_LL.CB_Data := Data.SPID_Buffer;
@@ -62,7 +62,7 @@ package body CYW43_LL is
    end CYW43_LL_Init;
 
    function CYW43_LL_GPIO_Set 
-   (Data : in out CYW43_Internal; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
+   (Data : in out CYW43_Internal_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
       Enable_Pin : constant UInt32 := (if GPIO_EN then Shift_Left (1, GPIO_N) else 0);
    begin
       CYW43_write_iovar_u32_u32 (Data, "gpioout", Shift_Left (1, GPIO_N), Enable_Pin, WWD_STA_INTERFACE);
@@ -81,7 +81,7 @@ package body CYW43_LL is
 end Cyw43_Put_Le32;
 
 function Cyw43_Do_Ioctl
-    (Buffer : in out CYW43_Internal; Kind, Cmd, Len : Integer;
+    (Buffer : in out CYW43_Internal_Record; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : UInt32) return Boolean is
       Start_Time : constant Time := Clock;
       Result : Boolean := 
@@ -95,7 +95,7 @@ begin
 end Cyw43_Do_Ioctl;
 
 function Cyw43_Send_Ioctl
-    (Buffer : in out CYW43_Internal; Kind, Cmd, Len : Integer;
+    (Buffer : in out CYW43_Internal_Record; Kind, Cmd, Len : Integer;
      Buf   : U8_Array;  Iface : UInt32) return Boolean is
    begin
     return False;
@@ -103,7 +103,7 @@ function Cyw43_Send_Ioctl
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
    procedure Cyw43_Write_Iovar_U32_U32
-    (Cyw43 : in out CYW43_Internal; Var : String; Val0, Val1, Iface : UInt32) is
+    (Cyw43 : in out CYW43_Internal_Record; Var : String; Val0, Val1, Iface : UInt32) is
       --  uint8_t *buf = &self->spid_buf[SDPCM_HEADER_LEN + 16];
       --  spid_buf[...] targets a specific index in the spid_buf byte array.
       --  SDPCM_HEADER_LEN + 16 is the target index.

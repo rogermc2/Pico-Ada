@@ -6,9 +6,6 @@ with CYW43_Types; use CYW43_Types;
 with RP2350; use RP2350;
 
 package CYW43_LL is
-
-   subtype  CYW43_LL_Record is CYW43_Internal_Record;
-
    --  For SPI
    CYW43_BUS_MAX_BLOCK_SIZE           : constant Positive := 64;
    CYW43_BACKPLANE_READ_PAD_LEN_BYTES : constant Positive := 16;
@@ -20,6 +17,24 @@ package CYW43_LL is
 --  #define CYW43_BACKPLANE_READ_PAD_LEN_BYTES 0
 --  #define CYW43_LL_STATE_SIZE_WORDS (526 + 1)
 --  #endif
+
+type CYW43_LL_Record (BL : Positive) is record
+      CB_Data                        : U8_Array (1 .. BL);
+      Dummy                          : UInt32 := 0;
+      Cur_Backplane_Window           : UInt32 := 0;
+      Wwd_SDPCM_Packet_Transmit_Sequence_Number : Byte := 0;
+      Wwd_SDPCM_Last_Bus_Data_Credit : Byte := 0;
+      Wlan_Flow_Control              : Byte := 0;
+      Wwd_SDPCM_Requested_Ioctl_ID   : UInt16 := 0;
+      Bus_Is_Up                      : Boolean := false;
+      Had_Successful_Packet          : Boolean := false;
+      --  #if CYW43_BACKPLANE_READ_PAD_LEN_BYTES > 0
+      --  uint32_t spi_header[(CYW43_BACKPLANE_READ_PAD_LEN_BYTES / 4) + 1] __attribute__((aligned(4))); // Must be before spid_buf
+      --  #endif
+      SPID_Buffer                    : U8_Array (1 .. BL);
+      Last_SSID_Joined               : U8_Array (1 .. 36);
+      Bus_Data                       : Byte := 0;
+   end record;
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean;

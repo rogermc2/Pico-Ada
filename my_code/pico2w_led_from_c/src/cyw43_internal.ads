@@ -1,5 +1,6 @@
 
 with RP2350; use RP2350;
+with CYW43_Types; use CYW43_Types;
 
 package CYW43_Internal is
 

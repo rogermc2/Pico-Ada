@@ -22,23 +22,5 @@ package CYW43_Types is
 
    CYW43_PIN_WL_REG_ON  : constant UInt32 := 16#0080_0000#;  --  pin 23;
 
-   --  cyw43_ll_t
-   --  type CYW43_LL_Record (BL : Positive) is record
-   --     Driver_Status         : UInt32 := 0;
-   --     CB_Data               : U8_Array (1 ..BL);
-   --     Cur_Backplane_Window  : Integer := 0;
-      --  Wwd_sdpcm_packet_transmit_sequence_number = 0;
-      --  Wwd_sdpcm_last_bus_data_credit = 1; // we get an immediate stall if this isn't done?
-      --  Wlan_flow_control = 0;
-      --  Wwd_sdpcm_requested_ioctl_id = 0;
-   --     Bus_is_up             : Boolean := false;
-   --     Had_successful_packet : Boolean := false;
-   --     Bus_data              : UInt32 := 0;
-   --     Protocol_State        : Natural;
-   --  end record;
-
---  static_assert (sizeof(cyw43_int_t) == sizeof (cyw43_ll_t), "");
-
-   
 
 end CYW43_Types;

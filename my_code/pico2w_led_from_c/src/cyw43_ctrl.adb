@@ -1,12 +1,13 @@
 
 with CYW43_Config_Port; use CYW43_Config_Port;
 with CYW43_LL; use CYW43_LL;
+with CYW43_Types; use CYW43_Types;
 
 package body CYW43_Ctrl is
 
    CYW43_PIN_WL_REG_ON  : constant UInt32 := 16#0080_0000#;  --  pin 23;
 
-   procedure  CYW43_Init (Data : in out CYW43_Internal) is
+   procedure  CYW43_Init (Data : in out CYW43_Internal_Record) is
       Buff : U32_Array (1 .. 100);
    begin
    --  #if defined(CYW43_PIN_WL_HOST_WAKE)
