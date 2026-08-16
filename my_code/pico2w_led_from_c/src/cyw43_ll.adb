@@ -52,13 +52,16 @@ package body CYW43_LL is
       return False;
    end CYW43_LL_GPIO_Get;
 
-   procedure CYW43_LL_Init
-      (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Record) is
+   function CYW43_LL_Init
+      (CYW43_LL : CYW43_LL_Record; Data : CYW43_Record)
+       return CYW43_Internal_Record is
       Self : CYW43_Internal_Record := CYW_Int_From_LL (CYW43_LL);
    begin
-      --  CYW43_LL.CB_Data := Data.SPID_Buffer;
+      Self.CB_Data := Data;
       Self.Wwd_SDPCM_Last_Bus_Data_Credit := 1;
       
+      return Self;
+
    end CYW43_LL_Init;
 
    function CYW43_LL_GPIO_Set 

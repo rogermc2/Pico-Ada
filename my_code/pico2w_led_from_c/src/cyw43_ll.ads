@@ -39,8 +39,8 @@ type CYW43_LL_Record (BL : Positive) is record
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean;
-   procedure CYW43_LL_Init
-      (CYW43_LL : in out CYW43_LL_Record; Data : CYW43_Record);
+   function CYW43_LL_Init (CYW43_LL : CYW43_LL_Record; Data : CYW43_Record)
+                           return CYW43_Internal_Record;
    function CYW43_LL_GPIO_Set (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
                                GPIO_EN : Boolean) return Boolean;
 
