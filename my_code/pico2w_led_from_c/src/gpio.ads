@@ -17,11 +17,11 @@ package GPIO is
      DRIVE_STRENGTH_8MA => 2, DRIVE_STRENGTH_12MA => 3);
 
    --  Define the pin numbers for the CYW43 chip
-   CYW43_PIN_WL_REG_ON  : constant UInt32 := 16#0080_0000#;  --  pin 23;
-   CYW43_PIN_WL_DATA    : constant UInt32 := 16#0100_0000#;  --  pin 24;
-   CYW43_PIN_WL_CS      : constant UInt32 := 16#0200_0000#;  --  pin 25;
-   CYW43_PIN_WL_CLK     : constant UInt32 := 16#2000_0000#;  --  pin 29;
-   CYW43_PIN_WL_All     : constant UInt32 := 16#2380_0000#;
+   PIN_WL_REG_ON  : constant UInt32 := 16#0080_0000#;  --  pin 23;
+   PIN_WL_DATA    : constant UInt32 := 16#0100_0000#;  --  pin 24;
+   PIN_WL_CS      : constant UInt32 := 16#0200_0000#;  --  pin 25;
+   PIN_WL_CLK     : constant UInt32 := 16#2000_0000#;  --  pin 29;
+   PIN_WL_All     : constant UInt32 := 16#2380_0000#;
 
    procedure Check_GPIO_Params (Pin : UInt32);
    function GPIO_Get_Function (Pin : UInt32) return UInt32;

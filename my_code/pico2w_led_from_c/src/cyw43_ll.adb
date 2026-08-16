@@ -16,7 +16,6 @@ package body CYW43_LL is
    WWD_AP_INTERFACE  : constant := 1;
    WWD_P2P_INTERFACE : constant := 2;
    WLC_SET_VAR       : constant := 263;
-   SPID_BUF_SIZE     : constant := 2048;
 
    CYW43_IOCTL_TIMEOUT_US : constant Time_Span := Milliseconds (500);
 

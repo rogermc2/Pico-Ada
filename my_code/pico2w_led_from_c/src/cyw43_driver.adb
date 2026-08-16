@@ -9,7 +9,7 @@ with CYW43_Types; use CYW43_Types;
 package body CYW43_Driver is
 
    CWY43_Async_Context : Async_Context_Kind := ASYNC_CONTEXT_Null;
-   LL  : CYW43_LL.CYW43_LL_Record (2048);
+   LL  : CYW43_LL.CYW43_LL_Record (SPI_Buffer_Size);
 
    --  CYW43_Driver_Init should be called before using any other
    --  CYW43 driver functions 

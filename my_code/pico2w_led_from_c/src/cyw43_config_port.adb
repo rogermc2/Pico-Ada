@@ -11,27 +11,27 @@ package body CYW43_Config_Port is
                                    Pull : CYW43_HAL_Pin_Pull; Alt : UInt32) is
    begin
       case Pin is
-         when CYW43_PIN_WL_REG_ON => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_REG_ON;
-         when CYW43_PIN_WL_DATA   => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_DATA;
-         when CYW43_PIN_WL_CS     => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_CS;
-         when CYW43_PIN_WL_CLK    => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_CLK;
-         when CYW43_PIN_WL_All    => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_All;
+         when PIN_WL_REG_ON => SIO_Periph.GPIO_OUT_SET := PIN_WL_REG_ON;
+         when PIN_WL_DATA   => SIO_Periph.GPIO_OUT_SET := PIN_WL_DATA;
+         when PIN_WL_CS     => SIO_Periph.GPIO_OUT_SET := PIN_WL_CS;
+         when PIN_WL_CLK    => SIO_Periph.GPIO_OUT_SET := PIN_WL_CLK;
+         when PIN_WL_All    => SIO_Periph.GPIO_OUT_SET := PIN_WL_All;
          when others =>
             raise Constraint_Error with "Invalid pin number for CYW43";
       end case;
 
-      SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_All;
+      SIO_Periph.GPIO_OUT_SET := PIN_WL_All;
    end CYW43_HAL_Pin_Config;
 
 
    procedure CYW43_HAL_Pin_Low (Pin : UInt32) is
    begin
       case Pin is
-         when CYW43_PIN_WL_REG_ON => SIO_Periph.GPIO_OUT_CLR := CYW43_PIN_WL_REG_ON;
-         when CYW43_PIN_WL_DATA   => SIO_Periph.GPIO_OUT_CLR := CYW43_PIN_WL_DATA;
-         when CYW43_PIN_WL_CS     => SIO_Periph.GPIO_OUT_CLR := CYW43_PIN_WL_CS;
-         when CYW43_PIN_WL_CLK    => SIO_Periph.GPIO_OUT_CLR := CYW43_PIN_WL_CLK;
-         when CYW43_PIN_WL_All    => SIO_Periph.GPIO_OUT_CLR := CYW43_PIN_WL_All;
+         when PIN_WL_REG_ON => SIO_Periph.GPIO_OUT_CLR := PIN_WL_REG_ON;
+         when PIN_WL_DATA   => SIO_Periph.GPIO_OUT_CLR := PIN_WL_DATA;
+         when PIN_WL_CS     => SIO_Periph.GPIO_OUT_CLR := PIN_WL_CS;
+         when PIN_WL_CLK    => SIO_Periph.GPIO_OUT_CLR := PIN_WL_CLK;
+         when PIN_WL_All    => SIO_Periph.GPIO_OUT_CLR := PIN_WL_All;
          when others =>
             raise Constraint_Error with "Invalid pin number for CYW43";
       end case;
@@ -40,11 +40,11 @@ package body CYW43_Config_Port is
    procedure CYW43_HAL_Pin_High (Pin : UInt32) is
    begin
       case Pin is
-         when CYW43_PIN_WL_REG_ON => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_REG_ON;
-         when CYW43_PIN_WL_DATA   => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_DATA;
-         when CYW43_PIN_WL_CS     => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_CS;
-         when CYW43_PIN_WL_CLK    => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_CLK;
-         when CYW43_PIN_WL_All    => SIO_Periph.GPIO_OUT_SET := CYW43_PIN_WL_All;
+         when PIN_WL_REG_ON => SIO_Periph.GPIO_OUT_SET := PIN_WL_REG_ON;
+         when PIN_WL_DATA   => SIO_Periph.GPIO_OUT_SET := PIN_WL_DATA;
+         when PIN_WL_CS     => SIO_Periph.GPIO_OUT_SET := PIN_WL_CS;
+         when PIN_WL_CLK    => SIO_Periph.GPIO_OUT_SET := PIN_WL_CLK;
+         when PIN_WL_All    => SIO_Periph.GPIO_OUT_SET := PIN_WL_All;
          when others =>
             raise Constraint_Error with "Invalid pin number for CYW43";
       end case;
