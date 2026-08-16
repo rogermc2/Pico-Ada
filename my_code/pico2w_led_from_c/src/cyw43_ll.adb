@@ -25,9 +25,8 @@ package body CYW43_LL is
    procedure Cyw43_Write_Iovar_U32_U32
     (Cyw43 : in out CYW43_Internal_Record; Var : String; Val0, Val1, Iface : UInt32);
 
-   function CYW_Int_From_LL
-      (CYW43_LL : CYW43_LL_Record) return CYW43_Internal_Record is
-      CYW43_Int : CYW43_Internal_Record (CYW43_LL.BL);
+   procedure CYW_Int_From_LL
+      (CYW43_Int : in out CYW43_Internal_Record; CYW43_LL : CYW43_LL_Record) is
    begin
       CYW43_Int.CB_Data := CYW43_LL.CB_Data;
       CYW43_Int.Cur_Backplane_Window := CYW43_LL.Cur_Backplane_Window;
@@ -41,8 +40,6 @@ package body CYW43_LL is
       CYW43_Int.Had_Successful_Packet := CYW43_LL.Had_Successful_Packet;
       CYW43_Int.Bus_Data := CYW43_LL.Bus_Data;
 
-      return CYW43_Int;
-
    end  CYW_Int_From_LL;
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
@@ -51,22 +48,21 @@ package body CYW43_LL is
       return False;
    end CYW43_LL_GPIO_Get;
 
-   function CYW43_LL_Init (CYW43_LL : CYW43_LL_Record; Data : CYW43_Record)
-                           return CYW43_Internal_Record is
-      Self : CYW43_Internal_Record := CYW_Int_From_LL (CYW43_LL);
+   procedure CYW43_LL_Init (Self : in out CYW43_Internal_Record;
+                   CYW43_LL : CYW43_LL_Record; Data : CYW43_Record) is
    begin
+      CYW_Int_From_LL (Self, CYW43_LL);
       Self.CB_Data := Data;
       Self.Wwd_SDPCM_Last_Bus_Data_Credit := 1;
-      
-      return Self;
 
    end CYW43_LL_Init;
 
-   function CYW43_LL_GPIO_Set 
-   (Data : in out CYW43_Internal_Record; GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
+   function CYW43_LL_GPIO_Set  (Data : in out CYW43_Internal_Record;
+                  GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
       Enable_Pin : constant UInt32 := (if GPIO_EN then Shift_Left (1, GPIO_N) else 0);
    begin
-      CYW43_write_iovar_u32_u32 (Data, "gpioout", Shift_Left (1, GPIO_N), Enable_Pin, WWD_STA_INTERFACE);
+      CYW43_write_iovar_u32_u32 (Data, "gpioout", Shift_Left (1, GPIO_N), Enable_Pin,
+                                  WWD_STA_INTERFACE);
       return True;
 
    end CYW43_LL_GPIO_Set;
@@ -116,11 +112,7 @@ function Cyw43_Send_Ioctl
       Buff_Last    : constant Integer := Start_Index + Var_Len + 7;
       Buffer       : U8_Array (1 .. Buff_Last);
       Result       : Boolean := False;
-   begin
-      --  for index in 1 .. Start_Index - 1 loop
-      --     Buffer (index) := Cyw43.SPI_Buffer (index);
-      --  end loop;
-      
+   begin      
       for index in Start_Index .. Start_Index + Var_Len loop
          Buffer (index) := Character'Pos (Var (index));
       end loop;

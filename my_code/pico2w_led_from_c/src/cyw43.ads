@@ -29,7 +29,9 @@ package CYW43 is
       AP_key          : U8_Array (1 .. 64);
    end record;
 
-   CYW43_State       : CYW43_Record;
-   CYW43_State_Sleep : UInt32 := 0;
+   function Get_CYW43_State return CYW43_Record;
+   function Get_CYW43_State_Sleep return UInt32;
+   procedure Set_CYW43_State  (State : CYW43_Record);
+   procedure Set_CYW43_State_Sleep  (Sleep : UInt32);
 
 end CYW43;
