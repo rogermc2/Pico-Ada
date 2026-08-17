@@ -1,10 +1,10 @@
 
-package body CYW43 is
+package body CYW43_Internal is
 
-   CYW43_State       : CYW43_Record;
+   CYW43_State       : CYW43_Internal_Record (SPI_Buffer_Size);
    CYW43_State_Sleep : UInt32 := 0;
 
-   function Get_CYW43_State return CYW43_Record is
+   function Get_CYW43_State return CYW43_Internal_Record is
    begin
       return CYW43_State;
 
@@ -16,7 +16,7 @@ package body CYW43 is
 
    end Get_CYW43_State_Sleep;
 
-   procedure Set_CYW43_State  (State : CYW43_Record) is
+   procedure Set_CYW43_State  (State : CYW43_Internal_Record) is
    begin
       CYW43_State := State;
 
@@ -28,4 +28,4 @@ package body CYW43 is
 
    end Set_CYW43_State_Sleep;
    
-end CYW43;
+end CYW43_Internal;

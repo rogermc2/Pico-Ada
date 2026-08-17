@@ -19,29 +19,29 @@ package CYW43_LL is
 --  #define CYW43_LL_STATE_SIZE_WORDS (526 + 1)
 --  #endif
 
-type CYW43_LL_Record (BL : Positive) is record
-      CB_Data                        : CYW43.CYW43_Record; 
-      Dummy                          : UInt32 := 0;
-      Cur_Backplane_Window           : UInt32 := 0;
-      Wwd_SDPCM_Packet_Transmit_Sequence_Number : Byte := 0;
-      Wwd_SDPCM_Last_Bus_Data_Credit : Byte := 0;
-      Wlan_Flow_Control              : Byte := 0;
-      Wwd_SDPCM_Requested_Ioctl_ID   : UInt16 := 0;
-      Bus_Is_Up                      : Boolean := false;
-      Had_Successful_Packet          : Boolean := false;
-      --  #if CYW43_BACKPLANE_READ_PAD_LEN_BYTES > 0
-      --  uint32_t spi_header[(CYW43_BACKPLANE_READ_PAD_LEN_BYTES / 4) + 1] __attribute__((aligned(4))); // Must be before spid_buf
-      --  #endif
-      SPID_Buffer                    : U8_Array (1 .. BL);
-      Last_SSID_Joined               : U8_Array (1 .. 36);
-      Bus_Data                       : Byte := 0;
-   end record;
+--  type CYW43_LL_Record (BL : Positive) is record
+--        CB_Data                        : CYW43.CYW43_Record; 
+--        Dummy                          : UInt32 := 0;
+--        Cur_Backplane_Window           : UInt32 := 0;
+--        Wwd_SDPCM_Packet_Transmit_Sequence_Number : Byte := 0;
+--        Wwd_SDPCM_Last_Bus_Data_Credit : Byte := 0;
+--        Wlan_Flow_Control              : Byte := 0;
+--        Wwd_SDPCM_Requested_Ioctl_ID   : UInt16 := 0;
+--        Bus_Is_Up                      : Boolean := false;
+--        Had_Successful_Packet          : Boolean := false;
+--        --  #if CYW43_BACKPLANE_READ_PAD_LEN_BYTES > 0
+--        --  uint32_t spi_header[(CYW43_BACKPLANE_READ_PAD_LEN_BYTES / 4) + 1] __attribute__((aligned(4))); // Must be before spid_buf
+--        --  #endif
+--        SPID_Buffer                    : U8_Array (1 .. BL);
+--        Last_SSID_Joined               : U8_Array (1 .. 36);
+--        Bus_Data                       : Byte := 0;
+--     end record;
 
+   procedure CYW43_LL_Bus_Sleep (Self_In : CYW43_Internal_Record; Can_Sleep : Boolean);
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean;
-   procedure CYW43_LL_Init (Self : in out CYW43_Internal_Record;
-             CYW43_LL : CYW43_LL_Record; Data : CYW43_Record);
-   function CYW43_LL_GPIO_Set (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
+   procedure CYW43_LL_Init (Self : in out CYW43_Internal_Record; Data : CYW43_Record);
+   function CYW43_LL_GPIO_Set (Self_In : in out CYW43_Internal_Record; GPIO_N : Integer;
                                GPIO_EN : Boolean) return Boolean;
 
 end CYW43_LL;

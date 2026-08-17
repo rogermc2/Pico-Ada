@@ -2830,5 +2830,56 @@ WL_GPIO0
 OP connected to user LED
 \end_layout
 
+\begin_layout Section
+Code
+\end_layout
+
+\begin_layout Standard
+cyw43_arch_gpio_put does not check for errors setting the GPIO.
+\end_layout
+
+\begin_layout Standard
+The lower level cyw43_gpio_set can be used instead if to check for errors.
+\end_layout
+
+\begin_layout Standard
+Routines called:
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_arch.cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN,
+ 1)
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_arch.cyw43_gpio_set(&cyw43_state,
+ (int)wl_gpio,
+ value);
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ctrl.cyw43_gpio_set
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ctrl.cyw43_ensure_up(self)
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_ll_gpio_set(&self->cyw43_ll,
+ gpio,
+ val)
+\end_layout
+
+\begin_layout LyX-Code
+cyw43_write_iovar_u32_u32(self,
+ "gpioout",
+ 1 << gpio_n,
+ gpio_en ?
+ (1 << gpio_n) :
+ 0,
+ WWD_STA_INTERFACE);
+\end_layout
+
 \end_body
 \end_document

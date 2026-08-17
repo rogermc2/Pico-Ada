@@ -24,4 +24,9 @@ package CYW43_Internal is
       Bus_Data                       : Byte := 0;
    end record;
 
+   function Get_CYW43_State return CYW43_Internal_Record;
+   function Get_CYW43_State_Sleep return UInt32;
+   procedure Set_CYW43_State  (State : CYW43_Internal_Record);
+   procedure Set_CYW43_State_Sleep  (Sleep : UInt32);
+
 end CYW43_Internal;

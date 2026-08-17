@@ -16,6 +16,7 @@ with RP2350; use RP2350;
 --  #endif
 
 package CYW43_Types is
+pragma Preelaborate;
 
    type U8_Array is array (Positive range <>) of Byte;
    type U32_Array is array (Positive range <>) of UInt32;

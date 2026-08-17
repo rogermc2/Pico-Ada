@@ -1,12 +1,11 @@
 
+--  with CYW43_Internal; use CYW43_Internal;
 with RP2350; use RP2350;
 with CYW43_Types; use CYW43_Types;
---  with CYW43_LL; use CYW43_LL;
 
 package CYW43 is
 
    type CYW43_Record is record
-      --  LL                  : CYW43_LL_Record;
       ITF_State           : Byte := 0;
       Trace_Flags         : UInt32 := 0;
       -- State for async events
@@ -29,9 +28,9 @@ package CYW43 is
       AP_key          : U8_Array (1 .. 64);
    end record;
 
-   function Get_CYW43_State return CYW43_Record;
-   function Get_CYW43_State_Sleep return UInt32;
-   procedure Set_CYW43_State  (State : CYW43_Record);
-   procedure Set_CYW43_State_Sleep  (Sleep : UInt32);
+   --  function Get_CYW43_State return CYW43_Internal_Record;
+   --  function Get_CYW43_State_Sleep return UInt32;
+   --  procedure Set_CYW43_State  (State : CYW43_Internal_Record);
+   --  procedure Set_CYW43_State_Sleep  (Sleep : UInt32);
 
 end CYW43;

@@ -8,6 +8,9 @@ with RP2350.IO_BANK0;
 with RP2350.PADS_BANK0;
 with RP2350.SIO;
 
+with CYW43; use CYW43;
+with CYW43_Ctrl; use CYW43_Ctrl;
+with CYW43_Internal; use CYW43_Internal;
 with CYW43_Driver; use CYW43_Driver;
 with Utilities; use Utilities;
 
@@ -38,6 +41,14 @@ package body CYW43_Arch is
    Mask_CLK        : constant uint32 := 16#2000_0000#;  --  pin 29
    All_Pins_Mask   : constant uint32 := 16#2380_0000#;
    
+  procedure CYW43_Arch_GPIO_Put (WL_GPIO : Natural; Value : Boolean) is
+      CYW43_State : CYW43_Internal_Record := Get_CYW43_State;
+      Result : Boolean := CYW43_GPIO_Set (CYW43_State, WL_GPIO, Value);
+   begin
+      null;
+
+   end CYW43_Arch_GPIO_Put;
+
    --  ASYNC_CONTEXT is THREADSAFE_BACKGROUND
   function CYW43_Arch_Init return Boolean is
       Result : Boolean := false;

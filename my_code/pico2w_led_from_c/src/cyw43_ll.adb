@@ -19,14 +19,19 @@ package body CYW43_LL is
 
    CYW43_IOCTL_TIMEOUT_US : constant Time_Span := Milliseconds (500);
 
+   procedure CYW43_LL_Bus_Sleep (Self_In : CYW43_Internal_Record; Can_Sleep : Boolean) is
+   begin
+      null;
+   end CYW43_LL_Bus_Sleep;
+
    function Cyw43_Send_Ioctl
       (Buffer : in out CYW43_Internal_Record; Kind, Cmd, Len : Integer;
       Buf   : U8_Array;  Iface : UInt32) return Boolean;
-   procedure Cyw43_Write_Iovar_U32_U32
-    (Cyw43 : in out CYW43_Internal_Record; Var : String; Val0, Val1, Iface : UInt32);
+   procedure Cyw43_Write_Iovar_U32_U32 (Cyw43 : in out CYW43_Internal_Record;
+                            Var : String; Val0, Val1, Iface : UInt32);
 
    procedure CYW_Int_From_LL
-      (CYW43_Int : in out CYW43_Internal_Record; CYW43_LL : CYW43_LL_Record) is
+      (CYW43_Int : in out CYW43_Internal_Record; CYW43_LL : CYW43_Internal_Record) is
    begin
       CYW43_Int.CB_Data := CYW43_LL.CB_Data;
       CYW43_Int.Cur_Backplane_Window := CYW43_LL.Cur_Backplane_Window;
@@ -48,20 +53,21 @@ package body CYW43_LL is
       return False;
    end CYW43_LL_GPIO_Get;
 
-   procedure CYW43_LL_Init (Self : in out CYW43_Internal_Record;
-                   CYW43_LL : CYW43_LL_Record; Data : CYW43_Record) is
+   procedure CYW43_LL_Init
+    (Self : in out CYW43_Internal_Record; Data : CYW43_Record) is
    begin
-      CYW_Int_From_LL (Self, CYW43_LL);
+      --  CYW_Int_From_LL (Self, CYW43_LL);
       Self.CB_Data := Data;
       Self.Wwd_SDPCM_Last_Bus_Data_Credit := 1;
 
    end CYW43_LL_Init;
 
-   function CYW43_LL_GPIO_Set  (Data : in out CYW43_Internal_Record;
+   function CYW43_LL_GPIO_Set  (Self_In : in out CYW43_Internal_Record;
                   GPIO_N : Integer; GPIO_EN : Boolean) return Boolean is
       Enable_Pin : constant UInt32 := (if GPIO_EN then Shift_Left (1, GPIO_N) else 0);
    begin
-      CYW43_write_iovar_u32_u32 (Data, "gpioout", Shift_Left (1, GPIO_N), Enable_Pin,
+      --  CYW_Int_From_LL (Self, Self_In);
+      CYW43_Write_IOvar_U32_U32 (Self_In, "gpioout", Shift_Left (1, GPIO_N), Enable_Pin,
                                   WWD_STA_INTERFACE);
       return True;
 
