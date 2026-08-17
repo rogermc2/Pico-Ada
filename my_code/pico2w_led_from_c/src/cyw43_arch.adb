@@ -12,6 +12,8 @@ with CYW43; use CYW43;
 with CYW43_Ctrl; use CYW43_Ctrl;
 with CYW43_Internal; use CYW43_Internal;
 with CYW43_Driver; use CYW43_Driver;
+
+with CYW43_Types;
 with Utilities; use Utilities;
 
 package body CYW43_Arch is
@@ -41,11 +43,12 @@ package body CYW43_Arch is
    Mask_CLK        : constant uint32 := 16#2000_0000#;  --  pin 29
    All_Pins_Mask   : constant uint32 := 16#2380_0000#;
    
-  procedure CYW43_Arch_GPIO_Put (WL_GPIO : Natural; Value : Boolean) is
-      CYW43_State : CYW43_Internal_Record := Get_CYW43_State;
-      Result : Boolean := CYW43_GPIO_Set (CYW43_State, WL_GPIO, Value);
+  function CYW43_Arch_GPIO_Put (WL_GPIO : Natural; Value : Boolean) 
+            return Boolean is
+      CYW43_State : CYW43_Internal_Record (CYW43_Types.SPI_Buffer_Size);
    begin
-      null;
+      Get_CYW43_State (CYW43_State);
+      return CYW43_GPIO_Set (CYW43_State, WL_GPIO, Value);
 
    end CYW43_Arch_GPIO_Put;
 

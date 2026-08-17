@@ -16,8 +16,10 @@ package body CYW43_Driver is
    --  CYW43_Driver_Init should be called before using any other
    function CYW43_Driver_Init
        (Context : Async_Context_Kind := ASYNC_CONTEXT_Null) return Boolean is
+       State : CYW43_Internal.CYW43_Internal_Record (SPI_Buffer_Size);
    begin
-      CYW43_Ctrl.CYW43_Init (LL, CYW43_Internal.Get_CYW43_State);
+      CYW43_Internal.Get_CYW43_State (State);
+      CYW43_Ctrl.CYW43_Init (LL, State);
       CWY43_Async_Context := Context;
 
       return True;
