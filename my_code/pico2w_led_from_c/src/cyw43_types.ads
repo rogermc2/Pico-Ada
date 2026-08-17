@@ -21,6 +21,8 @@ pragma Preelaborate;
    type U8_Array is array (Positive range <>) of Byte;
    type U32_Array is array (Positive range <>) of UInt32;
 
+   CYW43_WL_GPIO_LED_PIN : constant Natural := 0;
+
    SPI_Buffer_Size : constant Positive := 512;
 
 end CYW43_Types;

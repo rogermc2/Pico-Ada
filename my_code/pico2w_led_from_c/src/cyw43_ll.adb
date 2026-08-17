@@ -17,35 +17,30 @@ package body CYW43_LL is
    WWD_P2P_INTERFACE : constant := 2;
    WLC_SET_VAR       : constant := 263;
 
+   CDCF_IOC_ID_SHIFT : constant Natural := 16;
+   CDCF_IOC_ID_MASK  : constant UInt32 := 16#ffff0000#;
+   CDCF_IOC_IF_SHIFT : constant Natural := 12;
+
+   type IOctl_Header_Record is record
+      Command : UInt32;
+      Lengths : UInt32;
+      Flags   : UInt32;
+      Status  : UInt32;
+   end record;
+
    CYW43_IOCTL_TIMEOUT_US : constant Time_Span := Milliseconds (500);
+
+   function CYW43_Send_Ioctl
+    (Self : in out CYW43_Internal_Record; Kind, Command, Len : UInt32;
+     Buffer : U8_Array; Iface : UInt32) return Boolean; 
 
    procedure CYW43_LL_Bus_Sleep (Self_In : CYW43_Internal_Record; Can_Sleep : Boolean) is
    begin
       null;
    end CYW43_LL_Bus_Sleep;
 
-   function Cyw43_Send_Ioctl
-      (Buffer : in out CYW43_Internal_Record; Kind, Cmd, Len : Integer;
-      Buf   : U8_Array;  Iface : UInt32) return Boolean;
-   procedure Cyw43_Write_Iovar_U32_U32 (Cyw43 : in out CYW43_Internal_Record;
+   procedure Cyw43_Write_Iovar_U32_U32 (Self : in out CYW43_Internal_Record;
                             Var : String; Val0, Val1, Iface : UInt32);
-
-   procedure CYW_Int_From_LL
-      (CYW43_Int : in out CYW43_Internal_Record; CYW43_LL : CYW43_Internal_Record) is
-   begin
-      CYW43_Int.CB_Data := CYW43_LL.CB_Data;
-      CYW43_Int.Cur_Backplane_Window := CYW43_LL.Cur_Backplane_Window;
-      CYW43_Int.Wwd_SDPCM_Packet_Transmit_Sequence_Number :=
-             CYW43_LL.Wwd_SDPCM_Packet_Transmit_Sequence_Number;
-      CYW43_Int.Wwd_SDPCM_Last_Bus_Data_Credit :=
-       CYW43_LL.Wwd_SDPCM_Last_Bus_Data_Credit;
-      CYW43_Int.Wlan_Flow_Control := CYW43_LL.Wlan_Flow_Control;
-      CYW43_Int.Wwd_SDPCM_Requested_Ioctl_ID := CYW43_LL.Wwd_SDPCM_Requested_Ioctl_id;
-      CYW43_Int.Bus_Is_Up := CYW43_LL.Bus_Is_Up;
-      CYW43_Int.Had_Successful_Packet := CYW43_LL.Had_Successful_Packet;
-      CYW43_Int.Bus_Data := CYW43_LL.Bus_Data;
-
-   end  CYW_Int_From_LL;
 
    function CYW43_LL_GPIO_Get (Data : in out CYW43_Internal_Record; GPIO_N : Integer;
              GPIO_EN : Boolean) return Boolean is
@@ -81,41 +76,47 @@ package body CYW43_LL is
       Buffer (Offset + 2) := Byte (Shift_Right(Val, 16) and 16#FF#);
       Buffer (Offset + 3) := Byte (Shift_Right(Val, 24) and 16#FF#);
 
-end Cyw43_Put_Le32;
+end CYW43_Put_Le32;
 
-function Cyw43_Do_Ioctl
-    (Buffer : in out CYW43_Internal_Record; Kind, Cmd, Len : Integer;
-     Buf   : U8_Array;  Iface : UInt32) return Boolean is
+function CYW43_Do_Ioctl
+    (Self : in out CYW43_Internal_Record; Kind, Command, Len : UInt32;
+     Buffer  : U8_Array;  Iface : UInt32) return Boolean is
       Start_Time : constant Time := Clock;
       Result : Boolean := 
-         Cyw43_Send_Ioctl (Buffer, Kind, Cmd, Len, Buf, Iface);
+         CYW43_Send_Ioctl (Self, Kind, Command, Len, Buffer, Iface);
 begin
    while Time_Span (Clock - Start_Time) < CYW43_IOCTL_TIMEOUT_US loop
       null;
    end loop;
    return Result;
       
-end Cyw43_Do_Ioctl;
+end CYW43_Do_Ioctl;
 
-function Cyw43_Send_Ioctl
-    (Buffer : in out CYW43_Internal_Record; Kind, Cmd, Len : Integer;
-     Buf   : U8_Array;  Iface : UInt32) return Boolean is
+function CYW43_Send_Ioctl
+    (Self : in out CYW43_Internal_Record; Kind, Command, Len : UInt32;
+     Buffer : U8_Array; Iface : UInt32) return Boolean is
+     Ioctl_ID : constant UInt16 := Self.Wwd_SDPCM_Requested_Ioctl_ID + 1;
+     Flags : constant UInt32 :=
+      (Shift_Left (UInt32 (Ioctl_ID), CDCF_IOC_ID_SHIFT) and CDCF_IOC_ID_MASK) or
+      Kind or Shift_Left (Iface,CDCF_IOC_IF_SHIFT );
+      Header : IOctl_Header_Record := (Command, Len and 16#ffff#, Flags, 0);
    begin
+      Self.Wwd_SDPCM_Requested_Ioctl_ID := Ioctl_ID;
     return False;
-   end Cyw43_Send_Ioctl;
+   end CYW43_Send_Ioctl;
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
-   procedure Cyw43_Write_Iovar_U32_U32
-    (Cyw43 : in out CYW43_Internal_Record; Var : String; Val0, Val1, Iface : UInt32) is
+   procedure CYW43_Write_Iovar_U32_U32
+    (Self : in out CYW43_Internal_Record; Var : String; Val0, Val1, Iface : UInt32) is
       --  uint8_t *buf = &self->spid_buf[SDPCM_HEADER_LEN + 16];
       --  spid_buf[...] targets a specific index in the spid_buf byte array.
       --  SDPCM_HEADER_LEN + 16 is the target index.
       --  It skips the length of the SDPCM header plus an additional 16 bytes 
       --  to set the start of the payload data
-      Var_Len      : constant Integer := Var'Length;
-      Var_Len_P10  : constant Integer := Var_Len + 10;
-      Start_Index  : constant Integer := SDPCM_HEADER_LEN + 16;
-      Buff_Last    : constant Integer := Start_Index + Var_Len + 7;
+      Var_Len      : constant Positive := Var'Length;
+      Var_Len_P10  : constant Positive := Var_Len + 10;
+      Start_Index  : constant Positive := SDPCM_HEADER_LEN + 16;
+      Buff_Last    : constant Positive := Start_Index + Var_Len + 7;
       Buffer       : U8_Array (1 .. Buff_Last);
       Result       : Boolean := False;
    begin      
@@ -125,15 +126,15 @@ function Cyw43_Send_Ioctl
       Buffer (Start_Index + Var_Len + 1) := 0;  -- add terminator
 
       --  Put Little Endian 32-bit values into a buffer
-      Cyw43_Put_Le32 (Cyw43.SPID_Buffer, Var_Len + 2, Val0);
-      Cyw43_Put_Le32 (Cyw43.SPID_Buffer, Var_Len + 6, Val1);
+      CYW43_Put_Le32 (Self.SPID_Buffer, Var_Len + 2, Val0);
+      CYW43_Put_Le32 (Self.SPID_Buffer, Var_Len + 6, Val1);
 
-      --  Cyw43.SPI_Buffer := Buffer;
+      --  CYW43.SPI_Buffer := Buffer;
       -- cyw43_do_ioctl(self, SDPCM_SET, WLC_SET_VAR, len + 8, buf, iface);
       -- Note: We pass the slice of the buffer starting at Start_Index
-      Result := Cyw43_Do_Ioctl (Cyw43, SDPCM_SET, WLC_SET_VAR, Var_Len_P10, 
-            Cyw43.SPID_Buffer, Iface);
+      Result := Cyw43_Do_Ioctl (Self, SDPCM_SET, WLC_SET_VAR,  
+               UInt32 (Var_Len_P10), Buffer, Iface);
 
-   end Cyw43_Write_Iovar_U32_U32;
+   end CYW43_Write_Iovar_U32_U32;
 
 end CYW43_LL;
