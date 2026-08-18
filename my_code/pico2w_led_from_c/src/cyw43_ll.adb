@@ -135,6 +135,17 @@ function CYW43_Send_Ioctl
 
    end  CYW43_Sdpcm_Send_Common;
 
+   --  CYW43_Write_Bytes_Pad configures the padding needed for data sent to
+   --   cyw43_write_bytes().
+   --  #if CYW43_USE_SPI
+   --  #define CYW43_WRITE_BYTES_PAD(len) ALIGN_UINT((len), 4)
+   --  #else
+   --  #define CYW43_WRITE_BYTES_PAD(len) ALIGN_UINT((len), 64)
+   --  #endif
+   --  #define ALIGN_UINT(value, alignment) (((value) + (alignment) - 1) & ~((alignment) - 1))
+   --  alignment: Must be a power of two (e.g., 4, 8, 16).+ (alignment) - 1:
+   --  Rounds the value up to the next potential boundary.& ~((alignment) - 1): 
+   --  Clears the lower bits to align the value downward.
    function CYW43_Write_Bytes_Pad (Size : UInt32) return Boolean is
    begin
       return False;

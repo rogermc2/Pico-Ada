@@ -8,9 +8,9 @@ with RP2350; use RP2350;
 
 package CYW43_LL is
    --  For SPI
-   CYW43_BUS_MAX_BLOCK_SIZE           : constant Positive := 64;
-   CYW43_BACKPLANE_READ_PAD_LEN_BYTES : constant Positive := 16;
-   CYW43_LL_STATE_SIZE_WORDS          : constant Positive :=
+   CYW43_BUS_MAX_BLOCK_SIZE           : constant UInt32 := 64;
+   CYW43_BACKPLANE_READ_PAD_LEN_BYTES : constant UInt32 := 16;
+   CYW43_LL_STATE_SIZE_WORDS          : constant UInt32 :=
      526 + 1 + (CYW43_BACKPLANE_READ_PAD_LEN_BYTES / 4 + 1);
       --  + CYW43_INCLUDE_LEGACY_F1_OVERFLOW_WORKAROUND_VARIABLES * 4)
 --  #else SDIO
