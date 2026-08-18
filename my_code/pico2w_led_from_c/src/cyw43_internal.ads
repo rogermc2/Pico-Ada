@@ -5,6 +5,10 @@ with CYW43_Types; use CYW43_Types;
 
 package CYW43_Internal is
 
+BUS_FUNCTION       : constant UInt32 := 0;
+BACKPLANE_FUNCTION : constant UInt32 := 1;
+WLAN_FUNCTION      : constant UInt32 := 2;
+
 -- cyw43_int_t
    type CYW43_Internal_Record (BL : Positive) is record
       CB_Data                        : CYW43.CYW43_Record;

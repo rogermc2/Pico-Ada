@@ -4,9 +4,10 @@ with Interfaces; use Interfaces;
 with Ada.Real_Time; use Ada.Real_Time;
 
 with CYW43_Ctrl; use CYW43_Ctrl;
-with RP2350; use RP2350;
 with CYW43_Internal; use CYW43_Internal;
+with CYW43_Bus_PIO_SPI; use CYW43_Bus_PIO_SPI;
 --  with CYW43_Types; use CYW43_Types;
+with RP2350; use RP2350;
 
 package body CYW43_LL is
 
@@ -40,8 +41,9 @@ package body CYW43_LL is
     (Self : in out CYW43_Internal_Record; Kind, Command, Len : UInt32;
      Buffer : U8_Array; Iface : UInt32) return Boolean;
    function CYW43_Sdpcm_Send_Common 
-      (Self : in out CYW43_Internal_Record; CONTROL_HEADER, Len : UINT32;
+      (Self : in out CYW43_Internal_Record; CONTROL_HEADER, Size : UINT32;
        Buffer : U8_Array) return Boolean;
+   function CYW43_Write_Bytes_Pad (Size : UInt32) return Boolean;
 
    procedure CYW43_LL_Bus_Sleep (Self_In : CYW43_Internal_Record; Can_Sleep : Boolean) is
    begin
@@ -125,11 +127,19 @@ function CYW43_Send_Ioctl
    end CYW43_Send_Ioctl;
 
    function CYW43_Sdpcm_Send_Common 
-      (Self : in out CYW43_Internal_Record; CONTROL_HEADER, Len : UINT32;
+      (Self : in out CYW43_Internal_Record; CONTROL_HEADER, Size : UInt32;
        Buffer : U8_Array) return Boolean is
    begin
-      return False;
+      --  cyw43_ll_bus_sleep((void *)self, false);
+      return CYW43_Write_Bytes (Self, WLAN_FUNCTION, 0, Buffer);
+
    end  CYW43_Sdpcm_Send_Common;
+
+   function CYW43_Write_Bytes_Pad (Size : UInt32) return Boolean is
+   begin
+      return False;
+
+   end  CYW43_Write_Bytes_Pad;
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
    procedure CYW43_Write_Iovar_U32_U32

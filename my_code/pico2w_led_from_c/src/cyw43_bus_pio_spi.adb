@@ -17,5 +17,13 @@ package body CYW43_Bus_PIO_SPI is
       return Pin;
 
    end CYW43_Get_Pin_WL;
+
+   function CYW43_Write_Bytes 
+      (Self   : in out CYW43_Internal_Record; CONTROL_HEADER, Size : UInt32;
+       Buffer : U8_Array) return Boolean is
+   begin
+      return False;
+
+   end  CYW43_Write_Bytes;
    
 end CYW43_Bus_PIO_SPI;
