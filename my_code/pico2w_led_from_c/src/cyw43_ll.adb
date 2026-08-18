@@ -10,11 +10,17 @@ with CYW43_Internal; use CYW43_Internal;
 
 package body CYW43_LL is
 
+   --  for cyw43_sdpcm_send_common
+   CONTROL_HEADER    : constant := 0;
+   ASYNCEVENT_HEADER : constant := 1;
+   DATA_HEADER       : constant := 2;
+
    SDPCM_HEADER_LEN  : constant := 12; -- Example value, typically 12 for SDPCM
    SDPCM_SET         : constant := 2;
    WWD_STA_INTERFACE : constant := 0;
    WWD_AP_INTERFACE  : constant := 1;
    WWD_P2P_INTERFACE : constant := 2;
+   WLC_GET_VAR       : constant := 262;
    WLC_SET_VAR       : constant := 263;
 
    CDCF_IOC_ID_SHIFT : constant Natural := 16;
@@ -102,7 +108,17 @@ function CYW43_Send_Ioctl
       Header : IOctl_Header_Record := (Command, Len and 16#ffff#, Flags, 0);
    begin
       Self.Wwd_SDPCM_Requested_Ioctl_ID := Ioctl_ID;
-    return False;
+      for index in Buffer'First .. Buffer'Last loop
+         Self.SPID_Buffer (index + SDPCM_HEADER_LEN + 16) := Buffer (index);
+      end loop;
+
+      --  if Header.Command = WLC_SET_VAR or else
+      --     Header.Command = WLC_GET_VAR then
+      --     CYW43_VDEBUG command
+      --  end if;
+
+      return CYW43_Sdpcm_Send_Common (Self, CONTROL_HEADER, 16 + len, Self.SPID_Buffer);
+
    end CYW43_Send_Ioctl;
 
    --  called as CYW43_write_iovar_u32_u32 ("gpioout", 1 << gpio_n, gpio_en ? (1 << gpio_n) : 0, WWD_STA_INTERFACE);
