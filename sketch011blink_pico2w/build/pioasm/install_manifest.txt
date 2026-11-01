@@ -1,0 +1,5 @@
+/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm-install/pioasm/pioasm
+/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm-install/pioasm/pioasmTargets.cmake
+/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm-install/pioasm/pioasmTargets-release.cmake
+/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm-install/pioasm/pioasmConfig.cmake
+/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm-install/pioasm/pioasmConfigVersion.cmake
