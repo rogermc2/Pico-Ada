@@ -1,0 +1,15 @@
+[submodule "Documents/themes/congo"]
+	path = Documents/themes/congo
+	url = https://github.com/jpanther/congo
+[submodule "Library/pico_bsp"]
+	path = Library/pico_bsp
+	url = https://github.com/krischik/pico_bsp.git
+[submodule "Library/rp2040_hal"]
+	path = Library/rp2040_hal
+	url = https://github.com/krischik/rp2040_hal.git
+[submodule "Library/openocd"]
+	path = Library/openocd
+	url = https://github.com/raspberrypi/openocd.git
+[submodule "Library/alire-index"]
+	path = Library/alire-index
+	url = https://github.com/krischik/alire-index.git

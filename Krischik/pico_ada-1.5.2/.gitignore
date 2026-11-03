@@ -1,0 +1,43 @@
+# Built application files
+*.apk
+*.ap_
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+*.uf2
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log Files
+*.log
+
+#vim
+.backups/
+*.swp
+*.swo
+.idea/
+
+# shell temporary files
+!Icons
+*.7z
+*.bmp
+*.rar
+*.tgz
+*.zwc
+*__GNATPP-TEMP
+.DS_Store
+Icon?
+screenlog.*
+settings.txt
+Temp
+x
+default.profraw
+Temp/*

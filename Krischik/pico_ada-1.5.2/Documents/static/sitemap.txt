@@ -1,0 +1,2 @@
+https://pi-ada-tutorial.sourceforge.io/gnatdoc/pico_ada_doc/
+https://pi-ada-tutorial.sourceforge.io/gnatdoc/pico2_ada_doc/

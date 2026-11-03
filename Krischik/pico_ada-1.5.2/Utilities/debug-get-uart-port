@@ -1,0 +1,59 @@
+#!/bin/echo  usage: typeset -x -f -u 
+############################################################ {{{1 ###########
+#  Copyright © 2026 … 2026  Martin Krischik «krischik@users.sourceforge.net»
+#############################################################################
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or ENDIFFTNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+############################################################ }}}1 ###########
+
+function debug-get-uart-port ()
+{
+    local Location_ID
+    local Probe_Info
+    local TTY_Suffix
+    local UART_Port
+    local UART_Device
+
+    # Step 1: Find the Debug Probe in system_profiler
+    #
+    Probe_Info=$(system_profiler SPUSBDataType 2>/dev/null |			    \
+	awk '/Debug Probe/{flag=1; next} flag && /Location ID:/{print; flag=0}' |   \
+	head -n 1)
+
+    if [[ -z "${Probe_Info}" ]]; then
+	print -u2 "❌ No Raspberry Pi Debug Probe found. Is it plugged in?"
+	print -u2 "   (Run: system_profiler SPUSBDataType | grep -A 20 'Debug Probe')"
+	exit 1
+    fi
+
+    # Step 2: Extract Location ID (e.g. 0x14420000)
+    #
+    Location_ID=$(echo "${Probe_Info}" | ggrep -oE '0x[0-9A-Fa-f]+' | head -n 1)
+
+    if [[ -z "${Location_ID}" ]]; then
+	print -u2 "❌ Could not parse Location ID"
+	exit 1
+    fi
+
+    # Step 3: Convert to tty name (remove 0x and trailing zeros)
+    #
+    TTY_Suffix=$(echo "${Location_ID#0x}" | tr '[:upper:]' '[:lower:]' | sed 's/0*$//')
+    UART_Port="usbmodem${TTY_Suffix}02"
+
+    print "${UART_Port}"
+}
+
+############################################################ {{{1 ###########
+# vim: set textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab :
+# vim: set filetype=zsh fileencoding= fileformat=unix foldmethod=marker :
+# vim: set nospell spelllang=en :

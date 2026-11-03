@@ -1,0 +1,65 @@
+name                            = "pico2_ada_c02_button_and_led"
+description                     = "Chapter 2 - Button & LED"
+long-description                = """Controlling an LED with a button on the
+Raspberry Pi Pico using Ada - two simple but useful interaction examples.
+
+In this chapter I combine a push button with an LED. We start with basic on/off
+control, then move to a toggle-style table lamp with software debounce.
+
+1. Sketch_02_1_Button_And_Led - Chapter 2.1 Switch LED with Button
+1. Sketch_02_2_Table_Lamp     - Chapter 2.2 Simple table lamp
+
+Read the full tutorial at [Chapter 1 Reloaded: Dual-Core Light Tasking -
+Blinking LEDs on Both
+Cores](https://pi-ada-tutorial.sourceforge.io/pico2_ada_c02_button_and_led)
+
+GNATdoc documentation:
+https://pi-ada-tutorial.sourceforge.io/gnatdoc/pico2_ada_c02_button_and_led/
+
+SourceForge repository:
+https://sourceforge.net/projects/pi-ada-tutorial/
+"""
+version                         = "1.5.2"
+licenses                        = "GPL-3.0-or-later"
+authors                         = ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers                     = ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers-logins              = ["krischik"]
+website                         = "https://pi-ada-tutorial.sourceforge.io/pico2_ada_c02_button_and_led"
+tags                            = ["raspberry", "pi", "pico", "rp2350", "tasking", "light-tasking", "ada2022", "embedded"]
+executables                     = [
+    "sketch_02_1_button_and_led",
+    "sketch_02_2_table_lamp"
+]
+
+[build-switches]
+"*".ada_version                 = ["-gnat2022"]
+development.compile_checks      = "Warnings"
+development.contracts           = "Yes"
+development.runtime_checks      = "Overflow"
+release.compile_checks          = "Warnings"
+release.contracts               = "No"
+release.runtime_checks          = "Default"
+validation.compile_checks       = "Warnings"
+validation.contracts            = "Yes"
+validation.runtime_checks       = "Everything"
+
+[[depends-on]]
+pico_bsp                        = "^3.0.0-alpha1"
+rp2040_hal                      = "^3.0.0-alpha1"
+light_tasking_rp2350            = "^15.3"
+
+[[pins]]
+# pico_bsp                        = { path='../Library/pico_bsp'   }
+# rp2040_hal                      = { path='../Library/rp2040_hal' }
+pico_bsp                        = { url='https://github.com/krischik/pico_bsp',    branch='develop' }
+rp2040_hal                      = { url='https://github.com/krischik/rp2040_hal',  branch='3.x'     }
+
+[configuration.values]
+pico_bsp.device                 = "RP2350A"
+rp2040_hal.device               = "RP2350A"
+light_tasking_rp2350.Max_CPUs   = 2
+light_tasking_rp2350.Board      = "rpi_pico2"
+
+# vim: set textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 expandtab :
+# vim: set filetype=toml fileencoding=utf-8 fileformat=unix foldmethod=diff :
+# vim: set spell spelllang=en_gb :

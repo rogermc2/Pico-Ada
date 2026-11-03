@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+for I in src/**/*.ad?; do
+	echo "Fix »then« for ${I}"
+	vim -E -s -n <<-EOF
+		edit ${I}
+		global /if .*\\n\\s*then/ join
+		% substitute /^\(\s*\)--  -/\1---/
+		exit
+	EOF
+done; unset I
+
+# vim: set nowrap tabstop=4 shiftwidth=4 softtabstop=4 noexpandtab :
+# vim: set textwidth=0 filetype=zsh foldmethod=marker nospell :

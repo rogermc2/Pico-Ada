@@ -1,0 +1,45 @@
+name                            = "pico_ada_doc"
+description                     = "Documentation "
+long-description                = """
+GNATdoc documentation:
+https://pi-ada-tutorial.sourceforge.io/gnatdoc/pico_ada_doc/
+
+SourceForge repository:
+https://sourceforge.net/projects/pi-ada-tutorial/
+"""
+
+version                         = "1.5.2"
+licenses                        = "GPL-3.0-or-later"
+authors                         = ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers                     = ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers-logins              = ["krischik"]
+website                         = "https://pi-ada-tutorial.sourceforge.io/pico_ada_doc"
+tags                            = ["raspberry", "pi", "pico", "rp2040", "ada2022", "embedded"]
+
+[build-switches]
+"*".ada_version                 = ["-gnat2022"]
+development.compile_checks      = "Warnings"
+development.contracts           = "Yes"
+development.runtime_checks      = "Overflow"
+release.compile_checks          = "Warnings"
+release.contracts               = "No"
+release.runtime_checks          = "Default"
+validation.compile_checks       = "Warnings"
+validation.contracts            = "Yes"
+validation.runtime_checks       = "Everything"
+
+[[depends-on]]
+rp2040_hal                      = "^2.7.1"
+pico_bsp                        = "^2.2"
+pico_xbsp                       = "^1.0"
+embedded_rp2040                 = "^15.3"
+
+[configuration.values]
+rp2040_hal.Use_Startup          = false
+rp2040_hal.Interrupts           = "bb_runtimes"
+embedded_rp2040.Max_CPUs        = 2
+embedded_rp2040.Board           = "rpi_pico"
+
+# vim: set textwidth=120 nowrap tabstop=8 shiftwidth=4 softtabstop=4 expandtab :
+# vim: set filetype=toml fileencoding=utf-8 fileformat=unix foldmethod=diff :
+# vim: set spell spelllang=en_gb :

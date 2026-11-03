@@ -1,0 +1,6 @@
+*.csv
+.hugo_build.lock
+default.profraw
+private
+public
+resources

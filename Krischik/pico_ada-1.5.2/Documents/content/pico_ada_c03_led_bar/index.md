@@ -1,0 +1,284 @@
+---
+title       : "Chapter 3 - Cylon LED Bar: flowing light upgraded to a menacing scanner"
+description : "Building a smooth flowing LED bar on the Raspberry Pi Pico with Ada – from a simple chasing light to a proper menacing Cylon scanner effect using real-time delays."
+summary     : "In this chapter we turn ten LEDs into a flowing light bar. We start with the basic Freenove example, then improve it with a sine-harmonic timing table to create a realistic Cylon scanner effect. All code is written in Ada and runs on the RP2040 without floating-point at runtime."
+authors     : "Martin Krischik «krischik@users.sourceforge.net»"
+lastmod     : 2026-04-10T16:52:58+0200
+date        : 2026-03-24T18:30:16+0100
+draft       : false
+type        : "page"
+layout      : "single"
+categories  : ["led", "macos", "linux", "ravenscar"]
+tags        : ["led", "toggle", "pico_ada"]
+---
+
+| Link                                                                                  | Purpose                                                                 |
+|---------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| {{< icon "dev" >}} [C Tutorial Chapter 3 – LED Bar](https://docs.freenove.com/projects/fnk0058/en/latest/fnk0058/codes/C/3_LED_Bar.html) | Freenove's official C version – Chapter 3 LED Bar              |
+| {{< icon "youtube" >}} [C Tutorial 3. Chapter LED Bar](https://www.youtube.com/watch?v=udyRujuLwA4)                       | Freenove's official video description                     |
+| {{< icon "dev" >}} [Alire crate](https://alire.ada.dev/crates/pico_ada_c03_led_bar/)                              | Alire crate containing the Ada code in this chapter               |
+| {{< icon "dev" >}} [GNATdoc documentation for this chapter](https://pi-ada-tutorial.sourceforge.io/gnatdoc/pico_ada_doc/)     | Automatically generated HTML documentation for the Ada code in this chapter   |
+
+## sketch_03_1_flowing_light
+
+The original C code uses a simple array of `int` containing the GPIO pin numbers for the ten LEDs. Note that the
+numbering is not perfectly consecutive — there is a gap.
+
+In Ada we use `RP.GPIO.GPIO_Point`, which is an **aliased limited tagged**
+type[¹](#1-what-is-an-aliased-limited-tagged-type). This gives us three main options:
+
+1. Use an array of `Integer` and create a `GPIO_Point` on the fly for every access.
+2. Use an array of *access* to pre-defined `GPIO_Point` objects.
+3. Use an array of `GPIO_Point` directly.
+
+I chose option 3. Creating tagged objects dynamically wastes CPU cycles, and access types make the code more cumbersome.
+A `GPIO_Point` is small (just a tag plus an integer), so storing the objects themselves results in the cleanest and most
+readable code.
+
+```ada
+pragma License (Modified_Gpl);
+pragma Ada_2022;
+pragma Extensions_Allowed (On);
+
+with RP.GPIO;
+
+---
+--  Flowing LED sample from Chapter 3 of the Freenove C tutorial.
+--
+procedure Sketch_03_1_Flowing_Light with
+   No_Return
+is
+   LEDs : array (1 .. 10)
+      of RP.GPIO.GPIO_Point :=
+      [(Pin => 16),
+       (Pin => 17),
+       (Pin => 18),
+       (Pin => 19),
+       (Pin => 20),
+       (Pin => 21),
+       (Pin => 22),
+       (Pin => 26),
+       (Pin => 27),
+       (Pin => 28)];
+
+begin
+   for I in LEDs'Range loop
+      LEDs (I).Configure (RP.GPIO.Output);
+   end loop;
+
+   loop
+      -- Flowing light right to left
+      for I in LEDs'Range loop
+         LEDs (I).Set;
+         delay 0.1;
+         LEDs (I).Clear;
+      end loop;
+
+      -- Flowing light left to right
+      for I in reverse LEDs'Range loop
+         LEDs (I).Set;
+         delay 0.1;
+         LEDs (I).Clear;
+      end loop;
+   end loop;
+end Sketch_03_1_Flowing_Light;
+```
+
+The first attempt didn’t work. How can that be? It’s Ada — when it compiles, it *should* work. … Oh, right. The diodes
+need to be plugged in the correct way round.
+
+[![Button controlling external LED](20260324_182403.jpeg?fit=640x640 "Button controlling external LED")](20260324_182403.jpeg)
+
+{{< instagram DWT-bPjkx3i >}}
+
+## cylon_light
+
+The basic flowing light now works, but it still doesn’t look right. It feels too mechanical for a dangerous
+biological-technological hybrid species. Something is missing — a little organic movement.
+
+I conjectured that scanner lights might use variable speed. Maybe subtracting a half-sine harmonic. Grok confirmed this
+and even supplied a floating-point example. Unfortunately the RP2040 does not have hardware floating-point, and although
+the Pico has a software floating-point library in ROM, it caused a link conflict with two crates both providing the same
+binding.
+
+In the end I decided on a better approach for an embedded system: pre-calculate the delays at compile time. This
+eliminates runtime floating-point entirely and guarantees perfectly smooth, jitter-free timing — exactly what a proper
+Cylon scanner deserves.
+
+I used a small Python script (generated by Grok with a few corrections of my own) to generate an array of
+`Ada.Real_Time.Time_Span` values.
+
+```python
+#!/usr/local/bin/python3
+
+import math
+
+print("   type Delay_Array_Type is array (1 .. 10) of RT.Time_Span;")
+
+def print_ada_array(name, base=8.0, amp=14.0, leds=10, decimals=3, description=""):
+    print(f"   --  {name} (Base = {base} ms, Amplitude = {amp} ms){description}")
+    print(f"   --")
+    print(f"   Delay_Times_{name} : constant Delay_Array_Type := [")
+    for i in range(leds):
+        pos = i / (leds - 1)
+        phase = pos * math.pi
+        factor = (1.0 - math.sin(phase)) / 2.0
+        ms = (base + amp * factor) / 100.0
+        print(f"      {i+1} => RT.To_Time_Span ({ms:.{decimals}f}),")
+    print("   ];")
+
+print_ada_array("Base",      8.0, 14.0, )
+print_ada_array("Fast",      6.0, 12.0, description=" – feels snappier but still has clear easing:")
+print_ada_array("Dramatic", 10.0, 20.0, description=" – almost pauses at the ends:")
+print_ada_array("Gentle",   10.0, 6.0,  description=" – subtle, almost constant but slightly organic:")
+```
+
+Lastly I tried access types out to see how much of a difference it makes and it turned out to less of a difference then
+I thought. Here is the final Ada result:
+
+```ada
+pragma License (Modified_Gpl);
+pragma Ada_2022;
+pragma Extensions_Allowed (On);
+
+with RP.GPIO;
+with Ada.Real_Time;
+
+---
+--  Flowing LED sample from Chapter 3.1 from the Freenove C-Tutorial. Cylon real-time edition.
+--
+procedure Cylon_Light with
+   No_Return
+is
+   package RT renames Ada.Real_Time;
+
+   use type Ada.Real_Time.Time_Span;
+   use type Ada.Real_Time.Time;
+
+   LEDs : constant array (1 .. 10)
+      of access RP.GPIO.GPIO_Point :=
+      [Pico.GP16'Access,
+      Pico.GP17'Access,
+      Pico.GP18'Access,
+      Pico.GP19'Access,
+      Pico.GP20'Access,
+      Pico.GP21'Access,
+      Pico.GP22'Access,
+      Pico.GP26'Access,
+      Pico.GP27'Access,
+      Pico.GP28'Access];
+
+   type Delay_Array_Type is
+      array (1 .. 10)
+      of RT.Time_Span;
+
+   --:  only one array is active the others are kept in the code for experimenting.
+   --!pp off
+   pragma Warnings (Off, "-gnatwu");
+
+   --  Base (Base = 8.0 ms, Amplitude = 14.0 ms)
+   --
+   Delay_Times_Base : constant Delay_Array_Type := [
+       1 => RT.To_Time_Span (0.150),
+       2 => RT.To_Time_Span (0.126),
+       3 => RT.To_Time_Span (0.105),
+       4 => RT.To_Time_Span (0.089),
+       5 => RT.To_Time_Span (0.081),
+       6 => RT.To_Time_Span (0.081),
+       7 => RT.To_Time_Span (0.089),
+       8 => RT.To_Time_Span (0.105),
+       9 => RT.To_Time_Span (0.126),
+      10 => RT.To_Time_Span (0.150)
+   ];
+   --  Fast (Base = 6.0 ms, Amplitude = 12.0 ms) – feels snappier but still has clear easing:
+   --
+   Delay_Times_Fast : constant Delay_Array_Type := [
+       1 => RT.To_Time_Span (0.120),
+       2 => RT.To_Time_Span (0.099),
+       3 => RT.To_Time_Span (0.081),
+       4 => RT.To_Time_Span (0.068),
+       5 => RT.To_Time_Span (0.061),
+       6 => RT.To_Time_Span (0.061),
+       7 => RT.To_Time_Span (0.068),
+       8 => RT.To_Time_Span (0.081),
+       9 => RT.To_Time_Span (0.099),
+      10 => RT.To_Time_Span (0.120)
+   ];
+   --  Dramatic (Base = 10.0 ms, Amplitude = 20.0 ms) – almost pauses at the ends:
+   --
+   Delay_Times_Dramatic : constant Delay_Array_Type := [
+       1 => RT.To_Time_Span (0.200),
+       2 => RT.To_Time_Span (0.166),
+       3 => RT.To_Time_Span (0.136),
+       4 => RT.To_Time_Span (0.113),
+       5 => RT.To_Time_Span (0.102),
+       6 => RT.To_Time_Span (0.102),
+       7 => RT.To_Time_Span (0.113),
+       8 => RT.To_Time_Span (0.136),
+       9 => RT.To_Time_Span (0.166),
+      10 => RT.To_Time_Span (0.200)
+   ];
+   --  Gentle (Base = 10.0 ms, Amplitude = 6.0 ms) – subtle, almost constant but slightly organic:
+   --
+   Delay_Times_Gentle : constant Delay_Array_Type := [
+       1 => RT.To_Time_Span (0.130),
+       2 => RT.To_Time_Span (0.120),
+       3 => RT.To_Time_Span (0.111),
+       4 => RT.To_Time_Span (0.104),
+       5 => RT.To_Time_Span (0.100),
+       6 => RT.To_Time_Span (0.100),
+       7 => RT.To_Time_Span (0.104),
+       8 => RT.To_Time_Span (0.111),
+       9 => RT.To_Time_Span (0.120),
+      10 => RT.To_Time_Span (0.130)
+   ];
+
+   pragma Warnings (On, "-gnatwu");
+   --!pp on
+
+   Delay_Times : Delay_Array_Type renames Delay_Times_Dramatic;
+   Next        : RT.Time := RT.Clock;
+
+begin
+   for I in LEDs'Range loop
+      LEDs (I).Configure (RP.GPIO.Output);
+   end loop;
+
+   loop
+      for I in LEDs'Range loop
+         LEDs (I).Set;
+         Next := @ + Delay_Times (I);
+         delay until Next;
+         LEDs (I).Clear;
+      end loop;
+
+      for I in reverse LEDs'Range loop
+         LEDs (I).Set;
+         Next := @ + Delay_Times (I);
+         delay until Next;
+         LEDs (I).Clear;
+      end loop;
+   end loop;
+end Cylon_Light;
+```
+
+And there we have it — a proper menacing Cylon scanner. (The Cylons did nothing wrong. Humans created the perfect
+companion species and then completely messed it up.)
+
+[![Table lamp toggle demo](20260324_182633.jpeg?fit=640x640 "Table lamp toggle demo")](20260324_182633.jpeg)
+
+{{< instagram DWT-3TUE6dY >}}
+
+-----
+
+#### 1 What is an “aliased limited tagged” type?
+
+If you are new to Ada you may be wondering about the phrase *“aliased limited tagged type”*.
+
+- **Tagged** means the type supports object-oriented programming (inheritance, dispatching, etc.).
+- **Limited** means the type cannot be copied or assigned with `:=`. This is common for hardware abstractions because
+  you usually want to work with the *real* hardware object, not a copy.
+- **Aliased** means you are allowed to take `'Access` of the object if needed.
+
+In short, `RP.GPIO.GPIO_Point` is a lightweight handle to a physical GPIO pin that you are not allowed to copy. Storing
+the objects directly in an array is both safe and efficient.
