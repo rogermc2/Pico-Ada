@@ -1,0 +1,43 @@
+with "config/simple_pico2_ada_config.gpr";
+with "runtime_build.gpr";
+
+project Simple_Pico2_Ada is
+
+   for Target use Runtime_Build'Target;
+   --  Define the exact bare-metal runtime for Cortex-M33
+   for Runtime ("Ada")  use Runtime_Build'Runtime ("Ada");
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Simple_Pico2_Ada_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use ".";
+   for Main use ("simple_pico2.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use 
+      ("-gnatw.X", "-gnatQ") & Simple_Pico2_Ada_Config.Ada_Compiler_Switches;
+
+      -- Flags to enforce exact hardware code generation for the RP2350 cores
+      Common_Flags := ("-mcpu=cortex-m33", 
+                       "-mthumb", "-mfloat-abi=hard",
+                       -- Standard Cortex-M33 floating point layout
+                       "-mfpu=fpv5-sp-d16",
+                       "-ffunction-sections", "-fdata-sections");
+      for Switches ("C") use Common_Flags & ("-O2", "-Wall");
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-W8", "-static", "-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Linker is
+      for Switches ("Ada") use Runtime_Build.Linker_Switches & (
+         "-Wl,--gc-sections",
+         -- "-Wl,--defsym=__stack_size=4096"
+         "-Wl,-print-memory-usage");
+   end Linker;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Simple_Pico2_Ada;

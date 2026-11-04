@@ -1,7 +1,0 @@
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/pioasm.dir
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/edit_cache.dir
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/rebuild_cache.dir
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/list_install_components.dir
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/install.dir
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/install/local.dir
-/System/Volumes/Data/Ada_Projects/Pico_Ada/sketch011blink_pico2w/build/pioasm/CMakeFiles/install/strip.dir
