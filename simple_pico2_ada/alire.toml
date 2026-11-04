@@ -9,3 +9,6 @@ website = ""
 tags = []
 
 executables = ["simple_pico2"]
+
+[[depends-on]]
+light_tasking_rp2350 = "^16.0.0"

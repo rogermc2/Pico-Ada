@@ -4,7 +4,8 @@ with C_Interface;  use C_Interface;
 
 procedure Simple_Pico2 is
    --  Assuming standard Pico SDK values for demonstration
-   --  (In a real project, you would import 'gpio_init', 'gpio_set_dir', etc. from the Pico SDK)
+   --  (In a real project, you would import 'gpio_init',
+   --  'gpio_set_dir', etc. from the Pico SDK)
    Current_LED_State : int := 0;
 begin
    loop
@@ -16,6 +17,5 @@ begin
 
       --  Delay loop or Pico SDK sleep_ms call would go here
    end loop;
-end Main;
 
 end Simple_Pico2;
