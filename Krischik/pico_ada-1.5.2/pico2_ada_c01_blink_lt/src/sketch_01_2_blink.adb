@@ -23,22 +23,17 @@ with Pico.UART_IO;
 with Pico;
 with RP.GPIO;
 
----
 --  Blink LED sample from Chapter 1.1 from the Freenove C-Tutorial Chapter 1.1
---
 --  RP2040 light tasking version
---
-procedure Sketch_01_2_Blink with
-   No_Return
-is
+
+procedure Sketch_01_2_Blink with No_Retur is
    pragma Debug (Pico.UART_IO.Initialise);
    pragma Debug (Pico.UART_IO.Put_Line ("+ Sketch_01_2_Blink"));
 
-   ---
    --  Use GP 15 for the external LED
-   --
-   LED : RP.GPIO.GPIO_Point renames Pico.GP15;
+   LED : RP.GPIO.GPIO_Point;
 begin
+   LED.Pin := 15;
    pragma Debug (Pico.UART_IO.Put_Line ("> Initialise"));
 
    LED.Configure (RP.GPIO.Output);
@@ -50,9 +45,5 @@ begin
       LED.Clear;
       delay 0.5;
    end loop;
-end Sketch_01_2_Blink;
 
----------------------------------------------------------------- {{{ ----------
---: vim: set textwidth=120 nowrap tabstop=8 shiftwidth=3 softtabstop=3 expandtab :
---: vim: set filetype=ada fileencoding=utf-8 fileformat=unix foldmethod=marker :
---: vim: set spell spelllang=en_gb :
+end Sketch_01_2_Blink;

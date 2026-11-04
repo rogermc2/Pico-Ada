@@ -1,4 +1,4 @@
-name                            = "pico_ada_c01_blink"
+name                            = "pico2_ada_c01_blink"
 description                     = "Chapter 1: Blinking LEDs - Getting Started on the Raspberry Pi Pico"
 long-description                = """My first steps into Ada programming on the Pico: from Jeremy Grosser's classic
 blink example through explicit pin control to using an external LED, plus thoughts on the elegant (but still

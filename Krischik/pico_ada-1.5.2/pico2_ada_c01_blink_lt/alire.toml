@@ -28,10 +28,7 @@ maintainers-logins              = ["krischik"]
 website                         = "https://pi-ada-tutorial.sourceforge.io/pico2_ada_c01_blink_lt"
 tags                            = ["raspberry", "pi", "pico2", "rp2350", "tasking", "light-tasking", "ada2022"]
 executables                     = [
-    "blink",
-    "sketch_01_1_blink",
-    "sketch_01_2_blink",
-    "double_blink-main"
+    "sketch_01_2_blink"
 ]
 
 [build-switches]
@@ -48,14 +45,12 @@ validation.runtime_checks       = "Everything"
 
 [[depends-on]]
 pico_bsp                        = "^3.0.0-alpha1"
-rp2040_hal                      = "^3.0.0-alpha1"
 light_tasking_rp2350            = "^15.3"
 
 [[pins]]
 # pico_bsp                        = { path='../Library/pico_bsp'   }
 # rp2040_hal                      = { path='../Library/rp2040_hal' }
 pico_bsp                        = { url='https://github.com/krischik/pico_bsp',    branch='develop' }
-rp2040_hal                      = { url='https://github.com/krischik/rp2040_hal',  branch='3.x'     }
 
 [configuration.values]
 pico_bsp.device                 = "RP2350A"
@@ -63,6 +58,13 @@ rp2040_hal.device               = "RP2350A"
 light_tasking_rp2350.Max_CPUs   = 2
 light_tasking_rp2350.Board      = "rpi_pico2"
 
+[[actions]]
+type = "post-build"
+command = [
+    "/opt/homebrew/bin/elf2uf2-rs", 
+    "sketch_01_2_blink", "sketch_01_2_blink.uf2"]
+
 # vim: set textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 expandtab :
 # vim: set filetype=toml fileencoding=utf-8 fileformat=unix foldmethod=diff :
 # vim: set spell spelllang=en_gb :
+

@@ -19,24 +19,18 @@
 with "config/pico2_ada_c01_blink_lt_config.gpr";
 with "runtime_build.gpr";
 
----
 --  Sample Project to make both the internal and an external LED blink at
 --  different rates using both cores of the RP2040.
--- 
+
 project Pico2_Ada_C01_Blink_LT is
 
    for Target              use Runtime_Build'Target;
    for Runtime ("Ada")     use Runtime_Build'Runtime ("Ada");
-   for Source_Dirs         use ("src/", "config/");
-   for Object_Dir          use "obj/" & Pico2_Ada_C01_Blink_LT_Config.Build_Profile;
+   for Source_Dirs         use ("src/", "config/", "../pico_xbsp/src/**");
+   for Object_Dir          use "." & Pico2_Ada_C01_Blink_LT_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
-   for Exec_Dir            use "bin/" & Pico2_Ada_C01_Blink_LT_Config.Build_Profile;
-   for Main                use (
-      "blink.adb",
-      "sketch_01_1_blink.adb",
-      "sketch_01_2_blink.adb",
-      "double_blink-main.adb"
-   );
+   for Exec_Dir            use ".";
+   for Main                use ("sketch_01_2_blink.adb");
 
    Ada_Compiler_Switches := Pico2_Ada_C01_Blink_LT_Config.Ada_Compiler_Switches & (
          "-gnat2022",   -- Ada 2022 mode
