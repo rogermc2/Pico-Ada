@@ -8,7 +8,7 @@ package body C_Interface is
       else
          return 0;
       end if;
-      
+
    end Ada_Get_Next_Status;
 
 end C_Interface;
