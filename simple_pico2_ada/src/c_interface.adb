@@ -37,4 +37,13 @@ package body C_Interface is
    --     Printf_String (Interfaces.C.To_C (Message & ASCII.LF));
    --  end Call_Printf_Simple;
 
+    procedure Print_LED_Status (Status : Integer) is
+    begin
+       if Status = 1 then
+          Put_Line ("LED is ON");
+       else
+          Put_Line ("LED is OFF");
+       end if;
+    end Print_LED_Status;
+
 end C_Interface;
