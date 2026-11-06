@@ -7,7 +7,7 @@ project Simple_Pico2_Ada is
    for Runtime ("Ada")  use Runtime_Build'Runtime ("Ada");
 
    for Languages use ("Ada", "C");
-   for Source_Dirs use ("src/", "config/");
+   for Source_Dirs use ("src/", "config/", "../common");
    for Object_Dir use "obj/" & Simple_Pico2_Ada_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Exec_Dir use ".";
@@ -58,7 +58,7 @@ project Simple_Pico2_Ada is
          -- "-I" & Pico_SDK_Path & "/src/rp2350/hardware_structs/include",
          -- "-I" & Pico_SDK_Path & "/src/boards/include",
          -- "-I" & Project'Project_Dir & "src"
-      );
+         );
     end Compiler;
 
    package Binder is
@@ -68,7 +68,6 @@ project Simple_Pico2_Ada is
    package Linker is
       for Switches ("Ada") use Runtime_Build.Linker_Switches & (
          "-Wl,--gc-sections",
-         -- "-Wl,--defsym=__stack_size=4096"
          "-Wl,-print-memory-usage");
    end Linker;
 
