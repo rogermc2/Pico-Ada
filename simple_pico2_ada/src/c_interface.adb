@@ -1,3 +1,6 @@
+
+with Ada.Text_IO; use Ada.Text_IO;
+
 package body C_Interface is
 
    function Ada_Get_Next_Status (Current_Status : int) return int is
@@ -11,29 +14,27 @@ package body C_Interface is
 
    end Ada_Get_Next_Status;
 
-   procedure Call_Puts (Message : String) is
-       procedure C_Puts (Str : chars_ptr) with
-      Import => True, Convention => C, External_Name => "puts";
-      Msg : chars_ptr := New_String ("C Code: " & Message & ASCII.LF);
-   begin
-      --  Call the C function
-      C_Puts (Msg);
-      Free (Msg);
-   end Call_Puts;
+   --  procedure C_Puts (Message : String) is
+   --      procedure C_Puts (Str : chars_ptr) with
+   --     Import => True, Convention => C, External_Name => "puts";
+   --     Msg : chars_ptr := New_String ("C Code: " & Message & ASCII.LF);
+   --  begin
+   --     --  Call the C function
+   --     C_Puts (Msg);
+   --     Free (Msg);
 
-   procedure Call_Printf (Message : String) is
-      --  Import the C printf function (using a simplified binding for a single string)
-      procedure C_Printf (Str : chars_ptr) with
-      Import => True, Convention => C, External_Name => "printf";
+   --  end C_Puts;
 
-      --  Create the C-compatible string pointer
-      Msg : chars_ptr := New_String ("C Code: " & Message & ASCII.LF);
-   begin
-      --  Call the C function
-      C_Printf (Msg);
+   --  procedure Call_Printf_Simple (Message : String) is
+   --  -- Import printf with a single string argument
+   --     procedure Printf_String (Format : Interfaces.C.char_array)
+   --     with Import, 
+   --           Convention    => C, 
+   --           External_Name => "printf";
 
-      --  Free the allocated C string memory
-      Free (Msg);
-   end Call_Printf;
+   --  begin
+   --     -- Interfaces.C.To_C converts an Ada string to a null-terminated C string
+   --     Printf_String (Interfaces.C.To_C (Message & ASCII.LF));
+   --  end Call_Printf_Simple;
 
 end C_Interface;

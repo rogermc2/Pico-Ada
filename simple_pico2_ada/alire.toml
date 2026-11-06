@@ -12,3 +12,9 @@ executables = ["simple_pico2"]
 
 [[depends-on]]
 light_tasking_rp2350 = "^16.0.0"
+
+[environment]
+CONSOLE_BACKEND = { set = "usb" }
+
+[[depends-on]]
+rp2040_hal = "^2.7.1"
