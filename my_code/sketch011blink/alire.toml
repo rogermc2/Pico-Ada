@@ -17,3 +17,6 @@ light_tasking_rp2350 = "*"
 
 [[depends-on]]
 gnat_arm_elf = "^15"
+
+[[depends-on]]
+pico_bsp = "^2.2.0"
