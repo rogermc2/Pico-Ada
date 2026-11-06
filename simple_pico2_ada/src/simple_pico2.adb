@@ -17,13 +17,12 @@ begin
    delay 2.0;
 
    loop
-       Print_LED_Status (Current_LED_State);
-       Put_Line ("Current LED State: " & Integer'image (Current_LED_State));
+      Current_LED_State := Toggle_Logic (Current_LED_State);
+      Print_LED_Status (Current_LED_State);
       delay 1.0; 
-      --  Use C function (which calls Ada logic) to toggle the state
-      Current_LED_State := Integer (C_Toggle_Logic (Int (Current_LED_State)));
+      Current_LED_State := Toggle_Logic (Current_LED_State);
+      Print_LED_Status (Current_LED_State);
       delay 1.0;
-      --  Delay loop or Pico SDK sleep_ms call would go here
    end loop;
 
 end Simple_Pico2;

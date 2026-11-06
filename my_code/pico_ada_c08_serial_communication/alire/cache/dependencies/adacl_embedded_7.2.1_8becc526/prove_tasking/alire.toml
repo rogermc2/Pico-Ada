@@ -1,0 +1,49 @@
+name					= "adacl_embedded_prove_tasking"
+description				= "SPARK prove package to prove AdaCL_Embedded"
+long-description			= """
+"""
+version					= "7.2.1"
+licenses				= "GPL-3.0-or-later"
+authors					= ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers				= ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers-logins			= ["krischik"]
+website					= "https://sourceforge.net/projects/adacl/"
+executables				= [ "dummy-main" ]
+
+[build-switches]
+"*".ada_version				= ["-gnat2022"]
+development.compile_checks		= "Warnings"
+development.contracts			= "Yes"
+development.runtime_checks		= "Overflow"
+release.compile_checks			= "Warnings"
+release.contracts			= "No"
+release.runtime_checks			= "Default"
+validation.compile_checks		= "Warnings"
+validation.contracts			= "Yes"
+validation.runtime_checks		= "Everything"
+
+[build-profiles]
+adacl_embedded				= "validation"
+adacl_embedded_prove_tasking		= "validation"
+
+[[depends-on]]
+adacl_embedded				= "^7.2"
+gnatprove				= "^16.1"
+light_tasking_rp2040			= "^15.4"
+
+[[pins]]
+adacl_embedded				= { path='..' }
+
+[configuration.values]
+adacl_embedded.Event_Log_Buffer_Size	= 64
+adacl_embedded.Variant			= "tasking"
+light_tasking_rp2040.Max_CPUs		= 2
+
+[[actions]]
+type					= "test"
+command					= ["alr", "gnatprove"]
+directory				= "."
+
+# vim: set textwidth=120 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab :
+# vim: set filetype=toml fileencoding=utf-8 fileformat=unix foldmethod=syntax :
+# vim: set spell spelllang=en_gb :
