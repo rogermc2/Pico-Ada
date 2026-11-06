@@ -1,17 +1,19 @@
 
 with Interfaces.C; use Interfaces.C;
+with Interfaces.C.Strings; use Interfaces.C.Strings;
 
 package C_Interface is
 
-   --  Import the C function into Ada
+   --  Import  C functions into Ada
    procedure C_Print_LED_Status (Status : int);
    pragma Import (C, C_Print_LED_Status, "c_print_led_status");
-
-   --  Import the second C function
    function C_Toggle_Logic (Current_Status : int) return int;
    pragma Import (C, C_Toggle_Logic, "c_toggle_logic");
-   --  Export an Ada function so C can call it
    function Ada_Get_Next_Status (Current_Status : int) return int;
    pragma Export (C, Ada_Get_Next_Status, "ada_get_next_status");
+   procedure Call_Printf (Message : String);
+   procedure Call_Puts (Message : String);
+   --  procedure C_Puts (Str : chars_ptr);
+   --  pragma Import (C, C_Puts, "puts");
 
 end C_Interface;

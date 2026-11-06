@@ -10,7 +10,7 @@ procedure Simple_Pico2 is
 begin
    loop
       --  Call the C function to print status
-      C_Print_LED_Status (Current_LED_State);
+      Print_LED_Status (Current_LED_State);
 
       --  Use C function (which calls Ada logic) to toggle the state
       Current_LED_State := C_Toggle_Logic (Current_LED_State);
