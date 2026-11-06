@@ -1,6 +1,5 @@
 
 #include <stdio.h>
-// #include "pico/stdlib.h"
 
 // External declaration of the Ada function we want to call
 extern int ada_get_next_status (int current_status);
