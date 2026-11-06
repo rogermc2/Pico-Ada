@@ -13,13 +13,13 @@ package body C_Interface is
 
    end Ada_Get_Next_Status;
 
-    procedure Print_LED_Status (Status : Integer) is
-    begin
-       if Status = 1 then
-          Put_Line ("LED is ON");
-       else
-          Put_Line ("LED is OFF");
-       end if;
-    end Print_LED_Status;
+   function C_Toggle_Logic (Current_Status : int) return int;
+   pragma Import (C, C_Toggle_Logic, "c_toggle_logic");
+
+   function Toggle_Logic (Current_Status : Integer) return integer is
+   begin
+      return Integer(C_Toggle_Logic (Int (Current_Status)));
+      
+   end Toggle_Logic;
 
 end C_Interface;
