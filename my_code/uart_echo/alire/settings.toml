@@ -1,2 +1,0 @@
-last_build_profile = "atomic=RELEASE,bbqueue=RELEASE,cortex_m=RELEASE,gnat_arm_elf=RELEASE,hal=RELEASE,pico_bsp=RELEASE,rp2040_hal=RELEASE,uart_echo=DEVELOPMENT,usb_embedded=RELEASE"
-
