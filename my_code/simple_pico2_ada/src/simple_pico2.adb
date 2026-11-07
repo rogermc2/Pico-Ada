@@ -3,7 +3,6 @@ with Interfaces.C; use Interfaces.C;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with C_Interface; use C_Interface;
 with Support; use Support;
 
 procedure Simple_Pico2 is
