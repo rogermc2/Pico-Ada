@@ -11,7 +11,6 @@ procedure Pico2_Blink is
    --  Assuming standard Pico SDK values for demonstration
    --  (In a real project, you would import 'gpio_init',
    --  'gpio_set_dir', etc. from the Pico SDK)
-   --  Use GP 15 for the external LED
    LED               : RP.GPIO.GPIO_Point;
    --  Current_LED_State : Integer := 0;
 begin
@@ -19,7 +18,7 @@ begin
    --  However, standard USB CDC serial ports take a second to negotiate a connection 
    --  with your operating system. A delay ensures your early prints aren't cut off.
    delay 2.0;
-   LED.Pin := 15;
+   LED.Pin := 15;  --  Use GP 15 for the external LED
    LED.Configure (RP.GPIO.Output);
 
    loop

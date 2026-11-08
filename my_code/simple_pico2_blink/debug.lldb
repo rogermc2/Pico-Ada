@@ -1,0 +1,10 @@
+settings set plugin.process.gdb-remote.packet-timeout 120
+gdb-remote localhost:3333
+process plugin packet monitor reset init
+process plugin packet monitor program bin/pico2_blink_signed.elf
+script import time; time.sleep(1)
+process plugin packet monitor cortex_m vector_catch hard_fault
+process plugin packet monitor reset halt
+script import time; time.sleep(1)
+breakpoint set --name _ada_pico2_blink
+continue
