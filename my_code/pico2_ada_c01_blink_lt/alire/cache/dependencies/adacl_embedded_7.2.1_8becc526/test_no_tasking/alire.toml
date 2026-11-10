@@ -1,0 +1,63 @@
+name					= "adacl_embedded_test_no_tasking"
+description				= "AdaCL: AUnit Test Suite for AdaCL AUnit"
+long-description			= """AUnit test suite for the Ada Class Library (AdaCL), ensuring functionality in Ada 2022.
+
+This support crate verifies the core AdaCL components.
+
+Licensed under GPL-3.0-or-later.
+
+Source: [SourceForge](https://sourceforge.net/p/adacl/git/ci/master/tree/adacl_aunit/test/src/)
+Documentation: [GNATdoc](https://adacl.sourceforge.net/gnatdoc/adacl_embedded_test_no_tasking/index.html)
+"""
+version					= "7.2.1"
+licenses				= "GPL-3.0-or-later"
+authors					= ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers				= ["Martin Krischik <krischik@users.sourceforge.net>"]
+maintainers-logins			= ["krischik"]
+website					= "https://sourceforge.net/projects/adacl_aunit/"
+tags					= ["aunit", "unit-test", "ada2022"]
+executables				= ["adacl_embedded_test-main"]
+
+[build-switches]
+"*".ada_version				= "Ada2022"
+"*".source_encoding			= "UTF_8"
+development.compile_checks		= "Warnings"
+development.contracts			= "Yes"
+development.debug_info			= "Yes"
+development.optimization		= "Debug"
+development.runtime_checks		= "Everything"
+release.compile_checks			= "Warnings"
+release.contracts			= "Yes"
+release.debug_info			= "No"
+release.optimization			= "Performance"
+release.runtime_checks			= "Everything"
+validation.compile_checks		= "Warnings"
+validation.contracts			= "Yes"
+validation.debug_info			= "Yes"
+validation.optimization			= "Debug"
+validation.runtime_checks		= "Everything"
+
+[build-profiles]
+adacl_embedded				= "validation"
+adacl_embedded_test_no_tasking		= "validation"
+
+[[depends-on]]
+adacl_embedded				= "^7.2"
+aunit					= "^26.0.0"
+
+[[pins]]
+adacl_embedded				= { path = ".." }
+
+[configuration.values]
+adacl_embedded.Event_Log_Buffer_Size	= 8
+adacl_embedded.Event_Log_Buffer_Length	= 32
+adacl_embedded.Variant			= "no_tasking"
+
+[[actions]]
+type					= "test"
+command					= ["alr", "run"]
+directory				= "test"
+
+# vim: set textwidth=120 nowrap tabstop=8 shiftwidth=4 softtabstop=4 noexpandtab :
+# vim: set filetype=toml fileencoding=utf-8 fileformat=unix foldmethod=syntax :
+# vim: set spell spelllang=en_gb :

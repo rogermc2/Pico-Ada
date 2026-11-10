@@ -1,0 +1,6 @@
+dependency:light_tasking_rp2350=15.4.0=e8a940b9b27477c6c755fbe3e44638d9e9b5581c6ff3fbb2288518660f8315cb
+dependency:pico_bsp=3.0.0-mk.1=237aed067ef0077791dc246a8acc4eb0b97e78f879f6198f33d7e0f86ff60ec1
+external:LIBRARY_TYPE=default
+external:PICO2_ADA_C01_BLINK_LT_LIBRARY_TYPE=default
+profile:pico2_ada_c01_blink_lt=DEVELOPMENT
+switches:pico2_ada_c01_blink_lt=-Og,-fdata-sections,-ffunction-sections,-g,-gnat2022,-gnatVa,-gnatW8,-gnata,-gnato,-gnatp,-gnatw.X,-gnatwa,-gnaty-d,-gnaty3,-gnatyA,-gnatyB,-gnatyI,-gnatyO,-gnatyS,-gnatya,-gnatyb,-gnatyc,-gnatye,-gnatyf,-gnatyh,-gnatyi,-gnatyk,-gnatyl,-gnatym,-gnatyn,-gnatyp,-gnatyr,-gnatyt,-gnatyu,-gnatyx
