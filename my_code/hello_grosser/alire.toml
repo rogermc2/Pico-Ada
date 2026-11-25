@@ -1,0 +1,23 @@
+name = "hello_grosser"
+description = ""
+version = "0.1.0-dev"
+
+authors = ["Your Name"]
+maintainers = ["Your Name <example@example.com>"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = []
+
+executables = ["hello_grosser"]
+
+[[depends-on]]
+light_tasking_rp2350 = "^16.0.0"
+
+[[depends-on]]
+rp2040_hal = "^3.0.0-alpha2"
+
+[[pins]]
+rp2040_hal = { url='https://github.com/JeremyGrosser/rp2040_hal', branch='3.x' }
+
+[configuration.values]
+rp2040_hal.Device = "RP2350A"

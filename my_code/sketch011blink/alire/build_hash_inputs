@@ -1,0 +1,6 @@
+dependency:light_tasking_rp2350=15.4.0=e8a940b9b27477c6c755fbe3e44638d9e9b5581c6ff3fbb2288518660f8315cb
+dependency:pico_bsp=2.2.0=d6f39736a87bf3d5efe1cfda33f0f6cb0296b768dd58f76bbfdc496da33be37d
+external:LIBRARY_TYPE=default
+external:SKETCH011BLINK_LIBRARY_TYPE=default
+profile:sketch011blink=DEVELOPMENT
+switches:sketch011blink=-Og,-fdata-sections,-ffunction-sections,-g,-gnatVa,-gnatW8,-gnatw.X,-gnatwa,-gnaty-d,-gnaty3,-gnatyA,-gnatyB,-gnatyI,-gnatyO,-gnatyS,-gnatya,-gnatyb,-gnatyc,-gnatye,-gnatyf,-gnatyh,-gnatyi,-gnatyk,-gnatyl,-gnatym,-gnatyn,-gnatyp,-gnatyr,-gnatyt,-gnatyu,-gnatyx

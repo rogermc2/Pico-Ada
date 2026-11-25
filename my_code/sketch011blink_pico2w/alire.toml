@@ -1,0 +1,21 @@
+name = "sketch_011_blink"
+description = "for Raspberry Pi Pico 2 W"
+version = "0.1.0-dev"
+
+authors = ["Roger"]
+maintainers = ["Roger <rogermc@iinet.net.au>"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+executables = ["sketch_011_blink"]
+
+[[depends-on]]
+light_rp2350 = "^15.2.0"
+
+[[depends-on]]
+gnat_arm_elf = "^15"
+
+[[depends-on]]
+pico_bsp = "^2.2.0"
+
+[configuration.values]
+# Use "RP2350A" for standard Pico 2, or "RP2350B" for 48-GPIO boards
+rp2040_hal.Device = "RP2350A"

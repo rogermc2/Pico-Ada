@@ -1,0 +1,22 @@
+with "config/vscode_simple_debug_config.gpr";
+project Vscode_Simple_Debug is
+
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Vscode_Simple_Debug_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use ".";
+   for Main use ("simple_debug.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Vscode_Simple_Debug_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Vscode_Simple_Debug;

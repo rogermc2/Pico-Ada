@@ -1,25 +1,5 @@
 name                            = "pico2_ada_c01_blink_lt"
 description                     = "Chapter 1 Reloaded: Dual-Core Light Tasking"
-long-description                = """Blinking LEDs on Both Cores Updated
-Chapter 1 using the new light_tasking_rp2350 runtime - now with proper
-multi-core support, Ada.Real_Time, and delay until for accurate, slippage-free
-LED blinking on Raspberry Pi Pico.
-
-Contained in Chapter 01 reloaded are:
-
-1. blink - Jeremy Grosser Ada sample (internal LED doesn't yet work)
-2. sketch_01_1_blink - Chapter 1.1 Blink internal LED (internal LED doesn't yet work)
-3. sketch_01_2_blink - Chapter 1.2 Blink external LED
-4. double_blink-main - double blink using both cores.
-
-Read the full tutorial at [Chapter 1 Reloaded: Dual-Core Light Tasking -
-Blinking LEDs on Both
-Cores](https://pi-ada-tutorial.sourceforge.io/pico2_ada_c01_blink_lt)
-
-> After quick community help, I rewrote Chapter 1 to use light tasking on both
-> rp2350 cores. No more manual timers - clean, precise dual-LED blinking with
-> zero slippage.
-"""
 version                         = "1.5.2"
 licenses                        = "GPL-3.0-or-later"
 authors                         = ["Martin Krischik <krischik@users.sourceforge.net>"]
@@ -27,9 +7,7 @@ maintainers                     = ["Martin Krischik <krischik@users.sourceforge.
 maintainers-logins              = ["krischik"]
 website                         = "https://pi-ada-tutorial.sourceforge.io/pico2_ada_c01_blink_lt"
 tags                            = ["raspberry", "pi", "pico2", "rp2350", "tasking", "light-tasking", "ada2022"]
-executables                     = [
-    "blink"
-]
+executables                     = ["sketch_01_2_blink"]
 
 [build-switches]
 "*".ada_version                 = ["-gnat2022"]
@@ -63,8 +41,3 @@ type = "post-build"
 command = [
     "/opt/homebrew/bin/elf2uf2-rs", 
     "sketch_01_2_blink", "sketch_01_2_blink.uf2"]
-
-# vim: set textwidth=0 nowrap tabstop=8 shiftwidth=4 softtabstop=4 expandtab :
-# vim: set filetype=toml fileencoding=utf-8 fileformat=unix foldmethod=diff :
-# vim: set spell spelllang=en_gb :
-
